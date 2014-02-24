@@ -20,11 +20,24 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+    ==================
+    ABOUT THIS PROJECT
+    ==================
+
+    This project is intended to work with Adobe CQ 5.5 and above.
+
+    This project was generated from the com.cqblueprints.archetypes:multi-module Maven Archetype.
+
+    More information on the generation process can be found here:
+
+    http://www.cqblueprints.com/xwiki/bin/view/Blue+Prints/The+CQ+Project+Maven+Archetype
+
+
+
+
     ================
     BUILD AND DEPLOY
     ================
-
-    This project is intended to work with Adobe CQ 5.5 and above.
 
     To build this project you will need access to the Adobe Maven Repository and also the CQ Blueprints Maven
     Repository:
