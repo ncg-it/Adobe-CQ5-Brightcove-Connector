@@ -1,5 +1,7 @@
 package com.brightcove.proserve.mediaapi.wrapper.apiobjects;
 
+import com.brightcove.proserve.mediaapi.wrapper.apiobjects.Video;
+
 import java.util.ArrayList;
 
 import org.jsonBC.JSONArray;
@@ -36,5 +38,15 @@ public class Videos extends ArrayList<Video> {
 	
 	public Integer getTotalCount(){
 		return this.totalCount;
+	}
+	
+	public JSONArray toJson() throws JSONException{
+		JSONArray json = new JSONArray();
+
+		for (Video video : this) {
+			json.put(video.toJson());
+		}
+
+		return json;
 	}
 }
