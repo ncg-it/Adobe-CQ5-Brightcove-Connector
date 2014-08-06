@@ -139,7 +139,7 @@ String previewPlayerListLoc = brcService.getPreviewPlayerListLoc();
                                     </div>
                                     <div name="pageDiv" class="pageDiv">
                                         Page Number:
-                                        <select name="selPageN" onchange="changePage(this.selectedIndex)"/>
+                                        <select name="selPageN" onchange="changePage(this.selectedIndex)"></select>
                                     </div>
                                 </td>
                             </tr>
@@ -187,7 +187,7 @@ String previewPlayerListLoc = brcService.getPreviewPlayerListLoc();
                                     </div>
                                     <div name="pageDiv" class="pageDiv">
                                         Page Number:
-                                        <select name="selPageN" onchange="changePage(this.selectedIndex)">
+                                        <select name="selPageN" onchange="changePage(this.selectedIndex)"></select>
                                     </div>
                                 </td>
                             </tr>
@@ -359,14 +359,14 @@ String previewPlayerListLoc = brcService.getPreviewPlayerListLoc();
                         <br/>
                         <span class="subTitle">Title is Required</span>
                     </center>
+                    <div class="hLine"></div>
                     <table>
-                        <div class="hLine"></div>
                         <tr class="requiredFields">
                             <td>Title:</td>
                             <td style="width:100%">
                                 <input type="text" name="plst.name" id="plst.name" />
+                            </td>
                         </tr>
-                        </td>
                         <tr>
                             <td>Short Description:</td>
                             <td>
@@ -416,6 +416,7 @@ String previewPlayerListLoc = brcService.getPreviewPlayerListLoc();
                     <br>
                     <button onClick="Load(getUploadStatusById())">Submit</button>
                     <button type="button" onClick="closeBox('getUplStatus')">Cancel</button>
+                </center>
             </div>
 
             <!--Upload Status Bar-->
@@ -448,10 +449,11 @@ String previewPlayerListLoc = brcService.getPreviewPlayerListLoc();
                     <form id="modPlstForm" method="POST" enctype="multipart/form-data" target="postFrame">
                         <button onClick="modPlstSubmit()">Yes</button>
                         <button type="button" class="btn" onClick="closeBox('modPlstPop')">No</button>
+                
+						<input type="hidden" name="command" value="update_playlist" />
+						<input type="hidden" name="playlist" id="playlist" />
+					</form>
                 </center>
-                <input type="hidden" name="command" value="update_playlist" />
-                <input type="hidden" name="playlist" id="playlist" />
-                </form>
             </div>
 
             <!--Player Preview  -->
@@ -472,14 +474,16 @@ String previewPlayerListLoc = brcService.getPreviewPlayerListLoc();
                         <br/>
                         <span class="subTitle">Sharee Account Id's Should be Comma Separated </span>
                     </center>
+                     <div class="hLine"></div>
                     <table>
-                        <div class="hLine"></div>
+                       
                         <tr class="requiredFields">
                             <td>Sharee Account Id's:</td>
                             <td style="width:100%">
                                 <input type="text" name="sharees" id="sharees" style="width:100%" />
+                            </td>
                         </tr>
-                        </td>
+                        
                     </table>
                     <fieldset>
                         <legend>Video</legend>

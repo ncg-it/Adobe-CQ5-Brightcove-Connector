@@ -60,8 +60,8 @@ $(function()
     Load(getAllVideosURL());
     var app = new CQ.Switcher({});
     app.render(document.body);
-    app = new CQ.HomeLink({});
-    app.render(document.body);
+    //app = new CQ.HomeLink({});
+    //app.render(document.body);
 });
 
 //function to move the progress bar on the video upload progress window

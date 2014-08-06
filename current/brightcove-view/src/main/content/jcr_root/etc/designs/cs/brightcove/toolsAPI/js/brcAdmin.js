@@ -264,16 +264,16 @@ function delConfYes(){
 }
 
 function buildJSONRequest(form){
-    if(document.getElementById('name').value =="" || document.getElementById('shortDescription').value =="" || form.filePath.value ==""){
+    if(document.getElementById('name').value =="" || document.getElementById('shortDescription').value =="" || document.getElementById('filePath').value ==""){
         alert("Require Name, Short Description and File");
         return;
     }else{
-        json = form.video
+        json = document.getElementById('video').value
         //Construct the JSON request:
         json.value = '{"name": "' + 
         document.getElementById('name').value + '", "shortDescription": "' + document.getElementById('shortDescription').value + 
         '"}';
-        form.video.value = json.value;
+        document.getElementById('video').value = json.value;
     }
 }
 function startUpload(){

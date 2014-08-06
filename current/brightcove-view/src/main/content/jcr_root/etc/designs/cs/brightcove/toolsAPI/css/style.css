@@ -106,7 +106,7 @@ table.tblConsole
     color:#3b3b3b;
     font-size: 16px;
     width: 100%;
-    border-style: solid;
+    border-style: none;
 }
 
 tr.trCenterHeader
@@ -520,7 +520,7 @@ table.tblConsole
     color:#3b3b3b;
     font-size: 13px;
     width: 100%;
-    border-style: solid;
+    border-style: none;
 }
 table.tblConsole #tbData td {border-bottom:1px solid #eee;}
 

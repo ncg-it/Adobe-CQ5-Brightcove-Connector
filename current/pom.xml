@@ -22,7 +22,7 @@
             the following CQ connection properties are the default out-of-the-box CQ settings and are used by all modules in this project.
             you should override them in your local settings.xml file if your CQ environment is different.
         -->
-        <cq.host>172.16.91.137</cq.host>
+        <cq.host>127.0.0.1</cq.host>
         <cq.port>4502</cq.port>
         <cq.user>admin</cq.user>
         <cq.password>admin</cq.password>
