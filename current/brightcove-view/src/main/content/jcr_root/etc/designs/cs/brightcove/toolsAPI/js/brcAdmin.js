@@ -43,7 +43,7 @@
  
 //CONFIG 
 //This should be set to point to proxy.jsp on your server
-var apiLocation = "/apps/brightcove/console/brightcove.proxy.html";
+var apiLocation =  CQ.shared.HTTP.getContextPath() +"/apps/brightcove/console/brightcove.proxy.html";
 
 
 //Default Fields

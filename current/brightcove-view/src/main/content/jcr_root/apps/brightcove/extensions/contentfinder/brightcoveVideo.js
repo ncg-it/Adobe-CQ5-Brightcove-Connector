@@ -39,7 +39,7 @@
        CQ.wcm.ContentFinderTab.getQueryBoxConfig({
             "id": "cfTab-Brightcove-QueryBox",
             "items": [
-                CQ.wcm.ContentFinderTab.getSuggestFieldConfig({"url": "/bin/brightcove/suggestions.json?type=videos"})
+                CQ.wcm.ContentFinderTab.getSuggestFieldConfig({"url":  CQ.shared.HTTP.getContextPath() +"/bin/brightcove/suggestions.json?type=videos"})
             ]
         }),
         CQ.wcm.ContentFinderTab.getResultsBoxConfig({
@@ -52,7 +52,7 @@
             "items": {
                 "tpl":
                     '<tpl for=".">' +
-                            '<div class="cq-cft-search-item" title="{thumbnailURL}" ondblclick="window.location=\'/apps/brightcove/console/brightcove.html\';">' +
+                            '<div class="cq-cft-search-item" title="{thumbnailURL}" ondblclick="window.location= CQ.shared.HTTP.getContextPath() +\'/apps/brightcove/console/brightcove.html\';">' +
                                     '<div class="cq-cft-search-thumb-top"' +
                                     ' style="background-image:url(\'{thumbnailURL}\');"></div>' +
                                          '<div class="cq-cft-search-text-wrapper">' +
@@ -68,7 +68,7 @@
                 {
                     text: "Export CSV",
                     handler: function() {
-                        var url='/bin/brightcove/api?a=3&query='+$("#cfTab-Brightcove-QueryBox input[name=query]").val();  
+                        var url= CQ.shared.HTTP.getContextPath() +'/bin/brightcove/api?a=3&query='+$("#cfTab-Brightcove-QueryBox input[name=query]").val();  
                         window.open(url, 'Download');
 
                    }
