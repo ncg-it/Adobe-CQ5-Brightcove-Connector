@@ -449,7 +449,7 @@ public class BrcUtils {
 	        int firstElement=0;
 	        if (start!= null && !start.trim().isEmpty() && Integer.parseInt(start)>0) {
 	        	firstElement = Integer.parseInt(start);
-	        	if (limit!= null && !limit.trim().isEmpty()) pageNumber = (firstElement+Integer.parseInt(limit))/20;
+	        	if (limit!= null && !limit.trim().isEmpty()) pageNumber = ((firstElement+Integer.parseInt(limit))/Integer.parseInt(limit))-1;
 	            
 	        }
 			int totalVideos = 0;
@@ -458,7 +458,7 @@ public class BrcUtils {
 				any.add("tag:"+querystr);
 				any.add("search_text:"+querystr);
 				
-	        	videos = rapi.SearchVideos(readToken, all, any, none, exact, SortByTypeEnum.DISPLAY_NAME, SortOrderTypeEnum.ASC, 20, pageNumber, videoFields, customFields);
+	        	videos = rapi.SearchVideos(readToken, all, any, none, exact, SortByTypeEnum.DISPLAY_NAME, SortOrderTypeEnum.ASC, Integer.parseInt(limit), pageNumber, videoFields, customFields);
 	        	if (isLong(querystr)) {
 	        		Set<Long> videoIds = new HashSet<Long>();
 	        		videoIds.add(Long.parseLong(querystr ));
@@ -466,7 +466,7 @@ public class BrcUtils {
 				}
 			}	else{
 				loggerBRi.error("noQuery");
-				videos = rapi.SearchVideos(readToken, all, any, none, exact, SortByTypeEnum.DISPLAY_NAME, SortOrderTypeEnum.ASC, 20, pageNumber, videoFields, customFields);
+				videos = rapi.SearchVideos(readToken, all, any, none, exact, SortByTypeEnum.DISPLAY_NAME, SortOrderTypeEnum.ASC, Integer.parseInt(limit), pageNumber, videoFields, customFields);
 				//videos = rapi.FindAllVideos(readToken, 20, pageNumber, SortByTypeEnum.DISPLAY_NAME, SortOrderTypeEnum.ASC, videoFields, customFields);
 			}
 			JSONArray items = new JSONArray();
@@ -480,7 +480,7 @@ public class BrcUtils {
 					item.put("thumbnailURL", vid.getThumbnailUrl());
 					items.put(item);
 				}
-				totalVideos = videos.size();
+				totalVideos = videos.getTotalCount();
 			}
 			jsTotal.put("items",items);
         	jsTotal.put("results", totalVideos);
@@ -637,7 +637,7 @@ public class BrcUtils {
 	        int firstElement=0;
 	        if (start!= null && !start.trim().isEmpty() && Integer.parseInt(start)>0) {
 	        	firstElement = Integer.parseInt(start);
-	        	if (limit!= null && !limit.trim().isEmpty()) pageNumber = (firstElement+Integer.parseInt(limit))/20;
+	        	if (limit!= null && !limit.trim().isEmpty()) pageNumber = ((firstElement+Integer.parseInt(limit))/Integer.parseInt(limit))-1;
 	            
 	        }
 			int totalVideos = 0;
@@ -646,7 +646,7 @@ public class BrcUtils {
 				any.add("tag:"+querystr);
 				any.add("search_text:"+URLEncoder.encode(querystr, "UTF-8"));
 				
-	        	videos = rapi.SearchVideos(readToken, all, any, none, exact, SortByTypeEnum.DISPLAY_NAME, SortOrderTypeEnum.ASC, 20, pageNumber, videoFields, customFields);
+	        	videos = rapi.SearchVideos(readToken, all, any, none, exact, SortByTypeEnum.DISPLAY_NAME, SortOrderTypeEnum.ASC, Integer.parseInt(limit), pageNumber, videoFields, customFields);
 	        	if (isLong(querystr)) {
 	        		Set<Long> videoIds = new HashSet<Long>();
 	        		videoIds.add(Long.parseLong(querystr ));
@@ -654,7 +654,7 @@ public class BrcUtils {
 				}
 			}	else{
 				loggerBRi.error("noQuery");
-				videos = rapi.SearchVideos(readToken, all, any, none, exact, SortByTypeEnum.DISPLAY_NAME, SortOrderTypeEnum.ASC, 20, pageNumber, videoFields, customFields);
+				videos = rapi.SearchVideos(readToken, all, any, none, exact, SortByTypeEnum.DISPLAY_NAME, SortOrderTypeEnum.ASC, Integer.parseInt(limit), pageNumber, videoFields, customFields);
 				//videos = rapi.FindAllVideos(readToken, 20, pageNumber, SortByTypeEnum.DISPLAY_NAME, SortOrderTypeEnum.ASC, videoFields, customFields);
 			}
 			JSONArray items = new JSONArray();
@@ -672,7 +672,7 @@ public class BrcUtils {
 				totalVideos = videos.size();
 			}
 			jsTotal.put("suggestions",items);
-        	jsTotal.put("results", totalVideos);
+			totalVideos = videos.getTotalCount();
 		} catch(Exception e) {
 			loggerBRi.error(e.getMessage());
 		}
