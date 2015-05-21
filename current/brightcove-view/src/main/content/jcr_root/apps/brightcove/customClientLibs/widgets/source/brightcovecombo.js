@@ -3,7 +3,7 @@
 
  Adobe CQ5 Brightcove Connector
 
- Copyright (C) 2011 Coresecure Inc.
+ Copyright (C) 2015 Coresecure Inc.
 
  Authors:    Alessandro Bonfatti
  Yan Kisen
@@ -99,7 +99,7 @@ Brightcove.Combo = CQ.Ext.extend(CQ.Ext.form.ComboBox, {
 			"reader":new CQ.Ext.data.JsonReader({
 				"id":"id",
 				"root":"items",
-				"totalProperty":"results",
+				"totalProperty":"totals",
 				"fields" : [ "id","name","thumbnailURL" ]
 			})
 		});
@@ -107,10 +107,12 @@ Brightcove.Combo = CQ.Ext.extend(CQ.Ext.form.ComboBox, {
 		Brightcove.Combo.superclass.constructor.call(this, config);
 	},
 	asyncSetDisplayValue: function(v){
+
 		var value = CQ.Ext.isEmpty(v) ? '' : v;
 		var combo = this;
 		this.store.baseParams[this.queryParam] = value;
-		this.store.baseParams['isID'] = true;
+		this.store.baseParams['isID'] = !CQ.Ext.isEmpty(v);
+        this.store.baseParams['account_id']=$("#accountSelector").val();
 		var success = this.store.load({
 			params: this.getParams(value),
 			callback: function() {
@@ -124,8 +126,8 @@ Brightcove.Combo = CQ.Ext.extend(CQ.Ext.form.ComboBox, {
 
 		}
 		this.store.baseParams['isID'] = false;
-		
-	} 
+
+	}
 	
 	
 });

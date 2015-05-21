@@ -3,7 +3,7 @@
 
     Adobe CQ5 Brightcove Connector
 
-    Copyright (C) 2011 Coresecure Inc.
+    Copyright (C) 2015 Coresecure Inc.
 
         Authors:    Alessandro Bonfatti
                     Yan Kisen
@@ -32,6 +32,7 @@
     org.apache.commons.fileupload.util.Streams,
     java.io.InputStream,
     java.util.List,
+	java.util.Set,
     java.util.Arrays,
     java.io.File,
     java.io.FileOutputStream,
@@ -51,12 +52,31 @@
     com.brightcove.proserve.mediaapi.wrapper.utils.*,
     com.brightcove.proserve.mediaapi.wrapper.*,
     org.apache.sling.api.request.RequestParameter,
-    com.brightcove.proserve.mediaapi.webservices.*" %>
+    com.coresecure.brightcove.wrapper.sling.*" %>
 
 <%
-BrcService brcService = BrcUtils.getSlingSettingService();
-String ReadToken = brcService.getReadToken();
-String WriteToken = brcService.getWriteToken();
+ConfigurationService cs = null;
+String defaultAccount ="";
+String cookieAccount = "";
+String selectedAccount = "";
+String ReadToken = "";
+String WriteToken = "";
+ConfigurationGrabber cg = ServiceUtil.getConfigurationGrabber();
+Set<String> services = cg.getAvailableServices(slingRequest);
+if (services.size() > 0) {
+	defaultAccount = (String) services.toArray()[0];
+	cookieAccount = ServiceUtil.getAccountFromCookie(slingRequest);
+	selectedAccount = (cookieAccount.trim().isEmpty()) ? defaultAccount : cookieAccount;
+
+	cs = cg.getConfigurationService(selectedAccount);
+
+ 	ReadToken = cs.getReadToken();
+ 	WriteToken = cs.getWriteToken();
+
+}
+
+
+
 
 response.reset();
 response.setContentType("application/json");

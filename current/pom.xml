@@ -6,7 +6,7 @@
 
     <groupId>com.coresecure.brightcove.cq5</groupId>
     <artifactId>parent</artifactId>
-    <version>3.0.2-SNAPSHOT</version>
+    <version>4.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>${project.groupId} - ${project.artifactId}</name>
@@ -23,7 +23,7 @@
             you should override them in your local settings.xml file if your CQ environment is different.
         -->
         <cq.host>127.0.0.1</cq.host>
-        <cq.port>4502</cq.port>
+        <cq.port>4508</cq.port>
         <cq.user>admin</cq.user>
         <cq.password>admin</cq.password>
     </properties>

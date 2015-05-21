@@ -2,7 +2,7 @@
 
     Adobe CQ5 Brightcove Connector
 
-    Copyright (C) 2011 Coresecure Inc.
+    Copyright (C) 2015 Coresecure Inc.
 
         Authors:    Alessandro Bonfatti
                     Yan Kisen
@@ -34,13 +34,32 @@
     com.day.cq.wcm.api.WCMMode,
     com.day.cq.wcm.api.components.Toolbar,
     com.day.cq.replication.ReplicationQueue,
-    com.day.cq.replication.AgentManager, java.util.Iterator,
-    com.brightcove.proserve.mediaapi.webservices.*" %><%
+    com.day.cq.replication.AgentManager,
+	java.util.Set,
+	java.util.Iterator,
+	com.coresecure.brightcove.wrapper.sling.*" %><%
 %><%@include file="/libs/foundation/global.jsp"%><%
     AgentManager agentMgr = sling.getService(AgentManager.class);
-BrcService brcService = BrcUtils.getSlingSettingService();
-String previewPlayerLoc = brcService.getPreviewPlayerLoc();
-String previewPlayerListLoc = brcService.getPreviewPlayerListLoc();
+
+ConfigurationService cs = null;
+String defaultAccount ="";
+String cookieAccount = "";
+String selectedAccount = "";
+String previewPlayerLoc = "";
+String previewPlayerListLoc = "";
+ConfigurationGrabber cg = ServiceUtil.getConfigurationGrabber();
+Set<String> services = cg.getAvailableServices(slingRequest);
+if (services.size() > 0) {
+	defaultAccount = (String) services.toArray()[0];
+	cookieAccount = ServiceUtil.getAccountFromCookie(slingRequest);
+	selectedAccount = (cookieAccount.trim().isEmpty()) ? defaultAccount : cookieAccount;
+
+	cs = cg.getConfigurationService(selectedAccount);
+
+	previewPlayerLoc = cs.getPreviewPlayerLoc();
+	previewPlayerListLoc = cs.getPreviewPlayerListLoc();
+}
+
 
 %><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">
 <html>
@@ -89,16 +108,31 @@ String previewPlayerListLoc = brcService.getPreviewPlayerListLoc();
         <div id="divConsole">
             <table width="100%" class="tblConsole" cellspacing="0" callpadding="0" border="0">
                 <tr>
-
                     <!-- Start center column -->
                     <td width="75%" valign="top">
                         <table id="listTable" width="100%" cellspacing="0" callpadding="0">
+                            <tr>
+                                <div id="accountDiv" style="float:right;padding:5px">
+
+                                    <select id='selAccount' name="selAccount" style="position: relative;top: 5px;">
+                                        <%
+                                            for(String account: services){
+                                        %>
+                                        <option value="<%=account%>" <%if (account.equals(selectedAccount)) {%>selected<%}%>><%=account%></option>
+                                        <% 
+                                        	}
+                                        %>
+                                    </select>
+                                </div>
+                            </tr>
                             <tr class="trCenterHeader">
                                 <td id="tdOne">
                                     <div id="headTitle" style="font-weight:bold">All Videos</div>
+
                                     <p>
                                         <div id="divVideoCount" style="float:left"></div>
-                                        <div id="searchDiv" style="float:right;padding:5px">
+
+                                    	<div id="searchDiv" style="float:right;padding:5px">
                                            
 	                                            <input id="search" type="text" value="Search Video" onClick="this.value=''">
 	                                            <!--Store the search query in searchBut.value so we can use it as the title of the page once the results are returned.  See searchVideoCallBack -->

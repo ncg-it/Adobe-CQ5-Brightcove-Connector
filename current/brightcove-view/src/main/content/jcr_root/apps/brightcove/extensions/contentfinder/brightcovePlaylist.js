@@ -3,7 +3,7 @@
 
  Adobe CQ5 Brightcove Connector
 
- Copyright (C) 2011 Coresecure Inc.
+ Copyright (C) 2015 Coresecure Inc.
 
  Authors:    Alessandro Bonfatti
  Yan Kisen
@@ -39,11 +39,42 @@
        CQ.wcm.ContentFinderTab.getQueryBoxConfig({
             "id": "cfTab-BrightcovePL-QueryBox",
             "items": [
-                CQ.wcm.ContentFinderTab.getSuggestFieldConfig({"url":  CQ.shared.HTTP.getContextPath() +"/bin/brightcove/suggestions.json?type=playlist"})
+                CQ.wcm.ContentFinderTab.getSuggestFieldConfig({"url":  CQ.shared.HTTP.getContextPath() +"/bin/brightcove/suggestions.json?type=playlist"}),
+                {
+                        xtype: "spacer",
+                        height: 5
+                },
+                {
+                    xtype: "combo",
+                    id: "cfTab-BrightcovePL-account",
+                    name:"account_id",
+                    triggerAction:"all",
+                    store: {
+                        "url": CQ.shared.HTTP.getContextPath() +'/bin/brightcove/accounts.json',
+                        "reader": new CQ.Ext.data.JsonReader({
+                            "root": "accounts",
+                            "fields": [
+                                "text", "value"
+                            ]                            
+                        })
+                    },
+                	valueField: 'value',  
+   					displayField: 'text',  
+                    editable: false,
+                    emptyText: CQ.I18n.getMessage("Filter by account"),
+                	style:"",
+                	listeners: {
+                    	select: function (combo, record, index ) {
+                    		var store = CQ.Ext.getCmp("cfTab-BrightcoveP").items.get(0);
+                    		var contentfinder_element = CQ.Ext.getCmp("cfTab-BrightcoveP");
+                    		contentfinder_element.submitQueryBox(store);
+                    	}
+                    }
+                }
             ]
         }),
         CQ.wcm.ContentFinderTab.getResultsBoxConfig({
-            "itemsDDGroups": [CQ.wcm.EditBase.DD_GROUP_ASSET],
+            "itemsDDGroups": ["brightcove_playlist"],
             "itemsDDNewParagraph": {
                 "path": "brightcove/components/content/brightcoveplaylist",
                 "propertyName": "./videoPlayerPL"
@@ -54,7 +85,7 @@
                     '<tpl for=".">' +
                             '<div class="cq-cft-search-item" title="{thumbnailURL}" ondblclick="window.location= CQ.shared.HTTP.getContextPath() +\'/apps/brightcove/console/brightcove.html\';">' +
                                     '<div class="cq-cft-search-thumb-top"' +
-                                    ' style="background-image:url(\'{thumbnailURL}\');"></div>' +
+                                    ' style="background-image:url(\'/etc/designs/cs/brightcove/images/noThumbnailPL.png\');"></div>' +
                                          '<div class="cq-cft-search-text-wrapper">' +
                                             '<div class="cq-cft-search-title"><p class="cq-cft-search-title">{name}</p><p>{path}</p></div>' +
                                         '</div>' +
@@ -82,7 +113,9 @@
             "reader": new CQ.Ext.data.JsonReader({
                 "root": "items",
                 "fields": [
-                    "name", "path", "thumbnailURL"
+                    {name:"name"},
+                    {name:"path", mapping:"id"},
+                    {name:"thumbnailURL", type:"string", mapping:"thumbnailURL"}
                 ],
                 "id": "path"
                 

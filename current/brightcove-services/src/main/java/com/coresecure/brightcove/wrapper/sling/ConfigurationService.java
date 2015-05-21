@@ -1,7 +1,7 @@
 /*
     Adobe CQ5 Brightcove Connector
 
-    Copyright (C) 2011 Coresecure Inc.
+    Copyright (C) 2015 Coresecure Inc.
 
         Authors:    Alessandro Bonfatti
                     Yan Kisen
@@ -19,13 +19,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.brightcove.proserve.mediaapi.webservices;
-
-import java.util.Map;
+package com.coresecure.brightcove.wrapper.sling;
 
 
+import java.util.List;
 
-public interface BrcService {
+public interface ConfigurationService {
 
     
     public String getReadToken();
@@ -34,7 +33,12 @@ public interface BrcService {
 	public String getPreviewPlayerListLoc();
     public String getPlayersLoc();
     public String getDefVideoPlayerID();
-	public String getDefVideoPlayerKey();
+	public String getDefVideoPlayerDataEmbedded();
 	public String getDefPlaylistPlayerID();
 	public String getDefPlaylistPlayerKey();
+    public String getClientID();
+    public String getClientSecret();
+    public String getAccountID();
+    public List<String> getAllowedGroupsList();
+    public String[] getAllowedGroups();
 }

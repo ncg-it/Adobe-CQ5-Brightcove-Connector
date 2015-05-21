@@ -2,7 +2,7 @@
 /*    
     Adobe CQ5 Brightcove Connector  
     
-    Copyright (C) 2011 Coresecure Inc.
+    Copyright (C) 2015 Coresecure Inc.
         
         Authors:    Alessandro Bonfatti
                     Yan Kisen
@@ -33,31 +33,42 @@
                      com.day.cq.wcm.api.components.IncludeOptions,
                      java.util.ResourceBundle,
                      com.day.cq.i18n.I18n,
-com.brightcove.proserve.mediaapi.webservices.BrcService,
-com.brightcove.proserve.mediaapi.webservices.BrcUtils,
+com.coresecure.brightcove.wrapper.sling.*,
 org.apache.sling.api.resource.*,
 org.apache.sling.commons.json.JSONArray,
 org.apache.sling.commons.json.JSONException,
 org.apache.sling.commons.json.JSONObject" %>
 <%@ page import="com.day.cq.wcm.api.NameConstants" %>
 <%@include file="/libs/foundation/global.jsp"%><%
-    BrcService brcService = BrcUtils.getSlingSettingService();
-	String playersPath = brcService.getPlayersLoc();
-//out.write(playersPath);
-Resource res = resourceResolver.resolve(playersPath);
+
 JSONObject root = new JSONObject();
 JSONArray items = new JSONArray();
-Iterator<Resource>  playersItr = res.listChildren();
 int results = 0;
+
+
+
+ConfigurationGrabber cg = ServiceUtil.getConfigurationGrabber();
+String defaultAccount = (String) cg.getAvailableServices().toArray()[0];
+ConfigurationService cs = cg.getConfigurationService(defaultAccount);
+
+String playersPath = cs.getPlayersLoc();
+Resource res = resourceResolver.resolve(playersPath);
+Iterator<Resource>  playersItr = res.listChildren();
+String selectedAccount = request.getParameter("account_id");
 while (playersItr.hasNext()){
     Page playerRes = playersItr.next().adaptTo(Page.class);
-
     if (playerRes != null && "brightcove/components/page/brightcoveplayer".equals(playerRes.getContentResource().getResourceType())) {
-		JSONObject item = new JSONObject();
-		item.put("path", playerRes.getPath());
-        item.put("name", playerRes.getTitle());
-        results++;
-		items.put(item);
+		org.apache.sling.commons.json.JSONObject item = new JSONObject();
+        String path = playerRes.getPath();
+        String title = playerRes.getTitle();
+        String account = playerRes.getProperties().get("account","");
+        if (!account.trim().isEmpty() && account.equals(selectedAccount)){
+            item.put("path", path);
+            item.put("name", title);
+            item.put("thumbnailURL", path);
+        	results++;
+			items.put(item);
+        }
     } 
 }
 

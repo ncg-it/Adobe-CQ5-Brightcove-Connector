@@ -44,18 +44,41 @@
             title="Player Configuration"
             xtype="dialogfieldset">
             <items jcr:primaryType="cq:WidgetCollection">
+                <accountSelector
+                    jcr:primaryType="cq:Widget"
+                    allowBlank="false"
+                    fieldDescription=""
+                    fieldLabel="Account:"
+                    fieldSubLabel=""
+                    name="./account"
+                    options="/bin/brightcove/accounts.json"
+                    optionsQTipField="text"
+                    optionsRoot="accounts"
+                    optionsTextField="text"
+                    optionsValueField="value"
+                    type="select"
+                    xtype="selection">
+                    <optionsConfig
+                        jcr:primaryType="nt:unstructured"
+                        editable="{Boolean}true"
+                        id="accountSelector"/>
+                </accountSelector>
                 <playerID
                     jcr:primaryType="cq:Widget"
                     allowBlank="false"
                     fieldDescription=""
                     fieldLabel="Player ID:"
                     fieldSubLabel=""
-                    name="./playerID"
-                    xtype="textfield"/>
+                    hiddenName="./playerID"
+                    xtype="BrightcoveRemotePlayerCombo">
+                    <listeners
+                        jcr:primaryType="nt:unstructured"
+                        focus="function(){this.store.baseParams['account_id']=$(&quot;#accountSelector&quot;).val();}"/>
+                </playerID>
                 <playerKey
                     jcr:primaryType="cq:Widget"
-                    allowBlank="false"
-                    fieldDescription=""
+                    allowBlank="true&#xa;"
+                    fieldDescription="Legacy configuration"
                     fieldLabel="Player Key:"
                     fieldSubLabel=""
                     name="./playerKey"

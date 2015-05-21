@@ -2,7 +2,7 @@
 /*    
     Adobe CQ5 Brightcove Connector  
     
-    Copyright (C) 2011 Coresecure Inc.
+    Copyright (C) 2015 Coresecure Inc.
         
         Authors:    Alessandro Bonfatti
                     Yan Kisen

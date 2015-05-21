@@ -3,7 +3,7 @@
 
     Adobe CQ5 Brightcove Connector
 
-    Copyright (C) 2011 Coresecure Inc.
+    Copyright (C) 2015 Coresecure Inc.
 
         Authors:    Alessandro Bonfatti
                     Yan Kisen
@@ -31,6 +31,8 @@
    org.slf4j.LoggerFactory,
    org.slf4j.Logger,
    java.util.Arrays,
+java.util.ArrayList,
+java.util.Collection,
    com.brightcove.proserve.mediaapi.wrapper.apiobjects.*,
    com.brightcove.proserve.mediaapi.wrapper.apiobjects.enums.*,
    com.brightcove.proserve.mediaapi.wrapper.utils.*,
@@ -38,16 +40,25 @@
    org.apache.sling.api.request.RequestParameter,
    java.io.*,
    java.util.UUID,
-   com.brightcove.proserve.mediaapi.webservices.*,
+   com.coresecure.brightcove.wrapper.sling.*,
    org.apache.sling.commons.json.JSONArray,
 org.apache.sling.commons.json.JSONException,
 org.apache.sling.commons.json.JSONObject,
 org.apache.sling.commons.json.io.JSONWriter" %>
 <%@include file="/libs/foundation/global.jsp"%>
 <%
-BrcService brcService = BrcUtils.getSlingSettingService();
-String ReadToken = brcService.getReadToken();
-String WriteToken = brcService.getWriteToken();
+
+ConfigurationGrabber cg = ServiceUtil.getConfigurationGrabber();
+Set<String> services = cg.getAvailableServices();
+String defaultAccount = (String) services.toArray()[0];
+String cookieAccount = ServiceUtil.getAccountFromCookie(slingRequest);
+String selectedAccount = (cookieAccount.trim().isEmpty()) ? defaultAccount : cookieAccount;
+
+ConfigurationService cs = cg.getConfigurationService(selectedAccount);
+com.coresecure.brightcove.wrapper.BrightcoveAPI brAPI = new com.coresecure.brightcove.wrapper.BrightcoveAPI(cs.getClientID(),cs.getClientSecret(),selectedAccount);
+
+String ReadToken = cs.getReadToken();
+String WriteToken = cs.getWriteToken();
 response.reset();
 response.setContentType("application/json");
 UUID uuid = new UUID(64L,64L);
@@ -84,100 +95,151 @@ String msg = "";
             
             switch (write_methods.indexOf(command)) {
                 case 0:
-                    File tempFile = null;
-                    InputStream fileStream;
-                    Video video = new Video();
-                    RequestParameter videoFile = slingRequest.getRequestParameter("filePath");
-                    String videoFilename = "/tmp/"+RandomID+"_"+videoFile.getFileName();
-                    fileStream = videoFile.getInputStream();
-                    tempFile = new File(videoFilename);
-                    FileOutputStream outStream = new FileOutputStream(tempFile);
-                    byte [] buf = new byte [1024];
-                    for(int byLen = 0; (byLen = fileStream.read(buf, 0, 1024)) > 0;){
-                        outStream.write(buf, 0, byLen);
-                        //if(tempFile.length()/1000 > 2){}//maximum file size is 2gigs
-                    }
-                    outStream.close();
-                    // Required fields
-                    video.setName(request.getParameter("name"));
-                    video.setShortDescription(request.getParameter("shortDescription"));
-                    
-                    
-                    // Optional fields
-                    //video.setAccountId(accountId);
-                    //video.setEconomics(EconomicsEnum.FREE);
-                    video.setItemState(ItemStateEnum.ACTIVE);
-                    video.setLinkText(request.getParameter("linkText"));
-                    video.setLinkUrl(request.getParameter("linkURL"));
-                    video.setLongDescription(request.getParameter("longDescription"));
-                    video.setReferenceId(request.getParameter("referenceId"));
-                    //video.setStartDate(new Date((new Date()).getTime() - 30*1000*60 )); // 30 minutes ago
-                      
-                    // Complex fields (all optional)
-                    //Date endDate = new Date();
-                    //endDate.setTime(endDate.getTime() + (30*1000*60)); // 30 minutes from now
-                    //video.setEndDate(endDate);
-                      
-                    //video.setGeoFiltered(true);
-                    //List<GeoFilterCodeEnum> geoFilteredCountries = new ArrayList<GeoFilterCodeEnum>();
-                    //geoFilteredCountries.add(GeoFilterCodeEnum.lookupByName("UNITED STATES"));
-                    //geoFilteredCountries.add(GeoFilterCodeEnum.CA);
-                    //video.setGeoFilteredCountries(geoFilteredCountries);
-                    //video.setGeoFilteredExclude(false);
+                	//"create_video"
+                	String ingestURL = slingRequest.getRequestParameter("filePath_Ingest").getString();
+                	String ingestProfile = slingRequest.getRequestParameter("profile_Ingest") != null ? slingRequest.getRequestParameter("profile_Ingest").getString() : "balanced-high-definition";
+                	if (ingestURL != null && !ingestURL.trim().isEmpty()) {
 
-                    if (request.getParameter("tags") != null) {
-                            
-                        List<String> tags = Arrays.asList(request.getParameterValues("tags"));
-                        List<String> tagsToAdd =  new ArrayList<String>();
-                        for(String tag: tags) {
-                        	if (tag.startsWith("+")) tagsToAdd.add(tag.substring(1));
+                        Collection<String> tagsToAdd = new ArrayList<String>();
+                        if (request.getParameter("tags") != null) {
+
+                            List<String> tags = Arrays.asList(request.getParameterValues("tags"));
+                            for(String tag: tags) {
+                                if (tag.startsWith("+")) tagsToAdd.add(tag.substring(1));
+                            }
+
                         }
-                        video.setTags(tagsToAdd);
-                    
-                    }
-                    // Some miscellaneous fields for the Media API (not the video objects)
-                    Boolean createMultipleRenditions = true;
-                    Boolean preserveSourceRendition  = true;
-                    Boolean h264NoProcessing         = false;
-                      
-                    // Image meta data
-                    /*Image thumbnail  = new Image();
-                    Image videoStill = new Image();
-                      
-                    thumbnail.setReferenceId("this is the thumbnail refid");
-                    videoStill.setReferenceId("this is the video still refid");
-                      
-                    thumbnail.setDisplayName("this is the thumbnail");
-                    videoStill.setDisplayName("this is the video still");
-                      
-                    thumbnail.setType(ImageTypeEnum.THUMBNAIL);
-                    videoStill.setType(ImageTypeEnum.VIDEO_STILL);
-                    */
-                    try{
-                       // Write the video
-                       logger.info("Writing video to Media API");
-                       Long newVideoId = wapi.CreateVideo(apiToken, video, videoFilename, TranscodeEncodeToEnum.FLV, createMultipleRenditions, preserveSourceRendition, h264NoProcessing);
-                       logger.info("New video id: '" + newVideoId + "'.");
-                       tempFile.delete();
-                       success = true;
-                       root.put("videoid",newVideoId);
-                       /*
-                       // Delete the video
-                       log.info("Deleting created video");
-                       Boolean cascade        = true; // Deletes even if it is in use by playlists/players
-                       Boolean deleteShares   = true; // Deletes if shared to child accounts
-                       String  deleteResponse = wapi.DeleteVideo(writeToken, newVideoId, null, cascade, deleteShares);
-                       log.info("Response from server for delete (no message is perfectly OK): '" + deleteResponse + "'.");
-                       */
+                        com.coresecure.brightcove.wrapper.objects.RelatedLink link = new com.coresecure.brightcove.wrapper.objects.RelatedLink(request.getParameter("linkText"),request.getParameter("linkURL"));
+						com.coresecure.brightcove.wrapper.objects.Ingest ingest = new com.coresecure.brightcove.wrapper.objects.Ingest(ingestProfile,ingestURL);
+                        com.coresecure.brightcove.wrapper.objects.Video video = new com.coresecure.brightcove.wrapper.objects.Video(
+                            request.getParameter("name"),
+                            request.getParameter("referenceId"),
+                            request.getParameter("shortDescription"),
+                            request.getParameter("longDescription"),
+                            "",
+                            tagsToAdd,
+                            null,
+                            null,
+                            false,
+                            link
+                        );
+						JSONObject videoItem =  brAPI.cms.createVideo(video);
+                        String newVideoId = videoItem.getString("id");
+						JSONObject videoIngested = new JSONObject();
+                        try {
+                            videoIngested =  brAPI.cms.createIngest(new com.coresecure.brightcove.wrapper.objects.Video(videoItem),ingest);
+                            if (videoIngested != null && videoIngested.has("id")) {
+                                logger.info("New video id: '" + newVideoId + "'.");
+                                success = true;
+                                root.put("videoid",newVideoId);
+                                root.put("output",videoIngested);
+                            } else {
+                                success = false;
+                                msg ="createIngest Error";
+								brAPI.cms.deleteVideo(newVideoId);
+                            }
+
+                        } catch (Exception exIngest){
+                            success = false;
+                            msg ="createIngest Exception";
+							brAPI.cms.deleteVideo(newVideoId);
+                        }
+                    } else {
+                        File tempFile = null;
+                        InputStream fileStream;
+                        Video video = new Video();
+                        RequestParameter videoFile = slingRequest.getRequestParameter("filePath");
+                        String videoFilename = "/tmp/"+RandomID+"_"+videoFile.getFileName();
+                        fileStream = videoFile.getInputStream();
+                        tempFile = new File(videoFilename);
+                        FileOutputStream outStream = new FileOutputStream(tempFile);
+                        byte [] buf = new byte [1024];
+                        for(int byLen = 0; (byLen = fileStream.read(buf, 0, 1024)) > 0;){
+                            outStream.write(buf, 0, byLen);
+                            //if(tempFile.length()/1000 > 2){}//maximum file size is 2gigs
+                        }
+                        outStream.close();
+                        // Required fields
+                        video.setName(request.getParameter("name"));
+                        video.setShortDescription(request.getParameter("shortDescription"));
+
                         
-                   }
-                   catch(Exception e){
-                       logger.error("Exception caught: '" + e + "'.");
-                       
-                   }
+                        // Optional fields
+                        //video.setAccountId(accountId);
+                        //video.setEconomics(EconomicsEnum.FREE);
+                        video.setItemState(ItemStateEnum.ACTIVE);
+                        video.setLinkText(request.getParameter("linkText"));
+                        video.setLinkUrl(request.getParameter("linkURL"));
+                        video.setLongDescription(request.getParameter("longDescription"));
+                        video.setReferenceId(request.getParameter("referenceId"));
+                        //video.setStartDate(new Date((new Date()).getTime() - 30*1000*60 )); // 30 minutes ago
+                          
+                        // Complex fields (all optional)
+                        //Date endDate = new Date();
+                        //endDate.setTime(endDate.getTime() + (30*1000*60)); // 30 minutes from now
+                        //video.setEndDate(endDate);
+                          
+                        //video.setGeoFiltered(true);
+                        //List<GeoFilterCodeEnum> geoFilteredCountries = new ArrayList<GeoFilterCodeEnum>();
+                        //geoFilteredCountries.add(GeoFilterCodeEnum.lookupByName("UNITED STATES"));
+                        //geoFilteredCountries.add(GeoFilterCodeEnum.CA);
+                        //video.setGeoFilteredCountries(geoFilteredCountries);
+                        //video.setGeoFilteredExclude(false);
+    
+                        if (request.getParameter("tags") != null) {
+                                
+                            List<String> tags = Arrays.asList(request.getParameterValues("tags"));
+                            List<String> tagsToAdd =  new ArrayList<String>();
+                            for(String tag: tags) {
+                                if (tag.startsWith("+")) tagsToAdd.add(tag.substring(1));
+                            }
+                            video.setTags(tagsToAdd);
+                        
+                        }
+                        // Some miscellaneous fields for the Media API (not the video objects)
+                        Boolean createMultipleRenditions = true;
+                        Boolean preserveSourceRendition  = true;
+                        Boolean h264NoProcessing         = false;
+                          
+                        // Image meta data
+                        /*Image thumbnail  = new Image();
+                        Image videoStill = new Image();
+                          
+                        thumbnail.setReferenceId("this is the thumbnail refid");
+                        videoStill.setReferenceId("this is the video still refid");
+                          
+                        thumbnail.setDisplayName("this is the thumbnail");
+                        videoStill.setDisplayName("this is the video still");
+                          
+                        thumbnail.setType(ImageTypeEnum.THUMBNAIL);
+                        videoStill.setType(ImageTypeEnum.VIDEO_STILL);
+                        */
+                        try{
+                           // Write the video
+                           logger.info("Writing video to Media API");
+                           Long newVideoId = wapi.CreateVideo(apiToken, video, videoFilename, TranscodeEncodeToEnum.FLV, createMultipleRenditions, preserveSourceRendition, h264NoProcessing);
+                           logger.info("New video id: '" + newVideoId + "'.");
+                           tempFile.delete();
+                           success = true;
+                           root.put("videoid",newVideoId);
+                           /*
+                           // Delete the video
+                           log.info("Deleting created video");
+                           Boolean cascade        = true; // Deletes even if it is in use by playlists/players
+                           Boolean deleteShares   = true; // Deletes if shared to child accounts
+                           String  deleteResponse = wapi.DeleteVideo(writeToken, newVideoId, null, cascade, deleteShares);
+                           log.info("Response from server for delete (no message is perfectly OK): '" + deleteResponse + "'.");
+                           */
+                            
+                       }
+                       catch(Exception e){
+                           logger.error("Exception caught: '" + e + "'.");
+                           
+                       }
+                    }
                    break;
                 case 1:
-
+					Video video = new Video();
                     EnumSet<VideoFieldEnum> videoFields = VideoFieldEnum.CreateEmptyEnumSet();
                     videoFields.add(VideoFieldEnum.ID);
                     videoFields.add(VideoFieldEnum.NAME);

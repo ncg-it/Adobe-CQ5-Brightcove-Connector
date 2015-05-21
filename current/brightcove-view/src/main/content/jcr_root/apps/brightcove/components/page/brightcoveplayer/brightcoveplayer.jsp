@@ -2,7 +2,7 @@
 /*    
     Adobe CQ5 Brightcove Connector  
     
-    Copyright (C) 2011 Coresecure Inc.
+    Copyright (C) 2015 Coresecure Inc.
         
         Authors:    Alessandro Bonfatti
                     Yan Kisen
@@ -32,7 +32,8 @@
                      com.day.cq.wcm.foundation.Paragraph,
                      com.day.cq.wcm.api.components.IncludeOptions,
                      java.util.ResourceBundle,
-                     com.day.cq.i18n.I18n" %>
+                     com.day.cq.i18n.I18n,
+com.coresecure.brightcove.wrapper.sling.*" %>
 <%@ page import="com.day.cq.wcm.api.NameConstants" %>
 <%!
 %><%@include file="/libs/foundation/global.jsp"%><%
@@ -57,8 +58,22 @@
     String descr = properties.get("jcr:description", "");
     String width = "480";
     String height = "270";
-    
-    ValueMap playerProperties = currentPage.getProperties();
+    String account = properties.get("account","");
+	String playerID = "";
+	String playerKey = properties.get("playerKey","");;
+	String data_embedded = "";
+    if (!account.trim().isEmpty()) {
+		ConfigurationGrabber cg = ServiceUtil.getConfigurationGrabber();
+		ConfigurationService cs = cg.getConfigurationService(account);
+        if (cs != null) {
+			playerID = cs.getDefVideoPlayerID();
+            data_embedded = cs.getDefVideoPlayerDataEmbedded();
+        }
+    }
+	data_embedded = properties.get("data_embedded",data_embedded);
+	playerID = properties.get("playerID",playerID);
+
+	ValueMap playerProperties = currentPage.getProperties();
 
     if (playerProperties.containsKey("width") && playerProperties.containsKey("height")) {
 
@@ -122,7 +137,19 @@
     
      <h2 class="no-icon"><%=i18n.get("Player Preview") %></h2>
 	    <div class="edit-box" style="width:75%">
-	        <% if (!width.isEmpty() && !height.isEmpty()) {%>
+	        <% if (playerKey.isEmpty()) {%>
+            	<video
+                      data-account="<%=account%>"
+                      data-player="<%=playerID%>"
+                      data-embed="<%=data_embedded%>"
+                      data-video-id=""
+                      class="video-js"
+                      width="<%=width%>px" height="<%=height%>px"
+                      class="video-js" controls></video>
+                    <script src="//players.brightcove.net/<%=account%>/<%=playerID%>_<%=data_embedded%>/index.min.js"></script>
+
+            <% } else { %>
+ 				<% if (!width.isEmpty() && !height.isEmpty()) {%>
 	            <!-- DO NOT USE!!!! FOR PREVIEW PURPOSES ONLY. -->
 	            
 	            <!-- Start of Brightcove Player -->
@@ -130,8 +157,7 @@
 	            <div style="display:none">
 	            
 	            </div>
-	            
-	            <!--
+    			<!--
 	            By use of this code snippet, I agree to the Brightcove Publisher T and C 
 	            found at https://accounts.brightcove.com/en/terms-and-conditions/. 
 	            -->
@@ -157,7 +183,8 @@
 	            -->
 	            <script type="text/javascript">brightcove.createExperiences();</script>
 	            <%} %>
-	    </div>
+           	<%} %>
+        </div>
     
 </body>
 </html>

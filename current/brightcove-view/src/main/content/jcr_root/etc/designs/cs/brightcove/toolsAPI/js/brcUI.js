@@ -3,7 +3,7 @@
 
  Adobe CQ5 Brightcove Connector
 
- Copyright (C) 2011 Coresecure Inc.
+ Copyright (C) 2015 Coresecure Inc.
 
  Authors:    Alessandro Bonfatti
  Yan Kisen
@@ -62,6 +62,11 @@ $(function()
     app.render(document.body);
     //app = new CQ.HomeLink({});
     //app.render(document.body);
+    $("#selAccount").change(function(){
+		createCookie("brc_act",$( this ).val(),1);
+        window.location.reload();
+    });
+
 });
 
 //function to move the progress bar on the video upload progress window
@@ -805,15 +810,86 @@ function extFormUpload() {
 	        name: 'longDescription',
 	        width:"100%"
 	    },{
-	        xtype: 'fileuploadfield',
-	        id: 'filePath',
-	        emptyText: 'Select a video',
-	        fieldLabel: 'Video',
-	        name: 'filePath',
-	        buttonText: 'Browse',
-	        width:"100%",
-	        allowBlank:false
-	    },{
+          xtype: "dialogfieldset",
+          collapsible: false,
+          collapsed: false,
+          items: [
+            {
+                xtype: 'fileuploadfield',
+                id: 'filePath',
+                emptyText: 'Select a video',
+                fieldLabel: 'Video',
+                name: 'filePath',
+                buttonText: 'Browse',
+                width:"100%",
+                allowBlank:true
+            },{
+                xtype: 'label',
+                text: 'OR:',
+                margins: '0 0 0 10'
+            },{
+              xtype: "dialogfieldset",
+              collapsible: false,
+              collapsed: false,
+              items: [
+                  {
+                      xtype: 'textfield',
+                      fieldLabel: 'Dynamic Ingest URL:',
+                      id: 'filePath_Ingest',
+                      name: 'filePath_Ingest',
+                      width:"100%"
+                  },{
+                      xtype: "selection",
+                      fieldLabel: "Dynamic Ingest Profile:",
+                      name: "profile_Ingest",
+                      type: "select",
+                      options: [
+                          {
+                              "value": "Express Standard",
+                              "text": "Express Standard"
+                          },{
+                              "value": "Live - HD",
+                              "text": "Live - HD"
+                          },{
+                              "value": "Live - Premium HD",
+                              "text": "Live - Premium HD"
+                          },{
+                              "value": "Live - Standard",
+                              "text": "Live - Standard"
+                          },{
+                              "value": "audio-only",
+                              "text": "audio-only"
+                          },{
+                              "value": "balanced-high-definition",
+                              "text": "balanced-high-definition"
+                          },{
+                              "value": "balanced-nextgen-player",
+                              "text": "balanced-nextgen-player"
+                          },{
+                              "value": "balanced-standard-definition",
+                              "text": "balanced-standard-definition"
+                          },{
+                              "value": "high-bandwidth-devices",
+                              "text": "high-bandwidth-devices"
+                          },{
+                              "value": "low-bandwidth-devices",
+                              "text": "low-bandwidth-devices"
+                          },{
+                              "value": "mp4-only",
+                              "text": "mp4-only"
+                          },{
+                              "value": "screencast",
+                              "text": "screencast"
+                          },{
+                              "value": "single-rendition",
+                              "text": "single-rendition"
+                          }
+                      ]
+                  }
+                ]
+            }
+          ]
+        },{
 	        xtype: 'hidden',
 	        id: 'video',
 	        name: 'video',
@@ -849,6 +925,7 @@ function extFormUpload() {
 	    		    //Ext.getCmp('form').getForm().submit();
 	    			formobj.submit({
 	                    success: function (form, action) {
+                            console.log(action);
 	                        w.destroy();
 	                    },
 	                    failure: function (form, action) {
