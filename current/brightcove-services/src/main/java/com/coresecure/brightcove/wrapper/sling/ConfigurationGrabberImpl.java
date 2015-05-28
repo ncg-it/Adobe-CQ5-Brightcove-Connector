@@ -63,7 +63,7 @@ public class ConfigurationGrabberImpl implements ConfigurationGrabber {
                 int i =0;
                 for(String account: getAvailableServices()) {
                     ConfigurationService cs = getConfigurationService(account);
-                    List<String> allowedGroups = cs.getAllowedGroupsList();
+                    List<String> allowedGroups = new ArrayList<String>(cs.getAllowedGroupsList());
                     allowedGroups.retainAll(memberOf);
                     if(allowedGroups.size()>0) {
                         result.add(account);
