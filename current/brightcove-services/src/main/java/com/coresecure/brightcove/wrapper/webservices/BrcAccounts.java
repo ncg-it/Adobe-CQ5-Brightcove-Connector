@@ -92,7 +92,8 @@ public class BrcAccounts extends SlingAllMethodsServlet {
                     int i =0;
                     for(String account: cg.getAvailableServices()) {
                         ConfigurationService cs = cg.getConfigurationService(account);
-                        List<String> allowedGroups = cs.getAllowedGroupsList();
+                        List<String> allowedGroups = new ArrayList<String>();
+                        allowedGroups.addAll(cs.getAllowedGroupsList());
                         allowedGroups.retainAll(memberOf);
                         if(allowedGroups.size()>0) {
                             JSONObject accountJson = new JSONObject();
