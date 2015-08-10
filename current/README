@@ -43,10 +43,10 @@
     Repository:
 
     - Connecting to the CQ Blueprints Maven Repository
-      http://www.cqblueprints.com/xwiki/bin/view/Blue+Prints/Connecting+to+the+CQ+Blueprints+Repository
+      http://www.cqblueprints.com/setup/cqmavenrepo.html
 
     - Connecting to the Adobe Maven Repository
-      http://www.cqblueprints.com/xwiki/bin/view/Blue+Prints/Connecting+to+the+Adobe+Maven+Repository
+      http://www.cqblueprints.com/setup/adobemavenrepo.html
 
     Once the repositories are added to your maven configuration file, you can execute the following steps:
 
