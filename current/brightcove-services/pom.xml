@@ -119,7 +119,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <Bundle-Activator>com.coresecure.brightcove.cq5.services.osgi.Activator</Bundle-Activator>
+                        <Bundle-Activator>com.brightcove.proserve.mediaapi.wrapper.osgi.Activator</Bundle-Activator>
                     </instructions>
                 </configuration>
             </plugin>

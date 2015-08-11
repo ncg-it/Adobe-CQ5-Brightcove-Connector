@@ -1,4 +1,4 @@
-package com.coresecure.brightcove.cq5.services.osgi;
+package com.brightcove.proserve.mediaapi.wrapper.osgi;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
