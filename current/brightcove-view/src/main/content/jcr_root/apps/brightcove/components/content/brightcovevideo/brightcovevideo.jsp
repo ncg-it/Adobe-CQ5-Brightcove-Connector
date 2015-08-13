@@ -28,7 +28,7 @@
 	String VideoRandomID = new String(video_uuid.randomUUID().toString().replaceAll("-",""));
 	String margLeft = "auto";
     String margRight = "auto";
-    String position= "center";
+    String position= properties.get("align","center");
 	String width = "480";
 	String height = "270";
 	boolean hasSize = false;
