@@ -95,9 +95,11 @@ public class BrcAccounts extends SlingAllMethodsServlet {
                         List<String> allowedGroups = new ArrayList<String>();
                         allowedGroups.addAll(cs.getAllowedGroupsList());
                         allowedGroups.retainAll(memberOf);
+                        String alias = cs.getAccountAlias();
+                        alias = (alias == null) ? account : alias;
                         if(allowedGroups.size()>0) {
                             JSONObject accountJson = new JSONObject();
-                            accountJson.put("text", account);
+                            accountJson.put("text", alias);
                             accountJson.put("value", account);
                             accountJson.put("id", i);
                             i++;

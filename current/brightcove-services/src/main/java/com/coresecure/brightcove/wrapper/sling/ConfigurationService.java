@@ -39,6 +39,7 @@ public interface ConfigurationService {
     public String getClientID();
     public String getClientSecret();
     public String getAccountID();
+    public String getAccountAlias();
     public List<String> getAllowedGroupsList();
     public String[] getAllowedGroups();
 }
