@@ -42,6 +42,7 @@ import java.util.*;
 		@Property(name="client_id", label="Client ID", description="CMS API Client ID", value=""),
 		@Property(name="client_secret", label="Client Secret", description="CMS API Client Secret", value=""),
 		@Property(name="key", label="Account ID", description="CMS API Account ID", value=""),
+		@Property(name="accountAlias", label="Account Alias", description="Text alias for Account ID", value=""),
 		@Property(name="readtoken", label="Read Token", description="Read Token", value=""),
 		@Property(name="writetoken", label="Write Token", description="Write Token", value=""),
     	@Property(name="playersstore", label="Players Store Path", description="Path of the players store locatione", value="/content/brightcovetools/players"),
@@ -115,6 +116,11 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 	public String getDefPlaylistPlayerKey() {
 		return (String) getProperties().get("defPlaylistPlayerKey");
 	}
+	
+	public String getAccountAlias() {
+		return (String) getProperties().get("accountAlias");
+	}
+	
     public String[] getAllowedGroups() {
         Object p =  getProperties().get("allowed_groups");
         if( p == null) return new String[0];
