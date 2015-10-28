@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
+
+    <!-- ======================================================================= -->
+    <!-- P R O J E C T                                                           -->
+    <!-- ======================================================================= -->
 
     <groupId>com.coresecure.brightcove.cq5</groupId>
     <artifactId>parent</artifactId>
@@ -14,6 +18,11 @@
     <description>
         Parent Maven POM for the 'Adobe CQ5 Brightcove Connector API' project.
     </description>
+
+
+    <!-- ====================================================================== -->
+    <!-- P R O P E R T I E S -->
+    <!-- ====================================================================== -->
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -47,12 +56,69 @@
         </snapshotRepository>
     </distributionManagement>
 
+    <!-- ======================================================================= -->
+    <!-- M O D U L E S                                                           -->
+    <!-- ======================================================================= -->
+
     <modules>
         <module>brightcove-view</module>
         <module>brightcove-services</module>
         <module>brightcove-config</module>
         <module>brightcove-all</module>
     </modules>
+
+    <!-- ======================================================================= -->
+    <!-- REPOSITORIES                                                            -->
+    <!-- ======================================================================= -->
+
+    <!--
+     Inclusion of repositories in POMs is controversial, to say the least.
+     It would be best if you proxied the Adobe repository using a Maven
+     Repository Manager. Once you do that, remove these sections.
+  -->
+    <repositories>
+        <repository>
+            <id>adobe</id>
+            <name>Adobe Public Repository</name>
+            <url>https://repo.adobe.com/nexus/content/groups/public/</url>
+            <layout>default</layout>
+        </repository>
+        <repository>
+            <id>cqblueprints.releases</id>
+            <name>CQ Blueprints Release Repository</name>
+            <url>http://dev.cqblueprints.com/nexus/content/repositories/releases/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>adobe</id>
+            <name>Adobe Public Repository</name>
+            <url>https://repo.adobe.com/nexus/content/groups/public/</url>
+            <layout>default</layout>
+        </pluginRepository>
+        <pluginRepository>
+            <id>cqblueprints.plugins.releases</id>
+            <name>CQ Blueprints Plugin Release Repository</name>
+            <url>http://dev.cqblueprints.com/nexus/content/repositories/releases/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <!-- ====================================================================== -->
+    <!-- D E P E N D E N C I E S                                                -->
+    <!-- ====================================================================== -->
 
     <dependencyManagement>
         <dependencies>
@@ -85,8 +151,31 @@
                 <version>0.3.0</version>
                 <scope>provided</scope>
             </dependency>
+
+
+            <!-- CQ 5.6.1 product dependencies -->
+            <dependency>
+                <!-- use com.day.cq.wcm as groupId if you are using an AEM version previous to 5.5 -->
+                <groupId>com.day.cq</groupId>
+                <artifactId>cq-quickstart-product-dependencies</artifactId>
+                <version>5.6.1</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.adobe.granite</groupId>
+                <artifactId>com.adobe.granite.xssprotection</artifactId>
+                <version>5.5.22</version>
+                <scope>provided</scope>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
+
+
+    <!-- ====================================================================== -->
+    <!-- B U I L D                                                              -->
+    <!-- ====================================================================== -->
 
     <build>
         <pluginManagement>
@@ -178,6 +267,10 @@
             </plugins>
         </pluginManagement>
     </build>
+
+    <!-- ====================================================================== -->
+    <!-- P R O F I L E S                                                        -->
+    <!-- ====================================================================== -->
 
     <profiles>
         <profile>
