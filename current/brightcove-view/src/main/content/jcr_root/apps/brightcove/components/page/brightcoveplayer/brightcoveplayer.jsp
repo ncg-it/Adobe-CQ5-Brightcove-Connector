@@ -1,9 +1,9 @@
-<%
-/*    
-    Adobe CQ5 Brightcove Connector  
-    
+<%--
+
+    Adobe CQ5 Brightcove Connector
+
     Copyright (C) 2015 Coresecure Inc.
-        
+
         Authors:    Alessandro Bonfatti
                     Yan Kisen
 
@@ -19,27 +19,24 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-%>
+
+--%>
 <%@ page contentType="text/html"
-             pageEncoding="utf-8"
-             import="com.day.cq.widget.HtmlLibraryManager,
-                     com.day.text.Text,
-                     java.util.Iterator,
-                     com.day.cq.wcm.api.Page,
-                     java.io.IOException,
-                     com.day.cq.wcm.foundation.ParagraphSystem,
-                     com.day.cq.wcm.foundation.Paragraph,
-                     com.day.cq.wcm.api.components.IncludeOptions,
-                     java.util.ResourceBundle,
-                     com.day.cq.i18n.I18n,
-com.coresecure.brightcove.wrapper.sling.*" %>
-<%@ page import="com.day.cq.wcm.api.NameConstants" %>
-<%!
-%><%@include file="/libs/foundation/global.jsp"%><%
-    
+         pageEncoding="utf-8"
+         import="com.coresecure.brightcove.wrapper.sling.ConfigurationGrabber,
+                 com.coresecure.brightcove.wrapper.sling.ConfigurationService,
+                 com.coresecure.brightcove.wrapper.sling.ServiceUtil,
+                 com.day.cq.i18n.I18n,
+                 com.day.cq.widget.HtmlLibraryManager,
+                 com.day.text.Text,
+                 java.util.ResourceBundle" %>
+
+<%@include file="/libs/foundation/global.jsp" %>
+
+<%
+
     final ResourceBundle resourceBundle = slingRequest.getResourceBundle(null);
-    I18n i18n = new I18n(resourceBundle);  
+    I18n i18n = new I18n(resourceBundle);
 
     String segmentPath = Text.getRelativeParent(resource.getPath(), 1);
     String parentPath = Text.getRelativeParent(segmentPath, 1);
@@ -47,7 +44,7 @@ com.coresecure.brightcove.wrapper.sling.*" %>
     boolean canVisitParent = false;
     try {
         Item item = currentNode.getSession().getItem(parentPath + "/jcr:primaryType");
-        if(item != null) {
+        if (item != null) {
             canVisitParent = NameConstants.NT_PAGE.equals(((Property) item).getString());
         }
     } catch (Exception e) {
@@ -58,53 +55,55 @@ com.coresecure.brightcove.wrapper.sling.*" %>
     String descr = properties.get("jcr:description", "");
     String width = "480";
     String height = "270";
-    String account = properties.get("account","");
-	String playerID = "";
-	String playerKey = properties.get("playerKey","");;
-	String data_embedded = "";
+    String account = properties.get("account", "");
+    String playerID = "";
+    String playerKey = properties.get("playerKey", "");
+    ;
+    String data_embedded = "";
     if (!account.trim().isEmpty()) {
-		ConfigurationGrabber cg = ServiceUtil.getConfigurationGrabber();
-		ConfigurationService cs = cg.getConfigurationService(account);
+        ConfigurationGrabber cg = ServiceUtil.getConfigurationGrabber();
+        ConfigurationService cs = cg.getConfigurationService(account);
         if (cs != null) {
-			playerID = cs.getDefVideoPlayerID();
+            playerID = cs.getDefVideoPlayerID();
             data_embedded = cs.getDefVideoPlayerDataEmbedded();
         }
     }
-	data_embedded = properties.get("data_embedded",data_embedded);
-	playerID = properties.get("playerID",playerID);
+    data_embedded = properties.get("data_embedded", data_embedded);
+    playerID = properties.get("playerID", playerID);
 
-	ValueMap playerProperties = currentPage.getProperties();
+    ValueMap playerProperties = currentPage.getProperties();
 
     if (playerProperties.containsKey("width") && playerProperties.containsKey("height")) {
 
         width = playerProperties.get("width", String.class);
         height = playerProperties.get("height", String.class);
     } else if (playerProperties.containsKey("width") && !playerProperties.containsKey("height")) {
-        width = playerProperties.get("width", String.class) ;
-        height =String.valueOf(270 * playerProperties.get("width", 1) / 480);
+        width = playerProperties.get("width", String.class);
+        height = String.valueOf(270 * playerProperties.get("width", 1) / 480);
 
     } else if (!playerProperties.containsKey("width") && playerProperties.containsKey("height")) {
-        height = playerProperties.get("height", String.class) ;
-        width  =String.valueOf(480 * playerProperties.get("height", 1) / 270);
-    } 
+        height = playerProperties.get("height", String.class);
+        width = String.valueOf(480 * playerProperties.get("height", 1) / 270);
+    }
 
 %><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">
 <html>
 <head>
-    <title>Brightcove Player | <%= title %></title>
-    <meta http-equiv="Content-Type" content="text/html; utf-8" />
+    <title>Brightcove Player | <%= title %>
+    </title>
+    <meta http-equiv="Content-Type" content="text/html; utf-8"/>
     <%
-    HtmlLibraryManager htmlMgr = sling.getService(HtmlLibraryManager.class);
-    if (htmlMgr != null) {
-        htmlMgr.writeIncludes(slingRequest, out, "cq.wcm.edit", "cq.tagging", "cq.personalization", "cq.security");
-    }
-    String dlgPath = null;
-    if (editContext != null && editContext.getComponent() != null) {
-        dlgPath = editContext.getComponent().getDialogPath();
-    }
+        HtmlLibraryManager htmlMgr = sling.getService(HtmlLibraryManager.class);
+        if (htmlMgr != null) {
+            htmlMgr.writeIncludes(slingRequest, out, "cq.wcm.edit", "cq.tagging", "cq.personalization", "cq.security");
+        }
+        String dlgPath = null;
+        if (editContext != null && editContext.getComponent() != null) {
+            dlgPath = editContext.getComponent().getDialogPath();
+        }
     %>
     <script src="/libs/cq/ui/resources/cq-ui.js" type="text/javascript"></script>
-    <script type="text/javascript" >
+    <script type="text/javascript">
         CQ.WCM.launchSidekick("<%= currentPage.getPath() %>", {
             propsDialog: "<%= dlgPath == null ? "" : dlgPath %>",
             locked: <%= currentPage.isLocked() %>
@@ -112,79 +111,90 @@ com.coresecure.brightcove.wrapper.sling.*" %>
     </script>
 </head>
 <body>
-    <cq:include path="clientcontext" resourceType="cq/personalization/components/clientcontext"/>
+<cq:include path="clientcontext" resourceType="cq/personalization/components/clientcontext"/>
 
-    <h1><%= title %><p><%= descr %></p></h1>
-    
-    <div class="definition-container"><%
-        %><%
-    %></div>
+<h1><%= title %><p><%= descr %>
+</p></h1>
 
-    
-   
+<div class="definition-container"><%
+%><%
+%></div>
 
-	<h2 class="no-icon"><%=i18n.get("Player ID") %></h2>
-    <p><%=i18n.get("Use the Page Properties editor to edit the Player ID.") %></p>
-    <div class="edit-box" style="width:75%">
-        <cq:text property="playerID" placeholder="<%=i18n.get("NONE") %>" tagName="p"/>
+
+<h2 class="no-icon"><%=i18n.get("Player ID") %>
+</h2>
+
+<p><%=i18n.get("Use the Page Properties editor to edit the Player ID.") %>
+</p>
+
+<div class="edit-box" style="width:75%">
+    <cq:text property="playerID" placeholder="<%=i18n.get("NONE") %>" tagName="p"/>
+</div>
+
+<h2 class="no-icon"><%=i18n.get("Player Key") %>
+</h2>
+
+<p><%=i18n.get("Use the Page Properties editor to edit the Player Key.") %>
+</p>
+
+<div class="edit-box" style="width:75%">
+    <cq:text property="playerKey" placeholder="<%=i18n.get("NONE") %>" tagName="p"/>
+</div>
+
+<h2 class="no-icon"><%=i18n.get("Player Preview") %>
+</h2>
+
+<div class="edit-box" style="width:75%">
+    <% if (playerKey.isEmpty()) {%>
+    <video
+            data-account="<%=account%>"
+            data-player="<%=playerID%>"
+            data-embed="<%=data_embedded%>"
+            data-video-id=""
+            class="video-js"
+            width="<%=width%>px" height="<%=height%>px"
+            class="video-js" controls></video>
+    <script src="//players.brightcove.net/<%=account%>/<%=playerID%>_<%=data_embedded%>/index.min.js"></script>
+
+    <% } else { %>
+    <% if (!width.isEmpty() && !height.isEmpty()) {%>
+    <!-- DO NOT USE!!!! FOR PREVIEW PURPOSES ONLY. -->
+
+    <!-- Start of Brightcove Player -->
+
+    <div style="display:none">
+
     </div>
+    <!--
+    By use of this code snippet, I agree to the Brightcove Publisher T and C
+    found at https://accounts.brightcove.com/en/terms-and-conditions/.
+    -->
 
-	<h2 class="no-icon"><%=i18n.get("Player Key") %></h2>
-    <p><%=i18n.get("Use the Page Properties editor to edit the Player Key.") %></p>
-    <div class="edit-box" style="width:75%">
-        <cq:text property="playerKey" placeholder="<%=i18n.get("NONE") %>" tagName="p"/>
-    </div>
-    
-     <h2 class="no-icon"><%=i18n.get("Player Preview") %></h2>
-	    <div class="edit-box" style="width:75%">
-	        <% if (playerKey.isEmpty()) {%>
-            	<video
-                      data-account="<%=account%>"
-                      data-player="<%=playerID%>"
-                      data-embed="<%=data_embedded%>"
-                      data-video-id=""
-                      class="video-js"
-                      width="<%=width%>px" height="<%=height%>px"
-                      class="video-js" controls></video>
-                    <script src="//players.brightcove.net/<%=account%>/<%=playerID%>_<%=data_embedded%>/index.min.js"></script>
+    <script language="JavaScript" type="text/javascript"
+            src="https://sadmin.brightcove.com/js/BrightcoveExperiences.js"></script>
 
-            <% } else { %>
- 				<% if (!width.isEmpty() && !height.isEmpty()) {%>
-	            <!-- DO NOT USE!!!! FOR PREVIEW PURPOSES ONLY. -->
-	            
-	            <!-- Start of Brightcove Player -->
-	            
-	            <div style="display:none">
-	            
-	            </div>
-    			<!--
-	            By use of this code snippet, I agree to the Brightcove Publisher T and C 
-	            found at https://accounts.brightcove.com/en/terms-and-conditions/. 
-	            -->
-	            
-	            <script language="JavaScript" type="text/javascript" src="https://sadmin.brightcove.com/js/BrightcoveExperiences.js"></script>
-	            
-	            <object id="myExperience" class="BrightcoveExperience">
-	              <param name="bgcolor" value="#FFFFFF" />
-	              <param name="width" value="<%=width %>" />
-	              <param name="height" value="<%=height %>" />
-	              <param name="playerID" value="<%=properties.get("playerID","") %>" />
-	              <param name="playerKey" value="<%=properties.get("playerKey","") %>" />
-	              <param name="isVid" value="true" />
-	              <param name="isUI" value="true" />
-	              <param name="dynamicStreaming" value="true" />
-	              <param name="cacheAMFURL" value="https://share.brightcove.com/services/messagebroker/amf"/><param name="secureConnections" value="true" />
-	            </object>
-	            
-	            <!-- 
-	            This script tag will cause the Brightcove Players defined above it to be created as soon
-	            as the line is read by the browser. If you wish to have the player instantiated only after
-	            the rest of the HTML is processed and the page load is complete, remove the line.
-	            -->
-	            <script type="text/javascript">brightcove.createExperiences();</script>
-	            <%} %>
-           	<%} %>
-        </div>
-    
+    <object id="myExperience" class="BrightcoveExperience">
+        <param name="bgcolor" value="#FFFFFF"/>
+        <param name="width" value="<%=width %>"/>
+        <param name="height" value="<%=height %>"/>
+        <param name="playerID" value="<%=properties.get("playerID","") %>"/>
+        <param name="playerKey" value="<%=properties.get("playerKey","") %>"/>
+        <param name="isVid" value="true"/>
+        <param name="isUI" value="true"/>
+        <param name="dynamicStreaming" value="true"/>
+        <param name="cacheAMFURL" value="https://share.brightcove.com/services/messagebroker/amf"/>
+        <param name="secureConnections" value="true"/>
+    </object>
+
+    <!--
+    This script tag will cause the Brightcove Players defined above it to be created as soon
+    as the line is read by the browser. If you wish to have the player instantiated only after
+    the rest of the HTML is processed and the page load is complete, remove the line.
+    -->
+    <script type="text/javascript">brightcove.createExperiences();</script>
+    <%} %>
+    <%} %>
+</div>
+
 </body>
 </html>

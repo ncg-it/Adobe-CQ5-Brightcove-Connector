@@ -20,8 +20,8 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
---%><%@ page contentType="text/html"
+--%>
+<%@ page contentType="text/html"
              pageEncoding="utf-8"
              import="com.day.cq.wcm.foundation.Image,
     com.day.cq.wcm.api.components.DropTarget,
@@ -119,7 +119,7 @@ if (services.size() > 0) {
                                             for(String account: services){
                                         %>
                                         <option value="<%=account%>" <%if (account.equals(selectedAccount)) {%>selected<%}%>><%=account%></option>
-                                        <% 
+                                        <%
                                         	}
                                         %>
                                     </select>
@@ -133,7 +133,7 @@ if (services.size() > 0) {
                                         <div id="divVideoCount" style="float:left"></div>
 
                                     	<div id="searchDiv" style="float:right;padding:5px">
-                                           
+
 	                                            <input id="search" type="text" value="Search Video" onClick="this.value=''">
 	                                            <!--Store the search query in searchBut.value so we can use it as the title of the page once the results are returned.  See searchVideoCallBack -->
 	                                            <select id='selField' name="selField" style="position: relative;top: 5px;">
@@ -148,7 +148,7 @@ if (services.size() > 0) {
 	                                            <button id="searchBut" onClick="searchVal=document.getElementById('search').value;searchField=document.getElementById('selField').value;Load(searchVideoURL())">Search</button>
                                         </div>
                                         <div id="searchDiv_pl" style="float:right;padding:5px;display:none;">
-                                           
+
                                                 <input id="search_pl" type="text" value="Search Playlists" onClick="this.value=''" style="position: relative;top: 5px;">
                                                 <!--Store the search query in searchBut.value so we can use it as the title of the page once the results are returned.  See searchVideoCallBack -->
                                                 <select id='selField_pl' name="selField_pl" style="position: relative;top: 5px;">
@@ -157,17 +157,17 @@ if (services.size() > 0) {
                                                 </select>
                                                 <button id="searchBut" onClick="searchVal=document.getElementById('search_pl').value;searchField=document.getElementById('selField_pl').value;Load(getFindPlaylistsURL())">Search</button>
                                         </div>
-                                        
+
                                 </td>
                             </tr>
-                           
+
                             <tr>
                                 <td id="tdTwo">
                                     <div name="butDiv" class="butDiv">
                                         <span name="buttonRow"><!--The buttons in buttonRow are hidden in playlist view -->
-                                            <button id="delButton" class="delButton" onClick="openBox('delConfPop')">Delete Checked</button> 
-                                            <button id="uplButton" class="uplButton" onClick="extFormUpload()">Upload Video</button> 
-                                            <button id="newplstButton" onClick="createPlaylistBox()">Create Playlist</button> 
+                                            <button id="delButton" class="delButton" onClick="openBox('delConfPop')">Delete Checked</button>
+                                            <button id="uplButton" class="uplButton" onClick="extFormUpload()">Upload Video</button>
+                                            <button id="newplstButton" onClick="createPlaylistBox()">Create Playlist</button>
                                         </span>
                                         <button class="btn" name="delFromPlstButton" onClick="openBox('modPlstPop')">Remove From Playlist</button>
                                     </div>
@@ -200,8 +200,8 @@ if (services.size() > 0) {
                                                 <th class="tdMainTableHead">
                                                     ID
                                                 </th>
-                                                
-                                                
+
+
                                             </tr>
                                         </thead>
                                         <tbody id="tbData">
@@ -213,7 +213,7 @@ if (services.size() > 0) {
                                 <td>
                                     <div name="butDiv" class="butDiv">
                                         <span name="buttonRow"><!--The buttons in buttonRow are hidden in playlist view -->
-                                            <button id="delButton" class="delButton" onClick="openBox('delConfPop')">Delete Checked</button> 
+                                            <button id="delButton" class="delButton" onClick="openBox('delConfPop')">Delete Checked</button>
                                             <button id="uplButton" class="uplButton" onClick="extFormUpload()">Upload Video</button>
                                             <button id="newplstButton" onClick="createPlaylistBox()">Create Playlist</button>
                                         </span>
@@ -289,10 +289,10 @@ if (services.size() > 0) {
             <!-- Dimmed "Screen" over content behind overlays -->
             <div id="screen" style="display:none"></div>
 
-            
 
 
-           
+
+
             <!--Upload Image-->
             <div id="uploadImageDiv" style="display:none" class="overlay tbInput">
                 <form id="uploadImageForm" method="POST" enctype="multipart/form-data" target="postFrame">
@@ -483,7 +483,7 @@ if (services.size() > 0) {
                     <form id="modPlstForm" method="POST" enctype="multipart/form-data" target="postFrame">
                         <button onClick="modPlstSubmit()">Yes</button>
                         <button type="button" class="btn" onClick="closeBox('modPlstPop')">No</button>
-                
+
 						<input type="hidden" name="command" value="update_playlist" />
 						<input type="hidden" name="playlist" id="playlist" />
 					</form>
@@ -510,14 +510,14 @@ if (services.size() > 0) {
                     </center>
                      <div class="hLine"></div>
                     <table>
-                       
+
                         <tr class="requiredFields">
                             <td>Sharee Account Id's:</td>
                             <td style="width:100%">
                                 <input type="text" name="sharees" id="sharees" style="width:100%" />
                             </td>
                         </tr>
-                        
+
                     </table>
                     <fieldset>
                         <legend>Video</legend>
