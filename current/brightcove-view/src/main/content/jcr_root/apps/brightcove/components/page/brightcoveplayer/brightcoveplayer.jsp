@@ -27,14 +27,13 @@
                  com.coresecure.brightcove.wrapper.sling.ConfigurationService,
                  com.coresecure.brightcove.wrapper.sling.ServiceUtil,
                  com.day.cq.i18n.I18n,
-                 com.day.cq.widget.HtmlLibraryManager,
                  com.day.text.Text,
                  java.util.ResourceBundle" %>
 
 <%@include file="/libs/foundation/global.jsp" %>
 
 <%
-    HtmlLibraryManager htmlMgr = sling.getService(HtmlLibraryManager.class);
+
 
     final ResourceBundle resourceBundle = slingRequest.getResourceBundle(null);
     I18n i18n = new I18n(resourceBundle);
@@ -104,16 +103,7 @@
 
     <meta http-equiv="Content-Type" content="text/html; utf-8"/>
 
-    <%
-
-        if (htmlMgr != null) {
-            //    htmlMgr.writeIncludes(slingRequest, out, "cq.wcm.edit", "cq.tagging", "cq.personalization", "cq.security");
-        }
-
-
-    %>
-    <%--TODO: verify--%>
-    <cq:includeClientLib categories="cq.wcm.edit,cq.tagging,cq.personalization,cq.security"/>
+    <cq:includeClientLib categories="cq.wcm.edit"/>
 
     <script src="/libs/cq/ui/resources/cq-ui.js" type="text/javascript"></script>
     <script type="text/javascript">
@@ -122,48 +112,44 @@
             locked: ${currentPage.locked}
         });
     </script>
+
+    <style type="text/css">
+        .edit-box {
+            width: 75%;
+        }
+    </style>
+
 </head>
+
 <body>
-<%-- ???: why is this included?--%>
-<%--<cq:include path="clientcontext" resourceType="cq/personalization/components/clientcontext"/>--%>
 
-<h1>${title}</h1>
+<h1>Brightcove Player Config | &quot;${title}&quot;</h1>
 
-<h2><${description}</h2>
-
-<div class="definition-container"></div>
-
-
-<h2 class="no-icon">
-    <%--TODO: Verify fmt:message--%>
-    <fmt:message var="Player ID"/>
-</h2>
-
-<p>
-    <fmt:message var="Use the Page Properties editor to edit the Player ID."/>
-</p>
-
-<div class="edit-box" style="width:75%">
-    <cq:text property="playerID" placeholder="<%=i18n.get("NONE") %>" tagName="p"/>
+<div class="definition-container">
+    <p></p>
 </div>
 
-<h2 class="no-icon">
-    <fmt:message var="Player Key"/>
-</h2>
 
-<p>
-    <fmt:message var="Use the Page Properties editor to edit the Player Key."/>
-</p>
+<cq:text value="Player ID" tagName="h2" tagClass="no-icon"/>
 
-<div class="edit-box" style="width:75%">
-    <cq:text property="playerKey" placeholder="<%=i18n.get("NONE") %>" tagName="p"/>
+<p>Use the Page Properties editor to edit the Player ID.</p>
+
+<div class="edit-box">
+    <cq:text property="playerID" placeholder="NONE" tagName="strong"/>
 </div>
 
-<h2 class="no-icon">
-    <fmt:message var="Player Preview"/>
-</h2>
+<cq:text value="Player Key" tagName="h2" tagClass="no-icon"/>
 
-<div class="edit-box" style="width:75%">
+<p>Use the Page Properties editor to edit the Player Key.</p>
+
+<div class="edit-box">
+    <cq:text property="playerKey" placeholder="NONE" tagName="strong"/>
+</div>
+
+<cq:text value="Player Preview" tagName="h2" tagClass="no-icon"/>
+<p></p>
+
+<div class="edit-box">
     <c:choose>
         <c:when test="${empty playerKey}">
 
@@ -186,9 +172,7 @@
 
                 <!-- Start of Brightcove Player -->
 
-                <div style="display:none">
-
-                </div>
+                <div style="display:none;"></div>
                 <!--
                 By use of this code snippet, I agree to the Brightcove Publisher T and C
                 found at https://accounts.brightcove.com/en/terms-and-conditions/.

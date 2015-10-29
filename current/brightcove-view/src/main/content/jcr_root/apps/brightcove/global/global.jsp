@@ -25,11 +25,15 @@
 
 <%@include file="/libs/foundation/global.jsp" %>
 <%
-    boolean isEditMode = false;
-    if (!(WCMMode.fromRequest(request) == WCMMode.DISABLED || WCMMode.fromRequest(request) == WCMMode.PREVIEW)) {
-        isEditMode = true;
-    }
+    WCMMode currentWCMMode = WCMMode.fromRequest(request);
+
+    boolean isEditMode = (currentWCMMode == WCMMode.EDIT);
+    boolean isDesignMode = (currentWCMMode == WCMMode.DESIGN);
+    boolean isEditOrDesignMode = (isEditMode || isDesignMode);
+
 
     //Update Page Context
     pageContext.setAttribute("isEditMode", isEditMode);
+    pageContext.setAttribute("isDesignMode", isEditMode);
+    pageContext.setAttribute("isEditOrDesignMode", isEditOrDesignMode);
 %>

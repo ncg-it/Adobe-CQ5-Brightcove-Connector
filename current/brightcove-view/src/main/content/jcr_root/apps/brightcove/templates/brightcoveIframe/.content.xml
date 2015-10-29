@@ -6,5 +6,6 @@
     ranking="{Long}100">
     <jcr:content
         jcr:primaryType="cq:PageContent"
+        cq:defaultView="html"
         sling:resourceType="brightcove/components/page/brightcoveIframe"/>
 </jcr:root>

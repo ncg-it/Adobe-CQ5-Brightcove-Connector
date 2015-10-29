@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jcr:root xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+<jcr:root xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0"
     jcr:primaryType="cq:Dialog"
     title="Dialog"
     xtype="dialog">
@@ -9,76 +9,28 @@
                 jcr:primaryType="cq:Panel"
                 title="General">
                 <items jcr:primaryType="cq:WidgetCollection">
-                    <accountSelector
+                    <account
                         jcr:primaryType="cq:Widget"
-                        allowBlank="false"
-                        fieldDescription=""
-                        fieldLabel="Account:"
-                        fieldSubLabel=""
-                        name="./account"
-                        options="/bin/brightcove/accounts.json"
-                        optionsQTipField="text"
-                        optionsRoot="accounts"
-                        optionsTextField="text"
-                        optionsValueField="value"
-                        type="select"
-                        xtype="selection">
-                        <optionsConfig
-                            jcr:primaryType="nt:unstructured"
-                            editable="{Boolean}true"
-                            id="accountSelector"/>
-                    </accountSelector>
-                    <comboPlayer
+                        path="/apps/brightcove/components/shared/dialog/accountSelection.infinity.json"
+                        xtype="cqinclude"/>
+                    <videoPlayer
                         jcr:primaryType="cq:Widget"
-                        allowBlank="false"
-                        fieldDescription=""
-                        fieldLabel="Video:"
-                        fieldSubLabel=""
-                        hiddenName="./videoPlayer"
-                        xtype="BrightcoveCombo">
-                        <listeners
-                            jcr:primaryType="nt:unstructured"
-                            focus="function(){this.store.baseParams['account_id']=$(&quot;#accountSelector&quot;).val();}"/>
-                    </comboPlayer>
+                        path="/apps/brightcove/components/shared/dialog/videoCombobox.infinity.json"
+                        xtype="cqinclude"/>
                     <align
                         jcr:primaryType="cq:Widget"
-                        fieldLabel="Component Alignment:"
-                        name="./align"
-                        type="select"
-                        xtype="selection">
-                        <options jcr:primaryType="cq:WidgetCollection">
-                            <left
-                                jcr:primaryType="nt:unstructured"
-                                text="Left"
-                                value="left"/>
-                            <center
-                                jcr:primaryType="nt:unstructured"
-                                text="Center"
-                                value="center"/>
-                            <right
-                                jcr:primaryType="nt:unstructured"
-                                text="Right"
-                                value="right"/>
-                        </options>
-                    </align>
+                        path="/apps/brightcove/components/shared/dialog/alignSelection.infinity.json"
+                        xtype="cqinclude"/>
                 </items>
             </tab1>
             <tab2
                 jcr:primaryType="cq:Panel"
                 title="Account Settings">
                 <items jcr:primaryType="cq:WidgetCollection">
-                    <comboPlayer
+                    <playerPath
                         jcr:primaryType="cq:Widget"
-                        allowBlank="true"
-                        fieldDescription=""
-                        fieldLabel="Player:"
-                        fieldSubLabel=""
-                        hiddenName="./playerPath"
-                        xtype="BrightcovePlayerCombo">
-                        <listeners
-                            jcr:primaryType="nt:unstructured"
-                            focus="function(){this.store.baseParams['account_id']=$(&quot;#accountSelector&quot;).val();}"/>
-                    </comboPlayer>
+                        path="/apps/brightcove/components/shared/dialog/playerCombobox.infinity.json"
+                        xtype="cqinclude"/>
                 </items>
             </tab2>
         </items>

@@ -3,5 +3,5 @@
     cq:isContainer="{Boolean}false"
     jcr:description="Brightcove Playlist Component"
     jcr:primaryType="cq:Component"
-    jcr:title="Brightcove Playlist"
+    jcr:title="Brightcove Playlist (Legacy)"
     componentGroup="General"/>

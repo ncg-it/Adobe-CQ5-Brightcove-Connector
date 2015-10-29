@@ -31,7 +31,6 @@
 <%
     UUID video_uuid = new UUID(64L, 64L);
     String videoContainerID = video_uuid.randomUUID().toString().replaceAll("-", "");
-
     String marginLeft = "auto";
     String marginRight = "auto";
     String position = properties.get("align", "center");
@@ -42,13 +41,13 @@
     String videoPlayer = properties.get("videoPlayer", "").trim();
     String account = properties.get("account", "").trim();
     String playerID = "";
-    String playerKey = "";
+    String data_embedded = "";
     if (!account.isEmpty()) {
         ConfigurationGrabber cg = ServiceUtil.getConfigurationGrabber();
         ConfigurationService cs = cg.getConfigurationService(account);
         if (cs != null) {
             playerID = cs.getDefVideoPlayerID();
-            playerKey = cs.getDefPlaylistPlayerKey();
+            data_embedded = cs.getDefVideoPlayerDataEmbedded();
         }
     }
 
@@ -68,7 +67,7 @@
         request.setAttribute("account", playerAccount);
         if (playerProperties.containsKey("playerID") && playerProperties.containsKey("playerKey")) {
             playerID = playerProperties.get("playerID", playerID);
-            playerKey = playerProperties.get("playerKey", playerKey);
+            data_embedded = playerProperties.get("data_embedded", data_embedded);
         }
         position = playerProperties.get("align", position);
         if (position.equals("left")) {
@@ -94,14 +93,15 @@
         }
     }
 
-// Update Page Context
+    // Update Page Context
 
     pageContext.setAttribute("account", account);
     pageContext.setAttribute("videoPlayer", videoPlayer);
     pageContext.setAttribute("playerPath", playerPath);
 
     pageContext.setAttribute("playerID", playerID);
-    pageContext.setAttribute("playerKey", playerKey);
+    pageContext.setAttribute("data_embedded", data_embedded);
+
 
     pageContext.setAttribute("videoContainerID", videoContainerID);
 
@@ -144,68 +144,33 @@
     </style>
 </c:if>
 
-playerPath: ${playerPath}
-<br/>
-playerID: ${playerID}
-<br/>
-playerKey: ${playerKey}
-<br/>
-videoPlayer: ${videoPlayer}
-<br/>
-account: ${account}
-
 <c:choose>
     <c:when test="${(not empty account) or (not empty playerPath)}">
+
         <div data-sly-test="${wcmmode.edit}"
              class="cq-dd-brightcove_player md-dropzone-video"
              data-sly-text="Drop player here"
              style="margin-bottom: 0;margin-left: ${marginLeft};margin-right: ${marginRight};margin-top: 0;overflow-x: hidden;overflow-y: hidden;text-align: center;width: 100%;text-align:${position};">
-            <c:if test="${not empty videoPlayer}">
 
+            <c:if test="${not empty videoPlayer}">
                 <div id="container-${videoContainerID}"
                      class="brightcove-container"
-                     style="width:100%"></div>
-
-                <cq:includeClientLib js="brc.BrightcoveExperiences-custom"/>
-
-                <script type="text/javascript">
-
-                    // listener for media change events
-                    function onMediaBegin(event) {
-                        var BCLcurrentVideoID;
-                        var BCLcurrentVideoNAME;
-                        BCLcurrentVideoID = BCLvideoPlayer.getCurrentVideo().id;
-                        BCLcurrentVideoNAME = BCLvideoPlayer.getCurrentVideo().displayName;
-                        switch (event.type) {
-                            case "mediaBegin":
-                                var currentVideoLength = "0";
-                                currentVideoLength = BCLvideoPlayer.getCurrentVideo().length;
-                                if (currentVideoLength != "0") currentVideoLength = currentVideoLength / 1000;
-                                if (typeof _gaq != "undefined") _gaq.push(['_trackEvent', location.pathname, event.type + " - " + currentVideoLength, BCLcurrentVideoNAME + " - " + BCLcurrentVideoID]);
-                                break;
-                            case "mediaPlay":
-                                _gaq.push(['_trackEvent', location.pathname, event.type + " - " + event.position, BCLcurrentVideoNAME + " - " + BCLcurrentVideoID]);
-                                break;
-                            case "mediaStop":
-                                _gaq.push(['_trackEvent', location.pathname, event.type + " - " + event.position, BCLcurrentVideoNAME + " - " + BCLcurrentVideoID]);
-                                break;
-                            case "mediaChange":
-                                _gaq.push(['_trackEvent', location.pathname, event.type + " - " + event.position, BCLcurrentVideoNAME + " - " + BCLcurrentVideoID]);
-                                break;
-                            case "mediaComplete":
-                                _gaq.push(['_trackEvent', location.pathname, event.type + " - " + event.position, BCLcurrentVideoNAME + " - " + BCLcurrentVideoID]);
-                                break;
-                            default:
-                                _gaq.push(['_trackEvent', location.pathname, event.type, BCLcurrentVideoNAME + " - " + BCLcurrentVideoID]);
-                        }
-                    }
-
-                </script>
-                <script>
-                    customBC.createVideo("${width}", "${height}", "${playerID}", "${playerKey}", "${videoPlayer}", "container-${videoContainerID}");
-                </script>
-
-
+                     style="width:100%">
+                    <video
+                            id="video-${videoContainerID}"
+                            data-account="${account}"
+                            data-player="${playerID}"
+                            data-embed="${data_embedded}"
+                            data-video-id="${videoPlayer}"
+                            class="video-js"
+                            <c:if test="${hasSize}">
+                                width="${width}px"
+                                height="${height}px"
+                            </c:if>
+                            class="video-js" controls>
+                    </video>
+                    <script src="//players.brightcove.net/${account}/${playerID}_${data_embedded}/index.min.js"></script>
+                </div>
             </c:if>
             <c:if test="${isEditMode}">
                 <div data-sly-test="${wcmmode.edit}"
