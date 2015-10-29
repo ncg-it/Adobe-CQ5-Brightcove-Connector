@@ -29,9 +29,10 @@
                  org.apache.sling.commons.json.JSONArray,
                  org.apache.sling.commons.json.JSONObject,
                  java.util.Iterator" %>
-<%@include file="/libs/foundation/global.jsp" %>
-<%
 
+<%@include file="/libs/foundation/global.jsp" %>
+
+<%
     JSONObject root = new JSONObject();
     JSONArray items = new JSONArray();
     int results = 0;

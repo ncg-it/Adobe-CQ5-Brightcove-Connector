@@ -24,30 +24,26 @@
 <%@ page import="com.coresecure.brightcove.wrapper.sling.ConfigurationGrabber,
                  com.coresecure.brightcove.wrapper.sling.ConfigurationService,
                  com.coresecure.brightcove.wrapper.sling.ServiceUtil,
-                 com.day.cq.wcm.api.WCMMode,
-                 com.day.cq.wcm.api.components.DropTarget,
                  java.util.UUID" %>
 
-<%@include file="/libs/foundation/global.jsp" %>
+<%@include file="/apps/brightcove/global/global.jsp" %>
+
 <%
 
-    String containerClass = DropTarget.CSS_CLASS_PREFIX + "brightcovevideo";
-
-
-    UUID video_uuid = new UUID(64L, 64L);
-    String VideoRandomID = video_uuid.randomUUID().toString().replaceAll("-", "");
-    String playerPath = properties.get("playerPath", "");
-    String videoPlayerPL = properties.get("videoPlayerPL", "");
-    String account = properties.get("account", "");
-    String margLeft = "auto";
-    String margRight = "auto";
+    UUID video_uuid = new UUID(64L, 64L); //UUID.randomUUID();
+    String videoContainerID = video_uuid.randomUUID().toString().replaceAll("-", "");
+    String playerPath = properties.get("playerPath", "").trim();
+    String videoPlayerPL = properties.get("videoPlayerPL", "").trim();
+    String account = properties.get("account", "").trim();
+    String marginLeft = "auto";
+    String marginRight = "auto";
     String position = "center";
     String width = "480";
     String height = "270";
 
     String playerID = "";
     String playerKey = "";
-    if (!account.trim().isEmpty()) {
+    if (!account.isEmpty()) {
         ConfigurationGrabber cg = ServiceUtil.getConfigurationGrabber();
         ConfigurationService cs = cg.getConfigurationService(account);
         if (cs != null) {
@@ -57,17 +53,19 @@
     }
 
     boolean hasSize = false;
-    boolean editMode = false;
-    if (!(WCMMode.fromRequest(request) == WCMMode.DISABLED || WCMMode.fromRequest(request) == WCMMode.PREVIEW))
-        editMode = true;
 
-    if (!playerPath.trim().isEmpty()) {
+
+    if (!playerPath.isEmpty()) {
         Page playerPage = resourceResolver.resolve(playerPath).adaptTo(Page.class);
         ValueMap playerProperties = playerPage.getProperties();
         String playerAccount = playerProperties.get("account", account);
         if (account.isEmpty() && playerProperties.containsKey("account")) {
-            currentNode.setProperty("account", playerAccount);
-            currentNode.save();
+            try {
+                currentNode.setProperty("account", playerAccount);
+                currentNode.save();
+            } catch (RepositoryException e) {
+                e.printStackTrace();
+            }
         }
         request.setAttribute("account", playerAccount);
         if (playerProperties.containsKey("playerID") && playerProperties.containsKey("playerKey")) {
@@ -76,9 +74,9 @@
         }
         position = playerProperties.get("align", position);
         if (position.equals("left")) {
-            margLeft = "0";
+            marginLeft = "0";
         } else if (position.equals("right")) {
-            margRight = "0";
+            marginRight = "0";
         }
         if (playerProperties.containsKey("width") && playerProperties.containsKey("height")) {
 
@@ -96,99 +94,119 @@
             hasSize = true;
 
         }
-        if (!hasSize) {
-            request.setAttribute("inlinecss", "true");
+    }
+
+
+    // Update Page Context
+
+    pageContext.setAttribute("account", account);
+    pageContext.setAttribute("videoPlayerPL", videoPlayerPL);
+    pageContext.setAttribute("playerPath", playerPath);
+
+    pageContext.setAttribute("playerID", playerID);
+    pageContext.setAttribute("playerKey", playerKey);
+
+    pageContext.setAttribute("videoContainerID", videoContainerID);
+
+    pageContext.setAttribute("position", position);
+
+    pageContext.setAttribute("marginLeft", marginLeft);
+    pageContext.setAttribute("marginRight", marginRight);
+    pageContext.setAttribute("width", width);
+    pageContext.setAttribute("height", height);
+
+    pageContext.setAttribute("hasSize", hasSize);
 %>
-<style>
-    #container-<%=VideoRandomID %> {
-        width: 80%;
-        display: block;
-        position: relative;
-        margin: 20px auto;
-    }
-
-    #container-<%=VideoRandomID %>:after {
-        padding-top: 56.25%;
-        display: block;
-        content: '';
-    }
-
-    #container-<%=VideoRandomID %> object {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        right: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-    }
-
-</style>
-<%
-        }
-    }
-    if (!account.trim().isEmpty() || !playerPath.trim().isEmpty()) {
-%>
-<div data-sly-test="${wcmmode.edit}" class="cq-dd-brightcove_player md-dropzone-video" data-sly-text="Drop player here"
-     style="margin-bottom: 0;margin-left: <%=margLeft%>;margin-right: <%=margRight%>;margin-top: 0;overflow-x: hidden;overflow-y: hidden;text-align: center;width: 100%;text-align:<%=properties.get("align","center")%>;">
-
-    <div id="container-<%=VideoRandomID %>" class="brightcove-container" style="width:100%">
-
-    </div>
-
-
-    <cq:includeClientLib js="brc.BrightcoveExperiences-custom"/>
-    <script type="text/javascript">
-
-
-        // listener for media change events
-        function onMediaBegin(event) {
-            var BCLcurrentVideoID;
-            var BCLcurrentVideoNAME;
-            BCLcurrentVideoID = BCLvideoPlayer.getCurrentVideo().id;
-            BCLcurrentVideoNAME = BCLvideoPlayer.getCurrentVideo().displayName;
-            switch (event.type) {
-                case "mediaBegin":
-                    var currentVideoLength = "0";
-                    currentVideoLength = BCLvideoPlayer.getCurrentVideo().length;
-                    if (currentVideoLength != "0") currentVideoLength = currentVideoLength / 1000;
-                    if (typeof _gaq != "undefined") _gaq.push(['_trackEvent', location.pathname, event.type + " - " + currentVideoLength, BCLcurrentVideoNAME + " - " + BCLcurrentVideoID]);
-                    break;
-                case "mediaPlay":
-                    _gaq.push(['_trackEvent', location.pathname, event.type + " - " + event.position, BCLcurrentVideoNAME + " - " + BCLcurrentVideoID]);
-                    break;
-                case "mediaStop":
-                    _gaq.push(['_trackEvent', location.pathname, event.type + " - " + event.position, BCLcurrentVideoNAME + " - " + BCLcurrentVideoID]);
-                    break;
-                case "mediaChange":
-                    _gaq.push(['_trackEvent', location.pathname, event.type + " - " + event.position, BCLcurrentVideoNAME + " - " + BCLcurrentVideoID]);
-                    break;
-                case "mediaComplete":
-                    _gaq.push(['_trackEvent', location.pathname, event.type + " - " + event.position, BCLcurrentVideoNAME + " - " + BCLcurrentVideoID]);
-                    break;
-                default:
-                    _gaq.push(['_trackEvent', location.pathname, event.type, BCLcurrentVideoNAME + " - " + BCLcurrentVideoID]);
-            }
+<c:if test="${hasSize}">
+    <style>
+        #container-${videoContainerID} {
+            width: 80%;
+            display: block;
+            position: relative;
+            margin: 20px auto;
         }
 
-    </script>
-    <script>
-        customBC.createPlaylist("<%=width%>", "<%=height%>", "<%=playerID%>", "<%=playerKey%>", "<%=videoPlayerPL%>", "container-<%=VideoRandomID %>");
-    </script>
+        #container-${videoContainerID}:after {
+            padding-top: 56.25%;
+            display: block;
+            content: '';
+        }
 
-    <% if (editMode) { %>
-    <div data-sly-test="${wcmmode.edit}"
-         class="cq-dd-brightcove_playlist cq-video-placeholder cq-block-sm-placeholder md-dropzone-video"
-         data-sly-text="Drop video here" style="width:99%"></div>
-    <% } %>
-</div>
-<% } else { %>
-<div data-sly-test="${wcmmode.edit}"
-     class="cq-dd-brightcove_player cq-video-placeholder cq-block-sm-placeholder md-dropzone-video"
-     data-sly-text="Drop player here"></div>
-<% } %>
+        #container-${videoContainerID} object {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+    </style>
+</c:if>
+<c:choose>
+    <c:when test="${(not empty account) or (not empty playerPath)}">
+        <div data-sly-test="${wcmmode.edit}"
+             class="cq-dd-brightcove_player md-dropzone-video"
+             data-sly-text="Drop player here"
+             style="margin-bottom: 0;margin-left: ${marginLeft};margin-right: ${marginRight};margin-top: 0;overflow-x: hidden;overflow-y: hidden;text-align: center;width: 100%;text-align:${position};">
+
+            <div id="container-${videoContainerID}"
+                 class="brightcove-container"
+                 style="width:100%"></div>
 
 
+            <cq:includeClientLib js="brc.BrightcoveExperiences-custom"/>
+
+            <script type="text/javascript">
 
 
+                // listener for media change events
+                function onMediaBegin(event) {
+                    var BCLcurrentVideoID;
+                    var BCLcurrentVideoNAME;
+                    BCLcurrentVideoID = BCLvideoPlayer.getCurrentVideo().id;
+                    BCLcurrentVideoNAME = BCLvideoPlayer.getCurrentVideo().displayName;
+                    switch (event.type) {
+                        case "mediaBegin":
+                            var currentVideoLength = "0";
+                            currentVideoLength = BCLvideoPlayer.getCurrentVideo().length;
+                            if (currentVideoLength != "0") currentVideoLength = currentVideoLength / 1000;
+                            if (typeof _gaq != "undefined") _gaq.push(['_trackEvent', location.pathname, event.type + " - " + currentVideoLength, BCLcurrentVideoNAME + " - " + BCLcurrentVideoID]);
+                            break;
+                        case "mediaPlay":
+                            _gaq.push(['_trackEvent', location.pathname, event.type + " - " + event.position, BCLcurrentVideoNAME + " - " + BCLcurrentVideoID]);
+                            break;
+                        case "mediaStop":
+                            _gaq.push(['_trackEvent', location.pathname, event.type + " - " + event.position, BCLcurrentVideoNAME + " - " + BCLcurrentVideoID]);
+                            break;
+                        case "mediaChange":
+                            _gaq.push(['_trackEvent', location.pathname, event.type + " - " + event.position, BCLcurrentVideoNAME + " - " + BCLcurrentVideoID]);
+                            break;
+                        case "mediaComplete":
+                            _gaq.push(['_trackEvent', location.pathname, event.type + " - " + event.position, BCLcurrentVideoNAME + " - " + BCLcurrentVideoID]);
+                            break;
+                        default:
+                            _gaq.push(['_trackEvent', location.pathname, event.type, BCLcurrentVideoNAME + " - " + BCLcurrentVideoID]);
+                    }
+                }
 
+            </script>
+            <script>
+                customBC.createPlaylist("${width}", "${height}", "${playerID}", "${playerKey}", "${videoPlayerPL}", "container-${videoContainerID}");
+            </script>
+
+            <c:if test="${isEditMode}">
+                <div data-sly-test="${wcmmode.edit}"
+                     data-sly-text="Drop video here"
+                     class="cq-dd-brightcove_playlist cq-video-placeholder cq-block-sm-placeholder md-dropzone-video"
+                     style="width:99%"></div>
+            </c:if>
+        </div>
+    </c:when>
+    <c:otherwise>
+        <div data-sly-test="${wcmmode.edit}"
+             class="cq-dd-brightcove_player cq-video-placeholder cq-block-sm-placeholder md-dropzone-video"
+             data-sly-text="Drop player here"></div>
+    </c:otherwise>
+</c:choose>

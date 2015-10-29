@@ -24,26 +24,25 @@
 <%@ page import="com.coresecure.brightcove.wrapper.sling.ConfigurationGrabber,
                  com.coresecure.brightcove.wrapper.sling.ConfigurationService,
                  com.coresecure.brightcove.wrapper.sling.ServiceUtil,
-                 com.day.cq.wcm.api.WCMMode,
                  java.util.UUID" %>
 
 <%@include file="/apps/brightcove/global/global.jsp" %>
 
 <%
     UUID video_uuid = new UUID(64L, 64L);
-    String VideoRandomID = video_uuid.randomUUID().toString().replaceAll("-", "");
-    String margLeft = "auto";
-    String margRight = "auto";
+    String videoContainerID = video_uuid.randomUUID().toString().replaceAll("-", "");
+    String marginLeft = "auto";
+    String marginRight = "auto";
     String position = properties.get("align", "center");
     String width = "480";
     String height = "270";
     boolean hasSize = false;
-    String playerPath = properties.get("playerPath", "");
-    String videoPlayer = properties.get("videoPlayer", "");
-    String account = properties.get("account", "");
+    String playerPath = properties.get("playerPath", "").trim();
+    String videoPlayer = properties.get("videoPlayer", "").trim();
+    String account = properties.get("account", "").trim();
     String playerID = "";
     String data_embedded = "";
-    if (!account.trim().isEmpty()) {
+    if (!account.isEmpty()) {
         ConfigurationGrabber cg = ServiceUtil.getConfigurationGrabber();
         ConfigurationService cs = cg.getConfigurationService(account);
         if (cs != null) {
@@ -51,19 +50,19 @@
             data_embedded = cs.getDefVideoPlayerDataEmbedded();
         }
     }
-    boolean editMode = false;
-    if (!(WCMMode.fromRequest(request) == WCMMode.DISABLED || WCMMode.fromRequest(request) == WCMMode.PREVIEW)) {
-        editMode = true;
-    }
 
 
-    if (!playerPath.trim().isEmpty()) {
+    if (!playerPath.isEmpty()) {
         Page playerPage = resourceResolver.resolve(playerPath).adaptTo(Page.class);
         ValueMap playerProperties = playerPage.getProperties();
         String playerAccount = playerProperties.get("account", account);
         if (account.isEmpty() && playerProperties.containsKey("account")) {
-            currentNode.setProperty("account", playerAccount);
-            currentNode.save();
+            try {
+                currentNode.setProperty("account", playerAccount);
+                currentNode.save();
+            } catch (RepositoryException e) {
+                e.printStackTrace();
+            }
         }
         request.setAttribute("account", playerAccount);
         if (playerProperties.containsKey("playerID") && playerProperties.containsKey("playerKey")) {
@@ -72,9 +71,9 @@
         }
         position = playerProperties.get("align", position);
         if (position.equals("left")) {
-            margLeft = "0";
+            marginLeft = "0";
         } else if (position.equals("right")) {
-            margRight = "0";
+            marginRight = "0";
         }
         if (playerProperties.containsKey("width") && playerProperties.containsKey("height")) {
 
@@ -92,70 +91,98 @@
             hasSize = true;
 
         }
-        if (!hasSize) {
-            request.setAttribute("inlinecss", "true");
+    }
+
+    // Update Page Context
+
+    pageContext.setAttribute("account", account);
+    pageContext.setAttribute("videoPlayer", videoPlayer);
+    pageContext.setAttribute("playerPath", playerPath);
+
+    pageContext.setAttribute("playerID", playerID);
+    pageContext.setAttribute("data_embedded", data_embedded);
+
+
+    pageContext.setAttribute("videoContainerID", videoContainerID);
+
+    pageContext.setAttribute("position", position);
+
+    pageContext.setAttribute("marginLeft", marginLeft);
+    pageContext.setAttribute("marginRight", marginRight);
+    pageContext.setAttribute("width", width);
+    pageContext.setAttribute("height", height);
+
+    pageContext.setAttribute("hasSize", hasSize);
+
+
 %>
-<style>
-    #container-<%=VideoRandomID %> {
-        width: 80%;
-        display: block;
-        position: relative;
-        margin: 20px auto;
-    }
-
-    #container-<%=VideoRandomID %>:after {
-        padding-top: 56.25%;
-        display: block;
-        content: '';
-    }
-
-    #video-<%=VideoRandomID %>.video-js {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        right: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-    }
-
-</style>
-<%
+<c:if test="${hasSize}">
+    <style>
+        #container-${videoContainerID} {
+            width: 80%;
+            display: block;
+            position: relative;
+            margin: 20px auto;
         }
-    }
-    if (!account.trim().isEmpty() || !playerPath.trim().isEmpty()) {
-%>
-<div data-sly-test="${wcmmode.edit}" class="cq-dd-brightcove_player md-dropzone-video" data-sly-text="Drop player here"
-     style="margin-bottom: 0;margin-left: <%=margLeft%>;margin-right: <%=margRight%>;margin-top: 0;overflow-x: hidden;overflow-y: hidden;text-align: center;width: 100%;text-align:<%=properties.get("align","center")%>;">
-    <%
-        if (!videoPlayer.trim().isEmpty()) {
-    %>
-    <div id="container-<%=VideoRandomID %>" class="brightcove-container" style="width:100%">
-        <video
-                id="video-<%=VideoRandomID %>"
-                data-account="<%=account%>"
-                data-player="<%=playerID%>"
-                data-embed="<%=data_embedded%>"
-                data-video-id="<%=videoPlayer%>"
-                class="video-js"
-                <% if (hasSize) { %>
-                width="<%=width%>px" height="<%=height%>px"
-                <%}%>
-                class="video-js" controls></video>
-        <script src="//players.brightcove.net/<%=account%>/<%=playerID%>_<%=data_embedded%>/index.min.js"></script>
 
-    </div>
+        #container-${videoContainerID}:after {
+            padding-top: 56.25%;
+            display: block;
+            content: '';
+        }
 
+        #container-${videoContainerID} object {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
 
-    <% } %>
-    <% if (editMode) { %>
-    <div data-sly-test="${wcmmode.edit}"
-         class="cq-dd-brightcove_video cq-video-placeholder cq-block-sm-placeholder md-dropzone-video"
-         data-sly-text="Drop video here" style="width:99%"></div>
-    <% } %>
-</div>
-<% } else { %>
-<div data-sly-test="${wcmmode.edit}"
-     class="cq-dd-brightcove_player cq-video-placeholder cq-block-sm-placeholder md-dropzone-video"
-     data-sly-text="Drop player here"></div>
-<% } %>
+    </style>
+</c:if>
+
+<c:choose>
+    <c:when test="${(not empty account) or (not empty playerPath)}">
+
+        <div data-sly-test="${wcmmode.edit}"
+             class="cq-dd-brightcove_player md-dropzone-video"
+             data-sly-text="Drop player here"
+             style="margin-bottom: 0;margin-left: ${marginLeft};margin-right: ${marginRight};margin-top: 0;overflow-x: hidden;overflow-y: hidden;text-align: center;width: 100%;text-align:${position};">
+
+            <c:if test="${not empty videoPlayer}">
+                <div id="container-${videoContainerID}"
+                     class="brightcove-container"
+                     style="width:100%">
+                    <video
+                            id="video-${videoContainerID}"
+                            data-account="${account}"
+                            data-player="${playerID}"
+                            data-embed="${data_embedded}"
+                            data-video-id="${videoPlayer}"
+                            class="video-js"
+                            <c:if test="${hasSize}">
+                                width="${width}px"
+                                height="${height}px"
+                            </c:if>
+                            class="video-js" controls>
+                    </video>
+                    <script src="//players.brightcove.net/${account}/${playerID}_${data_embedded}/index.min.js"></script>
+                </div>
+            </c:if>
+            <c:if test="${isEditMode}">
+                <div data-sly-test="${wcmmode.edit}"
+                     class="cq-dd-brightcove_video cq-video-placeholder cq-block-sm-placeholder md-dropzone-video"
+                     data-sly-text="Drop video here"
+                     style="width:99%"></div>
+            </c:if>
+        </div>
+    </c:when>
+    <c:otherwise>
+        <div data-sly-test="${wcmmode.edit}"
+             class="cq-dd-brightcove_player cq-video-placeholder cq-block-sm-placeholder md-dropzone-video"
+             data-sly-text="Drop player here"></div>
+    </c:otherwise>
+</c:choose>

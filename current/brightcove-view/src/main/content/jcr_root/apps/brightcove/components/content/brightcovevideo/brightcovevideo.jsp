@@ -58,7 +58,6 @@
         ValueMap playerProperties = playerPage.getProperties();
         String playerAccount = playerProperties.get("account", account);
         if (account.isEmpty() && playerProperties.containsKey("account")) {
-
             try {
                 currentNode.setProperty("account", playerAccount);
                 currentNode.save();
@@ -153,7 +152,9 @@
              style="margin-bottom: 0;margin-left: ${marginLeft};margin-right: ${marginRight};margin-top: 0;overflow-x: hidden;overflow-y: hidden;text-align: center;width: 100%;text-align:${position};">
             <c:if test="${not empty videoPlayer}">
 
-                <div id="container-${videoContainerID}" class="brightcove-container" style="width:100%"></div>
+                <div id="container-${videoContainerID}"
+                     class="brightcove-container"
+                     style="width:100%"></div>
 
                 <cq:includeClientLib js="brc.BrightcoveExperiences-custom"/>
 
@@ -199,7 +200,8 @@
             <c:if test="${isEditMode}">
                 <div data-sly-test="${wcmmode.edit}"
                      class="cq-dd-brightcove_video cq-video-placeholder cq-block-sm-placeholder md-dropzone-video"
-                     data-sly-text="Drop video here" style="width:99%"></div>
+                     data-sly-text="Drop video here"
+                     style="width:99%"></div>
             </c:if>
         </div>
     </c:when>
