@@ -35,7 +35,7 @@
 
 
     UUID video_uuid = new UUID(64L, 64L);
-    String VideoRandomID = new String(video_uuid.randomUUID().toString().replaceAll("-", ""));
+    String VideoRandomID = video_uuid.randomUUID().toString().replaceAll("-", "");
     String playerPath = properties.get("playerPath", "");
     String videoPlayerPL = properties.get("videoPlayerPL", "");
     String account = properties.get("account", "");

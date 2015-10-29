@@ -27,10 +27,11 @@
                  com.day.cq.wcm.api.WCMMode,
                  java.util.UUID" %>
 
-<%@include file="/libs/foundation/global.jsp" %>
+<%@include file="/apps/brightcove/global/global.jsp" %>
+
 <%
     UUID video_uuid = new UUID(64L, 64L);
-    String VideoRandomID = new String(video_uuid.randomUUID().toString().replaceAll("-", ""));
+    String VideoRandomID = video_uuid.randomUUID().toString().replaceAll("-", "");
     String margLeft = "auto";
     String margRight = "auto";
     String position = properties.get("align", "center");
