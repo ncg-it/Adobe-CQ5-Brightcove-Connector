@@ -32,8 +32,6 @@
 
 <%
 
-
-    ConfigurationService cs = null;
     String defaultAccount = "";
     String cookieAccount = "";
     String selectedAccount = "";
@@ -46,11 +44,21 @@
         cookieAccount = ServiceUtil.getAccountFromCookie(slingRequest);
         selectedAccount = (cookieAccount.trim().isEmpty()) ? defaultAccount : cookieAccount;
 
-        cs = cg.getConfigurationService(selectedAccount);
+        ConfigurationService cs = cg.getConfigurationService(selectedAccount);
+        if (cs != null) {
+            previewPlayerLoc = cs.getPreviewPlayerLoc();
+            previewPlayerListLoc = cs.getPreviewPlayerListLoc();
+        }
 
-        previewPlayerLoc = cs.getPreviewPlayerLoc();
-        previewPlayerListLoc = cs.getPreviewPlayerListLoc();
     }
+
+
+    //Update Page Context
+    pageContext.setAttribute("previewPlayerLoc", previewPlayerLoc);
+    pageContext.setAttribute("previewPlayerListLoc", previewPlayerListLoc);
+
+    pageContext.setAttribute("services", services);
+    pageContext.setAttribute("selectedAccount", selectedAccount);
 
 
 %><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">
@@ -66,11 +74,11 @@
     <cq:includeClientLib js="brc.bootstrap"/>
     <cq:includeClientLib js="brc.brightcove-api"/>
 
-    <title>VideoManager - Media API Sample Application</title>
+    <title>VideoManager - Media API Application</title>
     <script>
         //This should be the direct URL to a preview player,  corresponding to the account of the tokens
-        var previewPlayerLoc = "<%=previewPlayerLoc%>";
-        var previewPlayerListLoc = "<%=previewPlayerListLoc%>";
+        var previewPlayerLoc = "${previewPlayerLoc}";
+        var previewPlayerListLoc = "${previewPlayerListLoc}";
     </script>
 </head>
 
@@ -83,12 +91,15 @@
                 <ul class="nav">
                     <li class="active">
                         <a id="allVideos"
-                           onclick='searchVal="";$(this).parent("li").parent("ul").children("li").attr("class","");$(this).parent("li").attr("class","active");Load(getAllVideosURL());'>All
-                            Videos</a>
+                           onclick='searchVal="";$(this).parent("li").parent("ul").children("li").attr("class","");$(this).parent("li").attr("class","active");Load(getAllVideosURL());'>
+                            All Videos
+                        </a>
                     </li>
-                    <li><a id="allPlaylists"
-                           onclick='searchVal="";$(this).parent("li").parent("ul").children("li").attr("class","");$(this).parent("li").attr("class","active");Load(getAllPlaylistsURL())'>All
-                        Playlists</a>
+                    <li>
+                        <a id="allPlaylists"
+                           onclick='searchVal="";$(this).parent("li").parent("ul").children("li").attr("class","");$(this).parent("li").attr("class","active");Load(getAllPlaylistsURL())'>
+                            All Playlists
+                        </a>
                     </li>
                 </ul>
                 <div class="pull-right">
@@ -108,25 +119,19 @@
                     <table id="listTable" width="100%" cellspacing="0" callpadding="0">
                         <tr>
                             <div id="accountDiv" style="float:right;padding:5px">
-
                                 <select id='selAccount' name="selAccount" style="position: relative;top: 5px;">
-                                    <%
-                                        for (String account : services) {
-                                    %>
-                                    <option value="<%=account%>"
-                                            <%if (account.equals(selectedAccount)) {%>selected<%}%>><%=account%>
-                                    </option>
-                                    <%
-                                        }
-                                    %>
+                                    <c:forEach var="account" items="${services}" varStatus="status">
+                                        <option value="${account}"
+                                                class="${account eq selectedAccount ? 'selected':''}">
+                                                ${account}
+                                        </option>
+                                    </c:forEach>
                                 </select>
                             </div>
                         </tr>
                         <tr class="trCenterHeader">
                             <td id="tdOne">
                                 <div id="headTitle" style="font-weight:bold">All Videos</div>
-
-                                <p>
 
                                 <div id="divVideoCount" style="float:left"></div>
 
