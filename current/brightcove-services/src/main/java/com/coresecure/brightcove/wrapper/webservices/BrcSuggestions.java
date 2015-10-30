@@ -22,8 +22,8 @@
 package com.coresecure.brightcove.wrapper.webservices;
 
 import com.coresecure.brightcove.wrapper.sling.ServiceUtil;
-import org.apache.felix.scr.annotations.Property;
 import org.apache.felix.scr.annotations.Properties;
+import org.apache.felix.scr.annotations.Property;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.servlets.SlingAllMethodsServlet;
@@ -35,37 +35,37 @@ import java.io.PrintWriter;
 
 
 @Properties(value = {
-		@Property(name = "sling.servlet.extensions", value = { "json" }),
-		@Property(name = "sling.servlet.paths", value = "/bin/brightcove/suggestions")
+        @Property(name = "sling.servlet.extensions", value = {"json"}),
+        @Property(name = "sling.servlet.paths", value = "/bin/brightcove/suggestions")
 })
 public class BrcSuggestions extends SlingAllMethodsServlet {
-	
+
 
     @Override
     protected void doGet(final SlingHttpServletRequest request,
-            final SlingHttpServletResponse response) throws ServletException,
+                         final SlingHttpServletResponse response) throws ServletException,
             IOException {
-    		PrintWriter outWriter = response.getWriter();
-    		response.setContentType("application/json");
-    		JSONObject root = new JSONObject();
+        PrintWriter outWriter = response.getWriter();
+        response.setContentType("application/json");
+        JSONObject root = new JSONObject();
 
 
-    		int requestedAPI = 0;
-    		String requestedAccount="";
-    		if (request.getParameter("query") != null && request.getParameter("account_id") != null) {
-                requestedAccount = request.getParameter("account_id");
-                ServiceUtil serviceUtil = new ServiceUtil(requestedAccount);
+        int requestedAPI = 0;
+        String requestedAccount = "";
+        if (request.getParameter("query") != null && request.getParameter("account_id") != null) {
+            requestedAccount = request.getParameter("account_id");
+            ServiceUtil serviceUtil = new ServiceUtil(requestedAccount);
 
-                response.setContentType("application/json");
-    		    if ("playlist".equalsIgnoreCase(request.getParameter("type"))) {
-                    outWriter.write(serviceUtil.getPlaylistByID(request.getParameter("query")).toString());
-                } else {
-                    outWriter.write(serviceUtil.getList(false, request.getParameter("query")));
-    		    }
-    		    
-    		} else {
-    			outWriter.write("{\"items\":[],\"results\":0}");
-    		}
+            response.setContentType("application/json");
+            if ("playlist".equalsIgnoreCase(request.getParameter("type"))) {
+                outWriter.write(serviceUtil.getPlaylistByID(request.getParameter("query")).toString());
+            } else {
+                outWriter.write(serviceUtil.getList(false, request.getParameter("query")));
+            }
+
+        } else {
+            outWriter.write("{\"items\":[],\"results\":0}");
+        }
 
     }
 

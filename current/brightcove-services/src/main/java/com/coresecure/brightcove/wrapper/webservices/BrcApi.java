@@ -26,9 +26,9 @@ import com.coresecure.brightcove.wrapper.sling.ConfigurationGrabber;
 import com.coresecure.brightcove.wrapper.sling.ConfigurationService;
 import com.coresecure.brightcove.wrapper.sling.ServiceUtil;
 import org.apache.felix.scr.annotations.Component;
+import org.apache.felix.scr.annotations.Properties;
 import org.apache.felix.scr.annotations.Property;
 import org.apache.felix.scr.annotations.Service;
-import org.apache.felix.scr.annotations.Properties;
 import org.apache.jackrabbit.api.security.user.Authorizable;
 import org.apache.jackrabbit.api.security.user.Group;
 import org.apache.jackrabbit.api.security.user.UserManager;
@@ -36,52 +36,50 @@ import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.servlets.SlingAllMethodsServlet;
+import org.apache.sling.commons.json.JSONArray;
 import org.apache.sling.commons.json.JSONException;
 import org.apache.sling.commons.json.JSONObject;
-import org.apache.sling.commons.json.JSONArray;
 
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.servlet.ServletException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import javax.jcr.Node;
 
 @Service
 @Component
 @Properties(value = {
-		@Property(name = "sling.servlet.extensions", value = { "json" }),
-		@Property(name = "sling.servlet.paths", value = "/bin/brightcove/api")
+        @Property(name = "sling.servlet.extensions", value = {"json"}),
+        @Property(name = "sling.servlet.paths", value = "/bin/brightcove/api")
 })
 public class BrcApi extends SlingAllMethodsServlet {
-	
-	@Override
-	protected void doPost(final SlingHttpServletRequest request,
-            final SlingHttpServletResponse response) throws ServletException,
+
+    @Override
+    protected void doPost(final SlingHttpServletRequest request,
+                          final SlingHttpServletResponse response) throws ServletException,
             IOException {
-			
-			api(request, response);
-    		
-			
+
+        api(request, response);
+
 
     }
-	
-	
-	public void api(final SlingHttpServletRequest request,
-            final SlingHttpServletResponse response) throws ServletException,
-            IOException {
-		PrintWriter outWriter = response.getWriter();
-		response.setContentType("application/json");
-		JSONObject root = new JSONObject();
-		
 
-		int requestedAPI = 0;
-		String requestedAccount="";
-		if (request.getParameter("a") != null && request.getParameter("account_id") != null && !request.getParameter("account_id").trim().isEmpty()) {
-		    response.setContentType("application/json");
+
+    public void api(final SlingHttpServletRequest request,
+                    final SlingHttpServletResponse response) throws ServletException,
+            IOException {
+        PrintWriter outWriter = response.getWriter();
+        response.setContentType("application/json");
+        JSONObject root = new JSONObject();
+
+
+        int requestedAPI = 0;
+        String requestedAccount = "";
+        if (request.getParameter("a") != null && request.getParameter("account_id") != null && !request.getParameter("account_id").trim().isEmpty()) {
+            response.setContentType("application/json");
             requestedAccount = request.getParameter("account_id");
             ConfigurationGrabber cg = ServiceUtil.getConfigurationGrabber();
             ConfigurationService cs = cg.getConfigurationService(requestedAccount);
@@ -94,7 +92,7 @@ public class BrcApi extends SlingAllMethodsServlet {
             try {
                 Authorizable auth = userManager.getAuthorizable(session.getUserID());
 
-                if (auth != null ) {
+                if (auth != null) {
                     List<String> allowedGroups = cs.getAllowedGroupsList();
                     Iterator<Group> groups = auth.memberOf();
                     while (groups.hasNext() && !is_authorized) {
@@ -244,10 +242,10 @@ public class BrcApi extends SlingAllMethodsServlet {
 
     @Override
     protected void doGet(final SlingHttpServletRequest request,
-            final SlingHttpServletResponse response) throws ServletException,
+                         final SlingHttpServletResponse response) throws ServletException,
             IOException {
-    	api(request, response);
-    	
+        api(request, response);
+
     }
 
 }

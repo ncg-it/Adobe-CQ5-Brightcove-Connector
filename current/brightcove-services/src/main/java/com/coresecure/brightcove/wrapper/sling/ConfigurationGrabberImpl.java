@@ -1,38 +1,30 @@
 package com.coresecure.brightcove.wrapper.sling;
 
 
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.ReferenceCardinality;
-import org.apache.felix.scr.annotations.ReferencePolicy;
-import org.apache.felix.scr.annotations.Service;
-import org.apache.felix.scr.annotations.Reference;
-import org.apache.felix.scr.annotations.References;
-import org.apache.felix.scr.annotations.Activate;
-
-
+import org.apache.felix.scr.annotations.*;
 import org.apache.jackrabbit.api.security.user.Authorizable;
 import org.apache.jackrabbit.api.security.user.Group;
 import org.apache.jackrabbit.api.security.user.UserManager;
 import org.apache.sling.api.SlingHttpServletRequest;
-import org.osgi.service.component.ComponentContext;
 import org.osgi.framework.ServiceReference;
+import org.osgi.service.component.ComponentContext;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import java.util.*;
 
-@Component(immediate=true)
+@Component(immediate = true)
 @Service
 @References({
-        @Reference (cardinality=ReferenceCardinality.OPTIONAL_MULTIPLE,
-                policy=ReferencePolicy.DYNAMIC,
+        @Reference(cardinality = ReferenceCardinality.OPTIONAL_MULTIPLE,
+                policy = ReferencePolicy.DYNAMIC,
                 referenceInterface = ConfigurationService.class,
-                name="ConfigurationService")
+                name = "ConfigurationService")
 })
 
 public class ConfigurationGrabberImpl implements ConfigurationGrabber {
 
-    private static String KEY="key";
+    private static String KEY = "key";
 
     private final Map<String, ConfigurationService> myConfigurationServices = new HashMap<String, ConfigurationService>();
     private ComponentContext componentContext;
@@ -53,19 +45,19 @@ public class ConfigurationGrabberImpl implements ConfigurationGrabber {
             UserManager userManager = request.getResourceResolver().adaptTo(UserManager.class);
                 /* to get the current user */
             Authorizable auth = userManager.getAuthorizable(session.getUserID());
-            if (auth != null ) {
+            if (auth != null) {
                 List<String> memberOf = new ArrayList<String>();
                 Iterator<Group> groups = auth.memberOf();
                 while (groups.hasNext() && !is_authorized) {
                     Group group = groups.next();
                     memberOf.add(group.getID());
                 }
-                int i =0;
-                for(String account: getAvailableServices()) {
+                int i = 0;
+                for (String account : getAvailableServices()) {
                     ConfigurationService cs = getConfigurationService(account);
                     List<String> allowedGroups = new ArrayList<String>(cs.getAllowedGroupsList());
                     allowedGroups.retainAll(memberOf);
-                    if(allowedGroups.size()>0) {
+                    if (allowedGroups.size() > 0) {
                         result.add(account);
                         i++;
                     }
@@ -81,11 +73,11 @@ public class ConfigurationGrabberImpl implements ConfigurationGrabber {
     protected void bindConfigurationService(ServiceReference ref) {
         synchronized (this.myConfigurationServices) {
             String customKey = (String) ref.getProperty(KEY);
-            ConfigurationService operation = (ConfigurationService) this.componentContext.locateService("ConfigurationService",ref);
+            ConfigurationService operation = (ConfigurationService) this.componentContext.locateService("ConfigurationService", ref);
             //Or you can use
             //MyCustomServices operation = ref.getProperty("service.pid");
             if (operation != null) {
-                myConfigurationServices.put(customKey,operation);
+                myConfigurationServices.put(customKey, operation);
             }
         }
     }
@@ -98,7 +90,7 @@ public class ConfigurationGrabberImpl implements ConfigurationGrabber {
     }
 
     @Activate
-    protected void activate (ComponentContext ctx) {
+    protected void activate(ComponentContext ctx) {
         this.componentContext = ctx;
     }
 }

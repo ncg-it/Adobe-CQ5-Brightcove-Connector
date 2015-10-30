@@ -51,80 +51,79 @@ import java.util.List;
 @Service
 @Component
 @Properties(value = {
-		@Property(name = "sling.servlet.extensions", value = { "json" }),
-		@Property(name = "sling.servlet.paths", value = "/bin/brightcove/accounts")
+        @Property(name = "sling.servlet.extensions", value = {"json"}),
+        @Property(name = "sling.servlet.paths", value = "/bin/brightcove/accounts")
 })
 public class BrcAccounts extends SlingAllMethodsServlet {
-	
-	@Override
-	protected void doPost(final SlingHttpServletRequest request,
-            final SlingHttpServletResponse response) throws ServletException,
+
+    @Override
+    protected void doPost(final SlingHttpServletRequest request,
+                          final SlingHttpServletResponse response) throws ServletException,
             IOException {
-			
-			api(request, response);
-    		
-			
+
+        api(request, response);
+
 
     }
-	
-	
-	public void api(final SlingHttpServletRequest request,
-            final SlingHttpServletResponse response) throws ServletException,
+
+
+    public void api(final SlingHttpServletRequest request,
+                    final SlingHttpServletResponse response) throws ServletException,
             IOException {
         PrintWriter outWriter = response.getWriter();
-		response.setContentType("application/json");
-		JSONObject root = new JSONObject();
+        response.setContentType("application/json");
+        JSONObject root = new JSONObject();
         boolean is_authorized = false;
-            try {
-                Session session = request.getResourceResolver().adaptTo(Session.class);
-                UserManager userManager = request.getResourceResolver().adaptTo(UserManager.class);
+        try {
+            Session session = request.getResourceResolver().adaptTo(Session.class);
+            UserManager userManager = request.getResourceResolver().adaptTo(UserManager.class);
                 /* to get the current user */
-                Authorizable auth = userManager.getAuthorizable(session.getUserID());
-                if (auth != null ) {
-                    List<String> memberOf = new ArrayList<String>();
-                    Iterator<Group> groups = auth.memberOf();
-                    while (groups.hasNext() && !is_authorized) {
-                        Group group = groups.next();
-                        memberOf.add(group.getID());
-                    }
-                    ConfigurationGrabber cg = ServiceUtil.getConfigurationGrabber();
-                    JSONArray accounts = new JSONArray();
-                    int i =0;
-                    for(String account: cg.getAvailableServices()) {
-                        ConfigurationService cs = cg.getConfigurationService(account);
-                        List<String> allowedGroups = new ArrayList<String>();
-                        allowedGroups.addAll(cs.getAllowedGroupsList());
-                        allowedGroups.retainAll(memberOf);
-                        String alias = cs.getAccountAlias();
-                        alias = (alias == null) ? account : alias;
-                        if(allowedGroups.size()>0) {
-                            JSONObject accountJson = new JSONObject();
-                            accountJson.put("text", alias);
-                            accountJson.put("value", account);
-                            accountJson.put("id", i);
-                            i++;
-                            accounts.put(accountJson);
-                        }
-                    }
-                    root.put("accounts",accounts);
-
+            Authorizable auth = userManager.getAuthorizable(session.getUserID());
+            if (auth != null) {
+                List<String> memberOf = new ArrayList<String>();
+                Iterator<Group> groups = auth.memberOf();
+                while (groups.hasNext() && !is_authorized) {
+                    Group group = groups.next();
+                    memberOf.add(group.getID());
                 }
-                outWriter.write(root.toString(1));
-            } catch (JSONException je) {
-                outWriter.write("{\"accounts\":[],\"error\":\""+je.getMessage()+"\"}");
-            } catch (RepositoryException e) {
-                outWriter.write("{\"accounts\":[],\"error\":\""+e.getMessage()+"\"}");
-            }
+                ConfigurationGrabber cg = ServiceUtil.getConfigurationGrabber();
+                JSONArray accounts = new JSONArray();
+                int i = 0;
+                for (String account : cg.getAvailableServices()) {
+                    ConfigurationService cs = cg.getConfigurationService(account);
+                    List<String> allowedGroups = new ArrayList<String>();
+                    allowedGroups.addAll(cs.getAllowedGroupsList());
+                    allowedGroups.retainAll(memberOf);
+                    String alias = cs.getAccountAlias();
+                    alias = (alias == null) ? account : alias;
+                    if (allowedGroups.size() > 0) {
+                        JSONObject accountJson = new JSONObject();
+                        accountJson.put("text", alias);
+                        accountJson.put("value", account);
+                        accountJson.put("id", i);
+                        i++;
+                        accounts.put(accountJson);
+                    }
+                }
+                root.put("accounts", accounts);
 
-	}
-	
-	
+            }
+            outWriter.write(root.toString(1));
+        } catch (JSONException je) {
+            outWriter.write("{\"accounts\":[],\"error\":\"" + je.getMessage() + "\"}");
+        } catch (RepositoryException e) {
+            outWriter.write("{\"accounts\":[],\"error\":\"" + e.getMessage() + "\"}");
+        }
+
+    }
+
+
     @Override
     protected void doGet(final SlingHttpServletRequest request,
-            final SlingHttpServletResponse response) throws ServletException,
+                         final SlingHttpServletResponse response) throws ServletException,
             IOException {
-    	api(request, response);
-    	
+        api(request, response);
+
     }
 
 }

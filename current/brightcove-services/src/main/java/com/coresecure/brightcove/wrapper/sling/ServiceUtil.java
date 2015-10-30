@@ -23,22 +23,24 @@ public class ServiceUtil {
 
     public static ConfigurationGrabber getConfigurationGrabber() {
         BundleContext bundleContext = FrameworkUtil.getBundle(ConfigurationGrabber.class).getBundleContext();
-        return (ConfigurationGrabber)bundleContext.getService(bundleContext.getServiceReference(ConfigurationGrabber.class.getName()));
+        return (ConfigurationGrabber) bundleContext.getService(bundleContext.getServiceReference(ConfigurationGrabber.class.getName()));
     }
+
     public static Cookie getAccountCookie(SlingHttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
-        Map<String,Cookie> cookiesMap = new TreeMap<String,Cookie>();
+        Map<String, Cookie> cookiesMap = new TreeMap<String, Cookie>();
         if (cookies != null) {
-            for (int i=0; i<cookies.length; i++) {
+            for (int i = 0; i < cookies.length; i++) {
                 cookiesMap.put(cookies[i].getName(), cookies[i]);
-            };
+            }
+            ;
         }
         return cookiesMap.get("brc_act");
     }
 
     public static String getAccountFromCookie(SlingHttpServletRequest request) {
-        Cookie account =  getAccountCookie(request);
-        return (account!=null) ? account.getValue() : "";
+        Cookie account = getAccountCookie(request);
+        return (account != null) ? account.getValue() : "";
     }
 
     public static void setAccountCookie(HttpServletResponse response, String account, boolean secure) {
@@ -57,6 +59,7 @@ public class ServiceUtil {
     public ServiceUtil(String account_id) {
         brAPI = new BrightcoveAPI(account_id);
     }
+
     private static List sortByValue(final Map m) {
         List keys = new ArrayList();
         keys.addAll(m.keySet());
@@ -110,7 +113,7 @@ public class ServiceUtil {
     }
 
     public String getList(Boolean exportCSV, String query) {
-        String result = getList(exportCSV,  0, DEFAULT_LIMIT, true, query);
+        String result = getList(exportCSV, 0, DEFAULT_LIMIT, true, query);
         return result;
     }
 
@@ -121,34 +124,34 @@ public class ServiceUtil {
             int pageNumber = 0;
             long totalItems = 0;
             JSONArray videos = brAPI.cms.addThumbnail(brAPI.cms.getVideos(query, limit, offset, "name"));
-            offset = offset+limit;
+            offset = offset + limit;
             if (videos.length() > 0) {
-                totalItems =  brAPI.cms.getVideosCount(query).getLong("count");
+                totalItems = brAPI.cms.getVideosCount(query).getLong("count");
 
                 double totalPages = Math.floor(totalItems / limit);
 
                 while (offset < totalItems && full_scroll) {
-                    JSONArray videos_page =brAPI.cms.addThumbnail(brAPI.cms.getVideos(query, limit, offset, "name")) ;
+                    JSONArray videos_page = brAPI.cms.addThumbnail(brAPI.cms.getVideos(query, limit, offset, "name"));
                     for (int i = 0; i < videos_page.length(); i++) {
-                        JSONObject video=videos_page.getJSONObject(i);
+                        JSONObject video = videos_page.getJSONObject(i);
                         videos.put(video);
                     }
-                    offset = offset+limit;
+                    offset = offset + limit;
 
                 }
 
             }
 
-            if(exportCSV){
+            if (exportCSV) {
                 JSONObject tempJSON;
                 String csvString = "\"Video Name\",\"Video ID\"\r\n";
 
-                for (int key = 0; key < videos.length(); key++ ) {
-                    tempJSON =  videos.getJSONObject(key);
-                    csvString += "\""+tempJSON.getString("name") + "\",\""+tempJSON.getString("id") + "\"\r\n";
+                for (int key = 0; key < videos.length(); key++) {
+                    tempJSON = videos.getJSONObject(key);
+                    csvString += "\"" + tempJSON.getString("name") + "\",\"" + tempJSON.getString("id") + "\"\r\n";
                 }
                 result = csvString;
-            } else{
+            } else {
                 items.put("items", videos);
                 items.put("totals", totalItems);
                 result = items.toString(1);
@@ -161,22 +164,18 @@ public class ServiceUtil {
         return result;
     }
 
-    public boolean isLong( String input )
-    {
+    public boolean isLong(String input) {
         if (input == null || input.trim().isEmpty()) return false;
-        try
-        {
-            Long.parseLong(input );
+        try {
+            Long.parseLong(input);
             return true;
-        }
-        catch( Exception e )
-        {
+        } catch (Exception e) {
             return false;
         }
     }
 
     public String searchVideo(String querystr, int offset, int limit) {
-        String result = getList(false,  offset, limit, true, querystr);
+        String result = getList(false, offset, limit, true, querystr);
         return result;
     }
 
@@ -215,7 +214,7 @@ public class ServiceUtil {
             if (limits != null && !limits.trim().isEmpty() && limits.split("\\.\\.")[0] != null) {
                 firstElement = Integer.parseInt(limits.split("\\.\\.")[0]);
                 lastElement = Integer.parseInt(limits.split("\\.\\.")[1]);
-                limit = lastElement-firstElement;
+                limit = lastElement - firstElement;
             }
             result = getList(false, firstElement, limit, false, "");
         } catch (Exception e) {
@@ -225,9 +224,10 @@ public class ServiceUtil {
     }
 
     public String getSuggestions(String querystr, int offset, int limit) {
-        String result = getList(false,  offset, limit, true, querystr);
+        String result = getList(false, offset, limit, true, querystr);
         return result;
     }
+
     public JSONObject getPlayers() {
         JSONObject result = new JSONObject();
         try {
@@ -253,6 +253,7 @@ public class ServiceUtil {
         return result;
 
     }
+
     public String getPlaylists(int offset, int limit, boolean exportCSV, boolean full_scroll) {
         JSONObject items = new JSONObject();
         String result = "";
@@ -260,33 +261,33 @@ public class ServiceUtil {
             int pageNumber = 0;
             long totalItems = 0;
             JSONArray playlists = brAPI.cms.getPlaylists(limit, offset, "name");
-            offset = offset+limit;
+            offset = offset + limit;
             if (playlists.length() > 0) {
-                totalItems =  brAPI.cms.getPlaylistsCount().getLong("count");
+                totalItems = brAPI.cms.getPlaylistsCount().getLong("count");
 
                 double totalPages = Math.floor(totalItems / limit);
 
                 while (offset < totalItems && full_scroll) {
-                    JSONArray videos_page =brAPI.cms.getPlaylists(limit, offset,"name") ;
+                    JSONArray videos_page = brAPI.cms.getPlaylists(limit, offset, "name");
                     for (int i = 0; i < videos_page.length(); i++) {
                         playlists.put(videos_page.get(i));
                     }
-                    offset = offset+limit;
+                    offset = offset + limit;
 
                 }
 
             }
 
-            if(exportCSV){
+            if (exportCSV) {
                 JSONObject tempJSON;
                 String csvString = "\"Video Name\",\"Video ID\"\r\n";
 
-                for (int key = 0; key < playlists.length(); key++ ) {
-                    tempJSON =  playlists.getJSONObject(key);
-                    csvString += "\""+tempJSON.getString("name") + "\",\""+tempJSON.getString("id") + "\"\r\n";
+                for (int key = 0; key < playlists.length(); key++) {
+                    tempJSON = playlists.getJSONObject(key);
+                    csvString += "\"" + tempJSON.getString("name") + "\",\"" + tempJSON.getString("id") + "\"\r\n";
                 }
                 result = csvString;
-            } else{
+            } else {
                 items.put("items", playlists);
                 items.put("totals", totalItems);
 
@@ -299,12 +300,13 @@ public class ServiceUtil {
         }
         return result;
     }
+
     //Returns JSON of the video information based on a comma separated string of their ids.
     public JSONArray getVideosJsonByIds(String videoIds, String videoProperties) {
         JSONArray jsa = new JSONArray();
         try {
             String[] videos_ids = videoIds.split(",");
-            for(String id: videos_ids) {
+            for (String id : videos_ids) {
                 jsa.put(brAPI.cms.getVideo(id));
             }
         } catch (Exception e) {
@@ -327,7 +329,7 @@ public class ServiceUtil {
             if (limits != null && !limits.trim().isEmpty() && limits.split("\\.\\.")[0] != null) {
                 firstElement = Integer.parseInt(limits.split("\\.\\.")[0]);
                 lastElement = Integer.parseInt(limits.split("\\.\\.")[1]);
-                limit = lastElement-firstElement;
+                limit = lastElement - firstElement;
             }
             result = getPlaylists(firstElement, limit, false, false);
         } catch (Exception e) {

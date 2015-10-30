@@ -26,20 +26,34 @@ import java.util.List;
 
 public interface ConfigurationService {
 
-    
-    public String getReadToken();
-    public String getWriteToken();
-    public String getPreviewPlayerLoc();
-	public String getPreviewPlayerListLoc();
-    public String getPlayersLoc();
-    public String getDefVideoPlayerID();
-	public String getDefVideoPlayerDataEmbedded();
-	public String getDefPlaylistPlayerID();
-	public String getDefPlaylistPlayerKey();
-    public String getClientID();
-    public String getClientSecret();
-    public String getAccountID();
-    public String getAccountAlias();
-    public List<String> getAllowedGroupsList();
-    public String[] getAllowedGroups();
+
+    String getReadToken();
+
+    String getWriteToken();
+
+    String getPreviewPlayerLoc();
+
+    String getPreviewPlayerListLoc();
+
+    String getPlayersLoc();
+
+    String getDefVideoPlayerID();
+
+    String getDefVideoPlayerDataEmbedded();
+
+    String getDefPlaylistPlayerID();
+
+    String getDefPlaylistPlayerKey();
+
+    String getClientID();
+
+    String getClientSecret();
+
+    String getAccountID();
+
+    String getAccountAlias();
+
+    List<String> getAllowedGroupsList();
+
+    String[] getAllowedGroups();
 }
