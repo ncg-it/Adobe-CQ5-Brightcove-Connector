@@ -144,16 +144,6 @@
     </style>
 </c:if>
 
-playerPath: ${playerPath}
-<br/>
-playerID: ${playerID}
-<br/>
-playerKey: ${playerKey}
-<br/>
-videoPlayer: ${videoPlayer}
-<br/>
-account: ${account}
-
 <c:choose>
     <c:when test="${(not empty account) or (not empty playerPath)}">
         <div data-sly-test="${wcmmode.edit}"

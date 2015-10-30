@@ -6,7 +6,8 @@
     fieldLabel="Video:"
     fieldSubLabel=""
     hiddenName="./videoPlayer"
-    xtype="BrightcoveCombo">
+    storePath="/bin/brightcove/api?a=5"
+    xtype="brc_combobox">
     <listeners
         jcr:primaryType="nt:unstructured"
         focus="function(){this.store.baseParams['account_id']=$(&quot;#accountSelector&quot;).val();}"/>

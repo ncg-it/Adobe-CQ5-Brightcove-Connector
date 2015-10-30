@@ -26,7 +26,7 @@
  */
 var Brightcove = Brightcove || {};
 
-Brightcove.PlayerCombo = CQ.Ext.extend(CQ.Ext.form.ComboBox, {
+Brightcove.ComboBox = CQ.Ext.extend(CQ.Ext.form.ComboBox, {
 
     /**
      * @cfg {String} url
@@ -89,9 +89,14 @@ Brightcove.PlayerCombo = CQ.Ext.extend(CQ.Ext.form.ComboBox, {
                 '</tpl>'),
             "itemSelector": "div.search-item"
         });
+
+
+        var storePath = config.storePath;
+        console.log(storePath);
+
         var storeConfig = CQ.Util.applyDefaults(config.storeConfig, {
             "proxy": new CQ.Ext.data.HttpProxy({
-                "url": "/apps/brightcove/components/tools/players.html",
+                "url": storePath,
                 "method": "GET"
             }),
             "baseParams": {
@@ -100,17 +105,12 @@ Brightcove.PlayerCombo = CQ.Ext.extend(CQ.Ext.form.ComboBox, {
             "reader": new CQ.Ext.data.JsonReader({
                 "id": "id",
                 "root": "items",
-                "totalProperty": "results",
-                "fields": [
-                    {name: "name"},
-                    {name: "id", mapping: "path"},
-                    {name: "path", mapping: "path"},
-                    {name: "thumbnailURL", type: "string", mapping: "thumbnailURL"}
-                ]
+                "totalProperty": "totals",
+                "fields": ["id", "name", "thumbnailURL"]
             })
         });
         config.store = new CQ.Ext.data.Store(storeConfig);
-        Brightcove.PlayerCombo.superclass.constructor.call(this, config);
+        Brightcove.ComboBox.superclass.constructor.call(this, config);
     },
     asyncSetDisplayValue: function (v) {
 
@@ -139,4 +139,4 @@ Brightcove.PlayerCombo = CQ.Ext.extend(CQ.Ext.form.ComboBox, {
 
 
 });
-CQ.Ext.reg("BrightcovePlayerCombo", Brightcove.PlayerCombo);
+CQ.Ext.reg("brc_combobox", Brightcove.ComboBox);

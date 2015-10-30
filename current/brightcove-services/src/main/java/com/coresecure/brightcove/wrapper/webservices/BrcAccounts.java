@@ -25,6 +25,7 @@ package com.coresecure.brightcove.wrapper.webservices;
 import com.coresecure.brightcove.wrapper.sling.ConfigurationGrabber;
 import com.coresecure.brightcove.wrapper.sling.ConfigurationService;
 import com.coresecure.brightcove.wrapper.sling.ServiceUtil;
+import com.coresecure.brightcove.wrapper.utils.TextUtil;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Properties;
 import org.apache.felix.scr.annotations.Property;
@@ -94,11 +95,15 @@ public class BrcAccounts extends SlingAllMethodsServlet {
                     List<String> allowedGroups = new ArrayList<String>();
                     allowedGroups.addAll(cs.getAllowedGroupsList());
                     allowedGroups.retainAll(memberOf);
+
+                    String optionText = account;
                     String alias = cs.getAccountAlias();
-                    alias = (alias == null) ? account : alias;
+                    if (TextUtil.notEmpty(alias)) {
+                        optionText = String.format("%s [%s]", alias, account);
+                    }
                     if (allowedGroups.size() > 0) {
                         JSONObject accountJson = new JSONObject();
-                        accountJson.put("text", alias);
+                        accountJson.put("text", optionText);
                         accountJson.put("value", account);
                         accountJson.put("id", i);
                         i++;

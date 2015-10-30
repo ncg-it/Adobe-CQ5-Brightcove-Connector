@@ -49,17 +49,18 @@
                     id: "cfTab-Brightcove-Players-account",
                     name:"account_id",
                     triggerAction:"all",
+                    lazyInit:true,
                     store: {
                         "url": CQ.shared.HTTP.getContextPath() +'/bin/brightcove/accounts.json',
                         "reader": new CQ.Ext.data.JsonReader({
                             "root": "accounts",
                             "fields": [
                                 "text", "value"
-                            ]                            
+                            ]
                         })
                     },
-                	valueField: 'value',  
-   					displayField: 'text',  
+                	valueField: 'value',
+   					displayField: 'text',
                     editable: false,
                     emptyText: CQ.I18n.getMessage("Filter by account"),
                 	style:"",
@@ -100,7 +101,7 @@
                 {
                     text: "Export CSV",
                     handler: function() {
-                        var url= CQ.shared.HTTP.getContextPath() +'/bin/brightcove/api?a=3&query='+$("#cfTab-Brightcove-QueryBox input[name=query]").val();  
+                        var url= CQ.shared.HTTP.getContextPath() +'/bin/brightcove/api?a=3&query='+$("#cfTab-Brightcove-QueryBox input[name=query]").val();
                         window.open(url, 'Download');
 
                    }
@@ -118,9 +119,9 @@
                     {name:"thumbnailURL", type:"string", mapping:"thumbnailURL"}
                 ],
                 "id": "path"
-                
+
             })
-        
+
         })
     ]
 
