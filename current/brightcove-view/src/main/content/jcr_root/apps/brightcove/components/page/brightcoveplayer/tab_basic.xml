@@ -38,7 +38,7 @@
             <items jcr:primaryType="cq:WidgetCollection">
                 <account
                     jcr:primaryType="cq:Widget"
-                    path="/apps/brightcove/components/shared/dialog/selection_account.infinity.json"
+                    path="/apps/brightcove/components/shared/dialog/field_account.infinity.json"
                     xtype="cqinclude"/>
                 <playerID
                     jcr:primaryType="cq:Widget"

@@ -3,11 +3,11 @@
     jcr:primaryType="cq:Panel"
     title="Player Customization">
     <items jcr:primaryType="cq:WidgetCollection">
-        <player-styles
+        <fieldset-player-styles
             jcr:primaryType="cq:Widget"
             path="/apps/brightcove/components/shared/dialog/fieldset_player_styles.infinity.json"
             xtype="cqinclude"/>
-        <misc
+        <fieldset-misc
             jcr:primaryType="cq:Widget"
             collapsed="{Boolean}false"
             collapsible="{Boolean}true"
@@ -21,6 +21,6 @@
                     name="./data_embedded"
                     xtype="textfield"/>
             </items>
-        </misc>
+        </fieldset-misc>
     </items>
 </jcr:root>

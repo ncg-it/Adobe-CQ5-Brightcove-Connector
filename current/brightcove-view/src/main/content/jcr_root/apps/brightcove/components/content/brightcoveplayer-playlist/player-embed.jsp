@@ -23,6 +23,7 @@
 --%>
 
 <%@include file="/apps/brightcove/components/shared/global.jsp" %>
+
 <%--
 
 Actual player code is separated into smaller script to make overlaying the implementation easier by setting this component is set as the resourceSuperType.
@@ -51,6 +52,7 @@ Available Variables:
 Brightcove Reference:
 
       - http://docs.brightcove.com/en/video-cloud/brightcove-player/guides/embed-in-page.html
+      - http://docs.brightcove.com/en/video-cloud/brightcove-player/guides/playlist-using.html#inpageembed
 
 --%>
 
@@ -61,7 +63,7 @@ Brightcove Reference:
             data-account="${brc_account}"
             data-player="${brc_playerID}"
             data-embed="${brc_playerDataEmbed}"
-            data-video-id="${brc_videoID}"
+            data-playlist-id="${brc_playlistID}"
             <c:if test="${brc_hasSize}">
                 width="${brc_width}px"
                 height="${brc_height}px"
@@ -69,6 +71,8 @@ Brightcove Reference:
             class="video-js"
             controls>
     </video>
+
+    <ol class="vjs-playlist"></ol>
 
     <script src="//players.brightcove.net/${brc_account}/${brc_playerID}_${brc_playerDataEmbed}/index.min.js"></script>
 

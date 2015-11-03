@@ -34,7 +34,6 @@
 
     String componentID = UUID.randomUUID().toString().replaceAll("-", "");
 
-
     String videoID = properties.get("videoPlayer", "").trim();
     String playlistID = properties.get("videoPlayerPL", "").trim();
 
@@ -75,8 +74,8 @@
 
 
                 position = playerProperties.get("align", position);
-                width = playerProperties.get("width", position);
-                height = playerProperties.get("height", position);
+                width = playerProperties.get("width", width);
+                height = playerProperties.get("height", height);
 
             }
 
@@ -139,5 +138,7 @@
     pageContext.setAttribute("brc_height", height, PageContext.REQUEST_SCOPE);
     pageContext.setAttribute("brc_hasSize", hasSize, PageContext.REQUEST_SCOPE);
 
+
     pageContext.setAttribute("brc_componentID", componentID, PageContext.REQUEST_SCOPE);
+
 %>

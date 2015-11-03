@@ -10,7 +10,7 @@
             accept="[brightcove/.*]"
             groups="[brightcove_player]"
             propertyName="./playerPath"/>
-        <brightcove_playlist
+        <brightcove_video
             jcr:primaryType="cq:DropTargetConfig"
             accept="[brightcove/.*]"
             groups="[brightcove_playlist]"

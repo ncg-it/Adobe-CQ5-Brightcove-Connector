@@ -34,23 +34,58 @@
 %>
 
 
-<style>
+<style type="text/css">
 
     #component-wrap-${brc_componentID} {
 
     }
 
     #component-wrap-${brc_componentID} .drop-target-player {
-
+        margin-bottom: 0;
+        margin-left: ${brc_marginLeft};
+        margin-right: ${brc_marginRight};
+        margin-top: 0;
+        overflow-x: hidden;
+        overflow-y: hidden;
+        width: 100%;
+        text-align: ${brc_position};
     }
 
     #component-wrap-${brc_componentID} .drop-target-video {
-
+        width: 99%;
     }
 
     #component-wrap-${brc_componentID} .brightcove-container {
-
+        width: 100%;
     }
 
+
 </style>
+
+<c:if test="${brc_hasSize}">
+    <style type="text/css">
+        #component-wrap-${brc_componentID} .brightcove-container {
+            width: 80%;
+            display: block;
+            position: relative;
+            margin: 20px auto;
+        }
+
+        #component-wrap-${brc_componentID} .brightcove-container:after {
+            padding-top: 56.25%;
+            display: block;
+            content: '';
+        }
+
+        #component-wrap-${brc_componentID} .brightcove-container object {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</c:if>
 

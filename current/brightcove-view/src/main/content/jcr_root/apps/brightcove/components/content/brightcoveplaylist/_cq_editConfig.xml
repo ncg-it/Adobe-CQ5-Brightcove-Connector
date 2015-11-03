@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jcr:root xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
-    cq:actions="[text:Brightcove Playlist,-,EDITANNOTATECOPYMOVEDELETEINSERT]"
+    cq:actions="[text:Brightcove Playlist (Legacy),-,EDITANNOTATECOPYMOVEDELETEINSERT]"
     cq:dialogMode="floating"
     cq:layout="editbar"
     jcr:primaryType="cq:EditConfig">
@@ -10,7 +10,7 @@
             accept="[brightcove/.*]"
             groups="[brightcove_player]"
             propertyName="./playerPath"/>
-        <brightcove_playlist
+        <brightcove_video
             jcr:primaryType="cq:DropTargetConfig"
             accept="[brightcove/.*]"
             groups="[brightcove_playlist]"

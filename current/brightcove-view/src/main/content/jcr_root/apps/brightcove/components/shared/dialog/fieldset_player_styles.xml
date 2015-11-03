@@ -8,7 +8,7 @@
     <items jcr:primaryType="cq:WidgetCollection">
         <align
             jcr:primaryType="cq:Widget"
-            path="/apps/brightcove/components/shared/dialog/alignSelection.infinity.json"
+            path="/apps/brightcove/components/shared/dialog/field_align.infinity.json"
             xtype="cqinclude"/>
         <size
             jcr:primaryType="cq:Widget"

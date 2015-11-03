@@ -25,101 +25,46 @@
 <%@include file="/apps/brightcove/components/shared/component-global.jsp" %>
 
 <%
-
+    //Component Container
+    pageContext.setAttribute("containerID", properties.get("containerID", ""));
+    pageContext.setAttribute("containerClass", properties.get("containerClass", ""));
 
 %>
 
-<style type="text/css">
+<cq:include script="inline-styles.jsp"/>
 
-    #component-wrap-${brc_componentID} {
+<div id="${containerID}" class="${containerClass}">
+    <div id="component-wrap-${brc_componentID}">
+        <c:choose>
+            <c:when test="${(not empty brc_account) or (not empty brc_playerID)}">
 
-    }
+                <div data-sly-test="${isEditMode}"
+                     class="cq-dd-brightcove_player md-dropzone-video drop-target-player"
+                     data-sly-text="Drop player here">
 
-    #component-wrap-${brc_componentID} .drop-target-player {
-        margin-bottom: 0;
-        margin-left: ${brc_marginLeft};
-        margin-right: ${brc_marginRight};
-        margin-top: 0;
-        overflow-x: hidden;
-        overflow-y: hidden;
-        width: 100%;
-        text-align: ${brc_position};
-    }
+                    <c:if test="${(not empty brc_videoID) or (not empty brc_playlistID)}">
 
-    #component-wrap-${brc_componentID} .drop-target-video {
-        width: 99%;
-    }
+                            <cq:include script="player-embed.jsp"/>
 
-    #component-wrap-${brc_componentID} .brightcove-container {
-        width: 100%;
-    }
-
-
-</style>
-
-<c:if test="${brc_hasSize}">
-    <style type="text/css">
-        #component-wrap-${brc_componentID} .brightcove-container {
-            width: 80%;
-            display: block;
-            position: relative;
-            margin: 20px auto;
-        }
-
-        #component-wrap-${brc_componentID} .brightcove-container:after {
-            padding-top: 56.25%;
-            display: block;
-            content: '';
-        }
-
-        #component-wrap-${brc_componentID} .brightcove-container object {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            right: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-    </style>
-</c:if>
-
-<cq:include script="style.jsp"/>
-
-<div id="component-wrap-${brc_componentID}">
-    <c:choose>
-        <c:when test="${(not empty brc_account) or (not empty brc_playerID)}">
-
-            <div data-sly-test="${isEditMode}"
-                 class="cq-dd-brightcove_player md-dropzone-video drop-target-player"
-                 data-sly-text="Drop player here">
-
-                <c:if test="${(not empty brc_videoID) or (not empty brc_playlistID)}">
-
-                    <div class="brightcove-container">
-
-                        <cq:include script="player-embed.jsp"/>
-
-                    </div>
-                </c:if>
-                <c:if test="${isEditMode}">
-                    <div data-sly-test="${isEditMode}"
-                         class="cq-dd-brightcove_video cq-video-placeholder cq-block-sm-placeholder md-dropzone-video drop-target-video"
-                         data-sly-text="Drop video here"></div>
-                </c:if>
-            </div>
-        </c:when>
-        <c:otherwise>
-            <div data-sly-test="${isEditMode}"
-                 class="cq-dd-brightcove_player cq-video-placeholder cq-block-sm-placeholder md-dropzone-video drop-target-player-empty"
-                 data-sly-text="Drop player here"></div>
-        </c:otherwise>
-    </c:choose>
+                    </c:if>
+                    <c:if test="${isEditMode}">
+                        <div data-sly-test="${isEditMode}"
+                             class="cq-dd-brightcove_video cq-video-placeholder cq-block-sm-placeholder md-dropzone-video drop-target-video"
+                             data-sly-text="Drop video here"></div>
+                    </c:if>
+                </div>
+            </c:when>
+            <c:otherwise>
+                <div data-sly-test="${isEditMode}"
+                     class="cq-dd-brightcove_player cq-video-placeholder cq-block-sm-placeholder md-dropzone-video drop-target-player-empty"
+                     data-sly-text="Drop player here"></div>
+            </c:otherwise>
+        </c:choose>
+    </div>
 </div>
-
 <%
 
-    /*** Cleanup All Page Context Variables defined in /apps/brightcove/components/shared/component-global.jsp ***/
+    /*** Cleanup all Page Context attributes bound to Request in /apps/brightcove/components/shared/component-global.jsp ***/
 
     pageContext.removeAttribute("brc_componentID");
 
