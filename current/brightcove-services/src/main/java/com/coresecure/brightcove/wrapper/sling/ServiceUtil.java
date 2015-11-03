@@ -17,7 +17,9 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class ServiceUtil {
-    private static Logger loggerBRi = LoggerFactory.getLogger("Brightcove");
+    private static final Logger LOGGER = LoggerFactory.getLogger(ServiceUtil.class);
+
+
     public static int DEFAULT_LIMIT = 100;
     private BrightcoveAPI brAPI = null;
 
@@ -118,12 +120,13 @@ public class ServiceUtil {
     }
 
     public String getList(Boolean exportCSV, int offset, int limit, boolean full_scroll, String query) {
+        LOGGER.debug("getList: " + query);
         JSONObject items = new JSONObject();
         String result = "";
         try {
-            int pageNumber = 0;
             long totalItems = 0;
             JSONArray videos = brAPI.cms.addThumbnail(brAPI.cms.getVideos(query, limit, offset, "name"));
+            LOGGER.debug("videos " + videos.toString());
             offset = offset + limit;
             if (videos.length() > 0) {
                 totalItems = brAPI.cms.getVideosCount(query).getLong("count");
@@ -157,6 +160,7 @@ public class ServiceUtil {
                 result = items.toString(1);
             }
         } catch (JSONException e) {
+            LOGGER.error("JSONException", e);
             e.printStackTrace();
         } finally {
 

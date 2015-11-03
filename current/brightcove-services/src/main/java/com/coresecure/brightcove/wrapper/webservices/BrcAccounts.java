@@ -39,6 +39,8 @@ import org.apache.sling.api.servlets.SlingAllMethodsServlet;
 import org.apache.sling.commons.json.JSONArray;
 import org.apache.sling.commons.json.JSONException;
 import org.apache.sling.commons.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
@@ -57,6 +59,8 @@ import java.util.List;
 })
 public class BrcAccounts extends SlingAllMethodsServlet {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(BrcAccounts.class);
+
     @Override
     protected void doPost(final SlingHttpServletRequest request,
                           final SlingHttpServletResponse response) throws ServletException,
@@ -64,6 +68,15 @@ public class BrcAccounts extends SlingAllMethodsServlet {
 
         api(request, response);
 
+
+    }
+
+
+    @Override
+    protected void doGet(final SlingHttpServletRequest request,
+                         final SlingHttpServletResponse response) throws ServletException,
+            IOException {
+        api(request, response);
 
     }
 
@@ -89,6 +102,8 @@ public class BrcAccounts extends SlingAllMethodsServlet {
                 }
                 ConfigurationGrabber cg = ServiceUtil.getConfigurationGrabber();
                 JSONArray accounts = new JSONArray();
+
+                LOGGER.debug("accounts: " + accounts.toString());
                 int i = 0;
                 for (String account : cg.getAvailableServices()) {
                     ConfigurationService cs = cg.getConfigurationService(account);
@@ -119,15 +134,6 @@ public class BrcAccounts extends SlingAllMethodsServlet {
         } catch (RepositoryException e) {
             outWriter.write("{\"accounts\":[],\"error\":\"" + e.getMessage() + "\"}");
         }
-
-    }
-
-
-    @Override
-    protected void doGet(final SlingHttpServletRequest request,
-                         final SlingHttpServletResponse response) throws ServletException,
-            IOException {
-        api(request, response);
 
     }
 
