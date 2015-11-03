@@ -22,17 +22,122 @@
 
 --%>
 
-<%@ page import="java.util.UUID" %>
+<%@ page import="com.coresecure.brightcove.wrapper.sling.ConfigurationGrabber,
+                 com.coresecure.brightcove.wrapper.sling.ConfigurationService,
+                 com.coresecure.brightcove.wrapper.sling.ServiceUtil,
+                 com.coresecure.brightcove.wrapper.utils.TextUtil,
+                 java.util.UUID" %>
+
 
 <%@include file="/apps/brightcove/components/shared/global.jsp" %>
 <%
 
     String componentID = UUID.randomUUID().toString().replaceAll("-", "");
 
+
+    String videoID = properties.get("videoPlayer", "").trim();
+    String playlistID = properties.get("videoPlayerPL", "").trim();
+
+    String account = properties.get("account", "").trim();
+    String playerPath = properties.get("playerPath", "").trim();
+    String playerID = "";
+    String playerKey = "";
+
+    String playerDataEmbed = "default";
+
+
+    // Default Values
+
+    String marginLeft = "auto";
+    String marginRight = "auto";
+    String position = "center";
+    String width = "";
+    String height = "";
+    boolean hasSize = false;
+
+    // Load Player Configuration
+
+    if (!playerPath.isEmpty()) {
+
+        Resource playerPageResource = resourceResolver.resolve(playerPath);
+
+        if (playerPageResource != null) {
+
+            Page playerPage = playerPageResource.adaptTo(Page.class);
+
+            if (playerPage != null) {
+
+                ValueMap playerProperties = playerPage.getProperties();
+
+                playerID = playerProperties.get("playerID", playerID);
+                playerKey = playerProperties.get("playerKey", playerKey);
+                playerDataEmbed = playerProperties.get("data_embedded", playerDataEmbed);
+
+
+                position = playerProperties.get("align", position);
+                width = playerProperties.get("width", position);
+                height = playerProperties.get("height", position);
+
+            }
+
+        }
+
+    }
+
+    // Override with local component properties
+
+    position = properties.get("align", position);
+
+    if (position.equals("left")) {
+        marginLeft = "0";
+    } else if (position.equals("right")) {
+        marginRight = "0";
+    }
+
+    //we must override BOTH width and height to prevent one being set on Player Page and other set in component.
+    if (properties.containsKey("width") || properties.containsKey("height")) {
+        width = properties.get("width", width);
+        height = properties.get("height", height);
+    }
+
+    // Adjust size accordingly
+    if (TextUtil.notEmpty(width) || TextUtil.notEmpty(height)) {
+        hasSize = true;
+        if (TextUtil.isEmpty(width)) {
+            width = String.valueOf((480 * Integer.parseInt(height, 10)) / 270);
+        } else if (TextUtil.isEmpty(height)) {
+            height = String.valueOf((270 * Integer.parseInt(width, 10)) / 480);
+        }
+    }
+
+    //fallback to default
+    if (TextUtil.isEmpty(playerID) && TextUtil.notEmpty(account)) {
+        ConfigurationGrabber cg = ServiceUtil.getConfigurationGrabber();
+        ConfigurationService cs = cg.getConfigurationService(account);
+        if (cs != null) {
+            playerID = cs.getDefVideoPlayerID();
+            playerDataEmbed = cs.getDefVideoPlayerDataEmbedded();
+        }
+    }
+
+
     // Update Page Context
 
+    pageContext.setAttribute("brc_account", account, PageContext.REQUEST_SCOPE);
+    pageContext.setAttribute("brc_videoID", videoID, PageContext.REQUEST_SCOPE);
+    pageContext.setAttribute("brc_playlistID", playlistID, PageContext.REQUEST_SCOPE);
 
-    pageContext.setAttribute("componentID", componentID);
+    pageContext.setAttribute("brc_playerPath", playerPath, PageContext.REQUEST_SCOPE);
+    pageContext.setAttribute("brc_playerID", playerID, PageContext.REQUEST_SCOPE);
+    pageContext.setAttribute("brc_playerKey", playerKey, PageContext.REQUEST_SCOPE);
+    pageContext.setAttribute("brc_playerDataEmbed", playerDataEmbed, PageContext.REQUEST_SCOPE);
+
+    pageContext.setAttribute("brc_position", position, PageContext.REQUEST_SCOPE);
+    pageContext.setAttribute("brc_marginLeft", marginLeft, PageContext.REQUEST_SCOPE);
+    pageContext.setAttribute("brc_marginRight", marginRight, PageContext.REQUEST_SCOPE);
+    pageContext.setAttribute("brc_width", width, PageContext.REQUEST_SCOPE);
+    pageContext.setAttribute("brc_height", height, PageContext.REQUEST_SCOPE);
+    pageContext.setAttribute("brc_hasSize", hasSize, PageContext.REQUEST_SCOPE);
 
     pageContext.setAttribute("brc_componentID", componentID, PageContext.REQUEST_SCOPE);
 %>

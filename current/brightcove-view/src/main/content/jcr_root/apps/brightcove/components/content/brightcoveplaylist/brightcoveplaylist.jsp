@@ -115,11 +115,11 @@
 %>
 <style>
 
-    #component-wrap-${componentID} {
+    #component-wrap-${brc_componentID} {
 
     }
 
-    #component-wrap-${componentID} .drop-target-player {
+    #component-wrap-${brc_componentID} .drop-target-player {
         margin-bottom: 0;
         margin-left: ${marginLeft};
         margin-right: ${marginRight};
@@ -131,11 +131,11 @@
         text-align: ${position};
     }
 
-    #component-wrap-${componentID} .drop-target-video {
+    #component-wrap-${brc_componentID} .drop-target-video {
         width: 99%;
     }
 
-    #component-wrap-${componentID} .brightcove-container {
+    #component-wrap-${brc_componentID} .brightcove-container {
         width: 100%;
     }
 
@@ -144,20 +144,20 @@
 
 <c:if test="${hasSize}">
     <style type="text/css">
-        #component-wrap-${componentID} .brightcove-container {
+        #component-wrap-${brc_componentID} .brightcove-container {
             width: 80%;
             display: block;
             position: relative;
             margin: 20px auto;
         }
 
-        #component-wrap-${componentID} .brightcove-container:after {
+        #component-wrap-${brc_componentID} .brightcove-container:after {
             padding-top: 56.25%;
             display: block;
             content: '';
         }
 
-        #component-wrap-${componentID} .brightcove-container object {
+        #component-wrap-${brc_componentID} .brightcove-container object {
             position: absolute;
             top: 0;
             bottom: 0;
@@ -169,14 +169,14 @@
     </style>
 </c:if>
 
-<div id="component-wrap-${componentID}">
+<div id="component-wrap-${brc_componentID}">
     <c:choose>
         <c:when test="${(not empty account) or (not empty playerPath)}">
             <div data-sly-test="${wcmmode.edit}"
                  class="cq-dd-brightcove_player md-dropzone-video drop-target-player"
                  data-sly-text="Drop player here">
 
-                <div id="container-${componentID}" class="brightcove-container"></div>
+                <div id="container-${brc_componentID}" class="brightcove-container"></div>
 
 
                 <cq:includeClientLib js="brc.BrightcoveExperiences-custom"/>
@@ -216,7 +216,7 @@
 
                 </script>
                 <script>
-                    customBC.createPlaylist("${width}", "${height}", "${playerID}", "${playerKey}", "${videoPlayerPL}", "container-${componentID}");
+                    customBC.createPlaylist("${width}", "${height}", "${playerID}", "${playerKey}", "${videoPlayerPL}", "container-${brc_componentID}");
                 </script>
 
                 <c:if test="${isEditMode}">

@@ -33,98 +33,98 @@
     //  - http://docs.brightcove.com/en/video-cloud/brightcove-player/guides/embed-in-page.html
     //  - http://docs.brightcove.com/en/video-cloud/brightcove-player/guides/playlist-using.html#inpageembed
 
-    String marginLeft = "auto";
-    String marginRight = "auto";
-    String position = properties.get("align", "center");
-    String width = "480";
-    String height = "270";
-    boolean hasSize = false;
-    String playerPath = properties.get("playerPath", "").trim();
-    String videoPlayer = properties.get("videoPlayerPL", "").trim();
-    String account = properties.get("account", "").trim();
-    String playerID = "";
-    String data_embedded = "";
-    if (!account.isEmpty()) {
-        ConfigurationGrabber cg = ServiceUtil.getConfigurationGrabber();
-        ConfigurationService cs = cg.getConfigurationService(account);
-        if (cs != null) {
-            playerID = cs.getDefVideoPlayerID();
-            data_embedded = cs.getDefVideoPlayerDataEmbedded();
-        }
-    }
-
-
-    if (!playerPath.isEmpty()) {
-
-        Page playerPage = resourceResolver.resolve(playerPath).adaptTo(Page.class);
-        ValueMap playerProperties = playerPage.getProperties();
-        String playerAccount = playerProperties.get("account", account);
-        if (account.isEmpty() && playerProperties.containsKey("account")) {
-            try {
-                currentNode.setProperty("account", playerAccount);
-                currentNode.save();
-            } catch (RepositoryException e) {
-                e.printStackTrace();
-            }
-        }
-        request.setAttribute("account", playerAccount);
-        if (playerProperties.containsKey("playerID")) {//} && playerProperties.containsKey("playerKey")) {
-            playerID = playerProperties.get("playerID", playerID);
-            data_embedded = playerProperties.get("data_embedded", data_embedded);
-        }
-        position = playerProperties.get("align", position);
-        if (position.equals("left")) {
-            marginLeft = "0";
-        } else if (position.equals("right")) {
-            marginRight = "0";
-        }
-        if (playerProperties.containsKey("width") && playerProperties.containsKey("height")) {
-
-            width = playerProperties.get("width", String.class);
-            height = playerProperties.get("height", String.class);
-            hasSize = true;
-        } else if (playerProperties.containsKey("width") && !playerProperties.containsKey("height")) {
-            width = playerProperties.get("width", String.class);
-            height = String.valueOf(270 * playerProperties.get("width", 1) / 480);
-            hasSize = true;
-
-        } else if (!playerProperties.containsKey("width") && playerProperties.containsKey("height")) {
-            height = playerProperties.get("height", String.class);
-            width = String.valueOf(480 * playerProperties.get("height", 1) / 270);
-            hasSize = true;
-
-        }
-    }
-
-    // Update Page Context
-
-    pageContext.setAttribute("account", account);
-    pageContext.setAttribute("videoPlayer", videoPlayer);
-    pageContext.setAttribute("playerPath", playerPath);
-
-    pageContext.setAttribute("playerID", playerID);
-    pageContext.setAttribute("data_embedded", data_embedded);
-
-
-    pageContext.setAttribute("position", position);
-
-    pageContext.setAttribute("marginLeft", marginLeft);
-    pageContext.setAttribute("marginRight", marginRight);
-    pageContext.setAttribute("width", width);
-    pageContext.setAttribute("height", height);
-
-    pageContext.setAttribute("hasSize", hasSize);
+//    String marginLeft = "auto";
+//    String marginRight = "auto";
+//    String position = properties.get("align", "center");
+//    String width = "480";
+//    String height = "270";
+//    boolean hasSize = false;
+//    String playerPath = properties.get("playerPath", "").trim();
+//    String videoPlayer = properties.get("videoPlayerPL", "").trim();
+//    String account = properties.get("account", "").trim();
+//    String playerID = "";
+//    String data_embedded = "";
+//    if (!account.isEmpty()) {
+//        ConfigurationGrabber cg = ServiceUtil.getConfigurationGrabber();
+//        ConfigurationService cs = cg.getConfigurationService(account);
+//        if (cs != null) {
+//            playerID = cs.getDefVideoPlayerID();
+//            data_embedded = cs.getDefVideoPlayerDataEmbedded();
+//        }
+//    }
+//
+//
+//    if (!playerPath.isEmpty()) {
+//
+//        Page playerPage = resourceResolver.resolve(playerPath).adaptTo(Page.class);
+//        ValueMap playerProperties = playerPage.getProperties();
+//        String playerAccount = playerProperties.get("account", account);
+//        if (account.isEmpty() && playerProperties.containsKey("account")) {
+//            try {
+//                currentNode.setProperty("account", playerAccount);
+//                currentNode.save();
+//            } catch (RepositoryException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        request.setAttribute("account", playerAccount);
+//        if (playerProperties.containsKey("playerID")) {//} && playerProperties.containsKey("playerKey")) {
+//            playerID = playerProperties.get("playerID", playerID);
+//            data_embedded = playerProperties.get("data_embedded", data_embedded);
+//        }
+//        position = playerProperties.get("align", position);
+//        if (position.equals("left")) {
+//            marginLeft = "0";
+//        } else if (position.equals("right")) {
+//            marginRight = "0";
+//        }
+//        if (playerProperties.containsKey("width") && playerProperties.containsKey("height")) {
+//
+//            width = playerProperties.get("width", String.class);
+//            height = playerProperties.get("height", String.class);
+//            hasSize = true;
+//        } else if (playerProperties.containsKey("width") && !playerProperties.containsKey("height")) {
+//            width = playerProperties.get("width", String.class);
+//            height = String.valueOf(270 * playerProperties.get("width", 1) / 480);
+//            hasSize = true;
+//
+//        } else if (!playerProperties.containsKey("width") && playerProperties.containsKey("height")) {
+//            height = playerProperties.get("height", String.class);
+//            width = String.valueOf(480 * playerProperties.get("height", 1) / 270);
+//            hasSize = true;
+//
+//        }
+//    }
+//
+//    // Update Page Context
+//
+//    pageContext.setAttribute("account", account);
+//    pageContext.setAttribute("videoPlayer", videoPlayer);
+//    pageContext.setAttribute("playerPath", playerPath);
+//
+//    pageContext.setAttribute("playerID", playerID);
+//    pageContext.setAttribute("data_embedded", data_embedded);
+//
+//
+//    pageContext.setAttribute("position", position);
+//
+//    pageContext.setAttribute("marginLeft", marginLeft);
+//    pageContext.setAttribute("marginRight", marginRight);
+//    pageContext.setAttribute("width", width);
+//    pageContext.setAttribute("height", height);
+//
+//    pageContext.setAttribute("hasSize", hasSize);
 
 
 %>
 
 <style>
 
-    #component-wrap-${componentID} {
+    #component-wrap-${brc_componentID} {
 
     }
 
-    #component-wrap-${componentID} .drop-target-player {
+    #component-wrap-${brc_componentID} .drop-target-player {
         margin-bottom: 0;
         margin-left: ${marginLeft};
         margin-right: ${marginRight};
@@ -136,22 +136,22 @@
         text-align: ${position};
     }
 
-    #component-wrap-${componentID} .drop-target-video {
+    #component-wrap-${brc_componentID} .drop-target-video {
         width: 99%;
     }
 
-    #component-wrap-${componentID} .brightcove-container {
+    #component-wrap-${brc_componentID} .brightcove-container {
         width: 100%;
     }
 
     <c:if test="${false}">
     /*playlist style*/
-    #component-wrap-${componentID} .brightcove-container .video-js {
+    #component-wrap-${brc_componentID} .brightcove-container .video-js {
         float: left;
         margin: 15px;
     }
 
-    #component-wrap-${componentID} .brightcove-container .vjs-playlist {
+    #component-wrap-${brc_componentID} .brightcove-container .vjs-playlist {
         width: 250px;
         float: left;
         margin: 15px;
@@ -164,20 +164,20 @@
 
 <c:if test="${hasSize}">
     <style type="text/css">
-        #component-wrap-${componentID} .brightcove-container {
+        #component-wrap-${brc_componentID} .brightcove-container {
             width: 80%;
             display: block;
             position: relative;
             margin: 20px auto;
         }
 
-        #component-wrap-${componentID} .brightcove-container:after {
+        #component-wrap-${brc_componentID} .brightcove-container:after {
             padding-top: 56.25%;
             display: block;
             content: '';
         }
 
-        #component-wrap-${componentID} .brightcove-container object {
+        #component-wrap-${brc_componentID} .brightcove-container object {
             position: absolute;
             top: 0;
             bottom: 0;
@@ -189,7 +189,7 @@
     </style>
 </c:if>
 
-<div id="component-wrap-${componentID}">
+<div id="component-wrap-${brc_componentID}">
     <c:choose>
         <c:when test="${(not empty account) or (not empty playerPath)}">
 
@@ -200,7 +200,7 @@
                 <c:if test="${not empty videoPlayer}">
                     <div class="brightcove-container">
                         <video
-                                id="video-${componentID}"
+                                id="video-${brc_componentID}"
                                 data-account="${account}"
                                 data-player="${playerID}"
                                 data-embed="${data_embedded}"

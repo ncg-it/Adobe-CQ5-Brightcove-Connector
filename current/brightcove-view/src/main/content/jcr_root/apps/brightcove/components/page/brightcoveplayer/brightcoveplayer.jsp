@@ -152,17 +152,6 @@
 <div class="edit-box">
     <c:choose>
         <c:when test="${empty playerKey}">
-            <ul>
-                <li>
-                    Account: <strong>${account}</strong>
-                </li>
-                <li>
-                    Player ID: <strong>${playerID}</strong>
-                </li>
-                <li>
-                    data_embedded: <strong>${data_embedded}</strong>
-                </li>
-            </ul>
             <video
                     data-account="${account}"
                     data-player="${playerID}"

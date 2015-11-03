@@ -1,55 +1,65 @@
+<%--
+
+    Adobe CQ5 Brightcove Connector
+
+    Copyright (C) 2015 Coresecure Inc.
+
+        Authors:    Alessandro Bonfatti
+                    Yan Kisen
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+--%>
+
 <%@include file="/apps/brightcove/components/shared/global.jsp" %>
-<%
+<%--
 
-%>
-EMBED
-<strong>brc_componentID:</strong> ${brc_componentID}
-<br/>
-<strong>componentID:</strong> ${componentID}
-<br/>
-<strong>test:</strong> ${test}
+Actual player code is separated into smaller script to make overlaying the implementation easier by setting this component is set as the resourceSuperType.
 
 
-<style>
+*** All page context variables are set in the parent script which should include /apps/brightcove/components/shared/component-global.jsp ***
 
-    #component-wrap-${brc_componentID} {
+Available Variables:
 
-    }
+        - ${brc_componentID}
 
-    #component-wrap-${brc_componentID} .drop-target-player {
-        margin-bottom: 0;
-        margin-left: ${marginLeft};
-        margin-right: ${marginRight};
-        margin-top: 0;
-        overflow-x: hidden;
-        overflow-y: hidden;
-        text-align: center;
-        width: 100%;
-        text-align: ${position};
-    }
+        - ${brc_account}
+        - ${brc_videoID}
+        - ${brc_playlistID}
 
-    #component-wrap-${componentID} .drop-target-video {
-        width: 99%;
-    }
+        - ${brc_playerID}
+        - ${brc_playerKey}
+        - ${brc_playerDataEmbed}
 
-    #component-wrap-${componentID} .brightcove-container {
-        width: 100%;
-    }
+        - ${brc_hasSize}
+        - ${brc_width}
+        - ${brc_height}
 
 
-</style>
+--%>
+
 
 <video
-        id="video-${componentID}"
-        data-account="${account}"
-        data-player="${playerID}"
-        data-embed="${data_embedded}"
-        data-video-id="${videoPlayer}"
-        class="video-js"
-        <c:if test="${hasSize}">
-            width="${width}px"
-            height="${height}px"
+        id="video-${brc_componentID}"
+        data-account="${brc_account}"
+        data-player="${brc_playerID}"
+        data-embed="${brc_playerDataEmbed}"
+        data-video-id="${brc_videoID}"
+        <c:if test="${brc_hasSize}">
+            width="${brc_width}px"
+            height="${brc_height}px"
         </c:if>
         class="video-js" controls>
 </video>
-<script src="//players.brightcove.net/${account}/${playerID}_${data_embedded}/index.min.js"></script>
+<script src="//players.brightcove.net/${brc_account}/${brc_playerID}_${brc_playerDataEmbed}/index.min.js"></script>

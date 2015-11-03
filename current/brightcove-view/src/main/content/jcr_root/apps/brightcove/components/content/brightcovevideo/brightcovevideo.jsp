@@ -114,11 +114,11 @@
 
 <style>
 
-    #component-wrap-${componentID} {
+    #component-wrap-${brc_componentID} {
 
     }
 
-    #component-wrap-${componentID} .drop-target-player {
+    #component-wrap-${brc_componentID} .drop-target-player {
         margin-bottom: 0;
         margin-left: ${marginLeft};
         margin-right: ${marginRight};
@@ -130,11 +130,11 @@
         text-align: ${position};
     }
 
-    #component-wrap-${componentID} .drop-target-video {
+    #component-wrap-${brc_componentID} .drop-target-video {
         width: 99%;
     }
 
-    #component-wrap-${componentID} .brightcove-container {
+    #component-wrap-${brc_componentID} .brightcove-container {
         width: 100%;
     }
 
@@ -143,20 +143,20 @@
 
 <c:if test="${hasSize}">
     <style type="text/css">
-        #component-wrap-${componentID} .brightcove-container {
+        #component-wrap-${brc_componentID} .brightcove-container {
             width: 80%;
             display: block;
             position: relative;
             margin: 20px auto;
         }
 
-        #component-wrap-${componentID} .brightcove-container:after {
+        #component-wrap-${brc_componentID} .brightcove-container:after {
             padding-top: 56.25%;
             display: block;
             content: '';
         }
 
-        #component-wrap-${componentID} .brightcove-container object {
+        #component-wrap-${brc_componentID} .brightcove-container object {
             position: absolute;
             top: 0;
             bottom: 0;
@@ -168,7 +168,7 @@
     </style>
 </c:if>
 
-<div id="component-wrap-${componentID}">
+<div id="component-wrap-${brc_componentID}">
     <c:choose>
         <c:when test="${(not empty account) or (not empty playerPath)}">
             <div data-sly-test="${wcmmode.edit}"
@@ -177,7 +177,7 @@
 
                 <c:if test="${not empty videoPlayer}">
 
-                    <div class="brightcove-container" id="container-${componentID}"></div>
+                    <div class="brightcove-container" id="container-${brc_componentID}"></div>
 
                     <cq:includeClientLib js="brc.BrightcoveExperiences-custom"/>
 
@@ -215,7 +215,7 @@
 
                     </script>
                     <script>
-                        customBC.createVideo("${width}", "${height}", "${playerID}", "${playerKey}", "${videoPlayer}", "container-${componentID}");
+                        customBC.createVideo("${width}", "${height}", "${playerID}", "${playerKey}", "${videoPlayer}", "container-${brc_componentID}");
                     </script>
 
 
