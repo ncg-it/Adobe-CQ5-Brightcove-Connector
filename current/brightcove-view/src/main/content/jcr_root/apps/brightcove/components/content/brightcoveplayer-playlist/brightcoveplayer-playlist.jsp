@@ -210,7 +210,17 @@
                                     width="${width}px"
                                     height="${height}px"
                                 </c:if>
-                                class="video-js" controls>
+                                class="video-js"
+                                controls>
+                                <%--
+                                    autoplay
+                                    height	Sets the display height of the video
+                                    loop	boolean - Causes the video to start over as soon as it ends.
+                                    muted	boolean - Mutes the videos sound
+                                    poster	Sets the image that displays before the video begins playing. This is often a frame of the video or a custom title screen. As soon as the user clicks play the image will go away.
+                                    preload	boolean - Informs the browser whether or not the video data should begin downloading as soon as the video tag is loaded.
+                                    width	Sets the display width of the video
+                                    --%>
                         </video>
 
                         <ol class="vjs-playlist"></ol>

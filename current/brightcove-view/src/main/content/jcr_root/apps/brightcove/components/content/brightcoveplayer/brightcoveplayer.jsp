@@ -113,35 +113,8 @@
     pageContext.setAttribute("hasSize", hasSize);
 
 %>
+<cq:include script="style.jsp"/>
 
-<style>
-
-    #component-wrap-${componentID} {
-
-    }
-
-    #component-wrap-${componentID} .drop-target-player {
-        margin-bottom: 0;
-        margin-left: ${marginLeft};
-        margin-right: ${marginRight};
-        margin-top: 0;
-        overflow-x: hidden;
-        overflow-y: hidden;
-        text-align: center;
-        width: 100%;
-        text-align: ${position};
-    }
-
-    #component-wrap-${componentID} .drop-target-video {
-        width: 99%;
-    }
-
-    #component-wrap-${componentID} .brightcove-container {
-        width: 100%;
-    }
-
-
-</style>
 
 <c:if test="${hasSize}">
     <style type="text/css">
@@ -179,6 +152,7 @@
                  data-sly-text="Drop player here">
                 <c:if test="${not empty videoPlayer}">
                     <div class="brightcove-container">
+                        <%--<cq:include script="player-embed.jsp"/>--%>
                         <video
                                 id="video-${componentID}"
                                 data-account="${account}"

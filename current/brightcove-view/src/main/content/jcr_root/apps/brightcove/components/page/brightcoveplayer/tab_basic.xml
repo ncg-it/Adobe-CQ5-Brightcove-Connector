@@ -14,6 +14,12 @@
                     fieldLabel="Title"
                     name="./jcr:title"
                     xtype="textfield"/>
+                <description
+                    jcr:primaryType="cq:Widget"
+                    fieldLabel="Description"
+                    fieldSubLabel="(For authors)"
+                    name="./jcr:description"
+                    xtype="textarea"/>
                 <hideinnav
                     jcr:primaryType="cq:Widget"
                     fieldLabel="Hide in Navigation"
@@ -23,23 +29,9 @@
                     xtype="selection"/>
             </items>
         </basic>
-        <more_titles
-            jcr:primaryType="cq:Widget"
-            collapsed="{Boolean}true"
-            collapsible="{Boolean}true"
-            title="More Titles and Description"
-            xtype="dialogfieldset">
-            <items jcr:primaryType="cq:WidgetCollection">
-                <description
-                    jcr:primaryType="cq:Widget"
-                    fieldLabel="Description"
-                    name="./jcr:description"
-                    xtype="textarea"/>
-            </items>
-        </more_titles>
         <player_information
             jcr:primaryType="cq:Widget"
-            collapsed="{Boolean}true"
+            collapsed="{Boolean}false"
             collapsible="{Boolean}true"
             title="Player Configuration"
             xtype="dialogfieldset">
@@ -68,24 +60,5 @@
                     xtype="textfield"/>
             </items>
         </player_information>
-        <player_style
-            jcr:primaryType="cq:Widget"
-            collapsed="{Boolean}true"
-            collapsible="{Boolean}true"
-            title="Player Styles"
-            xtype="dialogfieldset">
-            <items jcr:primaryType="cq:WidgetCollection">
-                <align
-                    jcr:primaryType="cq:Widget"
-                    path="/apps/brightcove/components/shared/dialog/alignSelection.infinity.json"
-                    xtype="cqinclude"/>
-                <size
-                    jcr:primaryType="cq:Widget"
-                    fieldLabel="Size"
-                    heightParameter="./height"
-                    widthParameter="./width"
-                    xtype="sizefield"/>
-            </items>
-        </player_style>
     </items>
 </jcr:root>

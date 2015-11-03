@@ -31,5 +31,8 @@
 
     // Update Page Context
 
+
     pageContext.setAttribute("componentID", componentID);
+
+    pageContext.setAttribute("brc_componentID", componentID, PageContext.REQUEST_SCOPE);
 %>
