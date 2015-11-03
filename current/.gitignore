@@ -82,3 +82,5 @@ buildNumber.properties
 *.dir
 # IntelliJ
 /out/
+
+brightcove-view/src/main/content/jcr_root/libs
