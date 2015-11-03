@@ -74,7 +74,7 @@
     <cq:includeClientLib js="brc.bootstrap"/>
     <cq:includeClientLib js="brc.brightcove-api"/>
 
-    <title>VideoManager - Media API Application</title>
+    <title>VideoManager - Brightcove Admin API</title>
     <script>
         //This should be the direct URL to a preview player,  corresponding to the account of the tokens
         var previewPlayerLoc = "${previewPlayerLoc}";

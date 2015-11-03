@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jcr:root xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+<jcr:root xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0"
     jcr:primaryType="cq:Panel"
     title="Basic">
     <items jcr:primaryType="cq:WidgetCollection">
@@ -17,7 +17,7 @@
                 <hideinnav
                     jcr:primaryType="cq:Widget"
                     fieldLabel="Hide in Navigation"
-                    inputValue="true"
+                    inputValue="{Boolean}true"
                     name="./hideInNav"
                     type="checkbox"
                     xtype="selection"/>
@@ -44,66 +44,41 @@
             title="Player Configuration"
             xtype="dialogfieldset">
             <items jcr:primaryType="cq:WidgetCollection">
-                <accountSelector
+                <account
                     jcr:primaryType="cq:Widget"
-                    allowBlank="false"
-                    fieldDescription=""
-                    fieldLabel="Account:"
-                    fieldSubLabel=""
-                    name="./account"
-                    options="/bin/brightcove/accounts.json"
-                    optionsQTipField="text"
-                    optionsRoot="accounts"
-                    optionsTextField="text"
-                    optionsValueField="value"
-                    type="select"
-                    xtype="selection">
-                    <optionsConfig
-                        jcr:primaryType="nt:unstructured"
-                        editable="{Boolean}true"
-                        id="accountSelector"/>
-                </accountSelector>
+                    path="/apps/brightcove/components/shared/dialog/accountSelection.infinity.json"
+                    xtype="cqinclude"/>
                 <playerID
                     jcr:primaryType="cq:Widget"
-                    allowBlank="false"
+                    allowBlank="{Boolean}false"
+                    brcAccountFieldName="./account"
                     fieldDescription=""
                     fieldLabel="Player ID:"
-                    fieldSubLabel=""
+                    fieldSubLabel="(HTML5)"
                     hiddenName="./playerID"
-                    xtype="BrightcoveRemotePlayerCombo">
-                    <listeners
-                        jcr:primaryType="nt:unstructured"
-                        focus="function(){this.store.baseParams['account_id']=$(&quot;#accountSelector&quot;).val();}"/>
-                </playerID>
+                    storePath="/bin/brightcove/api?a=1"
+                    xtype="brc_combobox"/>
                 <playerKey
                     jcr:primaryType="cq:Widget"
-                    allowBlank="true&#xa;"
+                    allowBlank="{Boolean}true"
                     fieldDescription="Legacy configuration"
                     fieldLabel="Player Key:"
                     fieldSubLabel=""
                     name="./playerKey"
                     xtype="textfield"/>
+            </items>
+        </player_information>
+        <player_style
+            jcr:primaryType="cq:Widget"
+            collapsed="{Boolean}true"
+            collapsible="{Boolean}true"
+            title="Player Styles"
+            xtype="dialogfieldset">
+            <items jcr:primaryType="cq:WidgetCollection">
                 <align
                     jcr:primaryType="cq:Widget"
-                    fieldLabel="Component Alignment:"
-                    name="./align"
-                    type="select"
-                    xtype="selection">
-                    <options jcr:primaryType="cq:WidgetCollection">
-                        <left
-                            jcr:primaryType="nt:unstructured"
-                            text="Left"
-                            value="left"/>
-                        <center
-                            jcr:primaryType="nt:unstructured"
-                            text="Center"
-                            value="center"/>
-                        <right
-                            jcr:primaryType="nt:unstructured"
-                            text="Right"
-                            value="right"/>
-                    </options>
-                </align>
+                    path="/apps/brightcove/components/shared/dialog/alignSelection.infinity.json"
+                    xtype="cqinclude"/>
                 <size
                     jcr:primaryType="cq:Widget"
                     fieldLabel="Size"
@@ -111,6 +86,6 @@
                     widthParameter="./width"
                     xtype="sizefield"/>
             </items>
-        </player_information>
+        </player_style>
     </items>
 </jcr:root>

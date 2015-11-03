@@ -22,19 +22,14 @@
 
 --%>
 
-<%@ page import="com.day.cq.wcm.api.WCMMode" %>
+<%@ page import="java.util.UUID" %>
 
-<%@include file="/libs/foundation/global.jsp" %>
+<%@include file="/apps/brightcove/global/global.jsp" %>
 <%
-    WCMMode currentWCMMode = WCMMode.fromRequest(request);
 
-    boolean isEditMode = (currentWCMMode == WCMMode.EDIT);
-    boolean isDesignMode = (currentWCMMode == WCMMode.DESIGN);
-    boolean isEditOrDesignMode = (isEditMode || isDesignMode);
+    String componentID = UUID.randomUUID().toString().replaceAll("-", "");
 
+    // Update Page Context
 
-    //Update Page Context
-    pageContext.setAttribute("isEditMode", isEditMode);
-    pageContext.setAttribute("isDesignMode", isEditMode);
-    pageContext.setAttribute("isEditOrDesignMode", isEditOrDesignMode);
+    pageContext.setAttribute("componentID", componentID);
 %>

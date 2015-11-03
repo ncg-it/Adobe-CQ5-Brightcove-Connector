@@ -99,7 +99,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">
 <html>
 <head>
-    <title>Brightcove Player | ${title}</title>
+    <title>${title} | Brightcove Player</title>
 
     <meta http-equiv="Content-Type" content="text/html; utf-8"/>
 
@@ -126,7 +126,7 @@
 <h1>Brightcove Player Config | &quot;${title}&quot;</h1>
 
 <div class="definition-container">
-    <p></p>
+    <cq:text value="${description}" tagName="p" tagClass=""/>
 </div>
 
 
@@ -152,7 +152,17 @@
 <div class="edit-box">
     <c:choose>
         <c:when test="${empty playerKey}">
-
+            <ul>
+                <li>
+                    Account: <strong>${account}</strong>
+                </li>
+                <li>
+                    Player ID: <strong>${playerID}</strong>
+                </li>
+                <li>
+                    data_embedded: <strong>${data_embedded}</strong>
+                </li>
+            </ul>
             <video
                     data-account="${account}"
                     data-player="${playerID}"
