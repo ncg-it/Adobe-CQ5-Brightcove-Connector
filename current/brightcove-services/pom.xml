@@ -211,7 +211,7 @@
                         <param>install</param>
                     </goals>
                     <profiles>
-                        <param>auto-deploy</param>
+                        <param>auto-deploy-bundle</param>
                     </profiles>
                 </configuration>
             </plugin>
