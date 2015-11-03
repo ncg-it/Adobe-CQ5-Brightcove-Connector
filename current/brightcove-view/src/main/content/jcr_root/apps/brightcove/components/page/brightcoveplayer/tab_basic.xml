@@ -38,7 +38,7 @@
             <items jcr:primaryType="cq:WidgetCollection">
                 <account
                     jcr:primaryType="cq:Widget"
-                    path="/apps/brightcove/components/shared/dialog/accountSelection.infinity.json"
+                    path="/apps/brightcove/components/shared/dialog/selection_account.infinity.json"
                     xtype="cqinclude"/>
                 <playerID
                     jcr:primaryType="cq:Widget"
@@ -50,15 +50,22 @@
                     hiddenName="./playerID"
                     storePath="/bin/brightcove/api?a=1"
                     xtype="brc_combobox"/>
+            </items>
+        </player_information>
+        <legacy-player
+            jcr:primaryType="cq:Widget"
+            collapsed="{Boolean}true"
+            collapsible="{Boolean}true"
+            title="Legacy Settings (Non-HTML5)"
+            xtype="dialogfieldset">
+            <items jcr:primaryType="cq:WidgetCollection">
                 <playerKey
                     jcr:primaryType="cq:Widget"
                     allowBlank="{Boolean}true"
-                    fieldDescription="Legacy configuration"
                     fieldLabel="Player Key:"
-                    fieldSubLabel=""
                     name="./playerKey"
                     xtype="textfield"/>
             </items>
-        </player_information>
+        </legacy-player>
     </items>
 </jcr:root>

@@ -48,7 +48,7 @@
     String playerID = "";
     String playerKey = properties.get("playerKey", "");
     ;
-    String data_embedded = "";
+    String data_embedded = "default";
     if (!account.trim().isEmpty()) {
         ConfigurationGrabber cg = ServiceUtil.getConfigurationGrabber();
         ConfigurationService cs = cg.getConfigurationService(account);
@@ -126,7 +126,7 @@
 <h1>Brightcove Player Config | &quot;${title}&quot;</h1>
 
 <div class="definition-container">
-    <cq:text value="${description}" tagName="p" tagClass=""/>
+    <p>${description}</p>
 </div>
 
 

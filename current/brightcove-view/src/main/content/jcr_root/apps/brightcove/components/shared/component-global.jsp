@@ -24,7 +24,7 @@
 
 <%@ page import="java.util.UUID" %>
 
-<%@include file="/apps/brightcove/global/global.jsp" %>
+<%@include file="/apps/brightcove/components/shared/global.jsp" %>
 <%
 
     String componentID = UUID.randomUUID().toString().replaceAll("-", "");

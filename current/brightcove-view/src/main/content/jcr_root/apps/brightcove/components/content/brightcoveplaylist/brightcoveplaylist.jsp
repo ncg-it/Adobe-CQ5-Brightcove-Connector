@@ -25,7 +25,7 @@
                  com.coresecure.brightcove.wrapper.sling.ConfigurationService,
                  com.coresecure.brightcove.wrapper.sling.ServiceUtil" %>
 
-<%@include file="/apps/brightcove/global/component-global.jsp" %>
+<%@include file="/apps/brightcove/components/shared/component-global.jsp" %>
 
 <%
 

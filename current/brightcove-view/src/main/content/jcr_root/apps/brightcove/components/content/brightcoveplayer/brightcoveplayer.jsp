@@ -25,10 +25,11 @@
                  com.coresecure.brightcove.wrapper.sling.ConfigurationService,
                  com.coresecure.brightcove.wrapper.sling.ServiceUtil" %>
 
-<%@include file="/apps/brightcove/global/component-global.jsp" %>
+<%@include file="/apps/brightcove/components/shared/component-global.jsp" %>
 
 <%
 
+    String videoPlayer = properties.get("videoPlayer", "").trim();
 
     String marginLeft = "auto";
     String marginRight = "auto";
@@ -38,10 +39,10 @@
     boolean hasSize = false;
 
     String playerPath = properties.get("playerPath", "").trim();
-    String videoPlayer = properties.get("videoPlayer", "").trim();
+
     String account = properties.get("account", "").trim();
     String playerID = "";
-    String data_embedded = "";
+    String data_embedded = "default";
     if (!account.isEmpty()) {
         ConfigurationGrabber cg = ServiceUtil.getConfigurationGrabber();
         ConfigurationService cs = cg.getConfigurationService(account);
@@ -113,7 +114,34 @@
     pageContext.setAttribute("hasSize", hasSize);
 
 %>
-<cq:include script="style.jsp"/>
+<style>
+
+    #component-wrap-${brc_componentID} {
+
+    }
+
+    #component-wrap-${brc_componentID} .drop-target-player {
+        margin-bottom: 0;
+        margin-left: ${marginLeft};
+        margin-right: ${marginRight};
+        margin-top: 0;
+        overflow-x: hidden;
+        overflow-y: hidden;
+        text-align: center;
+        width: 100%;
+        text-align: ${position};
+    }
+
+    #component-wrap-${componentID} .drop-target-video {
+        width: 99%;
+    }
+
+    #component-wrap-${componentID} .brightcove-container {
+        width: 100%;
+    }
+
+
+</style>
 
 
 <c:if test="${hasSize}">

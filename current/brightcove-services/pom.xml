@@ -109,6 +109,25 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpcore</artifactId>
+            <version>4.1.4</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.1.3</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpmime</artifactId>
+            <version>4.1.3</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.apache.sling</groupId>
             <artifactId>org.apache.sling.settings</artifactId>
         </dependency>
@@ -124,6 +143,9 @@
             <version>2.5.3</version>
             <scope>provided</scope>
         </dependency>
+
+
+
     </dependencies>
 
     <!-- ====================================================================== -->
@@ -139,7 +161,28 @@
                 <configuration>
                     <instructions>
                         <Bundle-Activator>com.brightcove.proserve.mediaapi.wrapper.osgi.Activator</Bundle-Activator>
+                        <Embed-Dependency>
+                            httpclient;scope=compile,
+                            httpcore;scope=compile,
+                            httpmime;scope=compile,
+                            squeakysand-osgi;scope=compile,
+                            squeakysand-commons;scope=compile,
+                            jsoup;scope=compile
+                        </Embed-Dependency>
+                        <!--<Embed-Dependency>-->
+                            <!--httpclient;scope=compile|runtime,-->
+                            <!--&lt;!&ndash;jackson-core;scope=compile|runtime,&ndash;&gt;-->
+                            <!--&lt;!&ndash;java-jwt;scope=compile|runtime,&ndash;&gt;-->
+                        <!--</Embed-Dependency>-->
+                        <!--<Import-Package>-->
+                            <!--net.sf.ehcache;resolution:=optional,-->
+                            <!--net.spy.memcached;resolution:=optional,-->
+                            <!--sun.misc;resolution:=optional,-->
+                            <!--com.sun.jdmk.comm;resolution:=optional,*-->
+                        <!--</Import-Package>-->
+                        <Embed-Transitive>true</Embed-Transitive>
                     </instructions>
+
                 </configuration>
             </plugin>
             <plugin>

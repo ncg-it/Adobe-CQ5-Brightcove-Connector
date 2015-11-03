@@ -3,24 +3,24 @@
     jcr:primaryType="cq:Panel"
     title="Player Customization">
     <items jcr:primaryType="cq:WidgetCollection">
-        <style
+        <player-styles
+            jcr:primaryType="cq:Widget"
+            path="/apps/brightcove/components/shared/dialog/fieldset_player_styles.infinity.json"
+            xtype="cqinclude"/>
+        <misc
             jcr:primaryType="cq:Widget"
             collapsed="{Boolean}false"
             collapsible="{Boolean}true"
-            title="Player Styles"
+            title="Miscellaneous"
             xtype="dialogfieldset">
             <items jcr:primaryType="cq:WidgetCollection">
-                <align
+                <embed
                     jcr:primaryType="cq:Widget"
-                    path="/apps/brightcove/components/shared/dialog/alignSelection.infinity.json"
-                    xtype="cqinclude"/>
-                <size
-                    jcr:primaryType="cq:Widget"
-                    fieldLabel="Size"
-                    heightParameter="./height"
-                    widthParameter="./width"
-                    xtype="sizefield"/>
+                    fieldLabel="Embed"
+                    fieldSubLabel="(data-embed)"
+                    name="./data_embedded"
+                    xtype="textfield"/>
             </items>
-        </style>
+        </misc>
     </items>
 </jcr:root>
