@@ -104,8 +104,8 @@ Brightcove.PlayerListCombo = CQ.Ext.extend(CQ.Ext.form.ComboBox, {
                 "fields": [
                     {name: "name"},
                     {name: "id", mapping: "id"},
-                    {name: "path", mapping: "id"},
-                ],
+                    {name: "path", mapping: "id"}
+                ]
             })
         });
         config.store = new CQ.Ext.data.Store(storeConfig);

@@ -108,7 +108,7 @@ Brightcove.Combo = CQ.Ext.extend(CQ.Ext.form.ComboBox, {
         Brightcove.Combo.superclass.constructor.call(this, config);
     },
     asyncSetDisplayValue: function (v) {
-
+        console.log('asyncSetDisplayValue');
         var value = CQ.Ext.isEmpty(v) ? '' : v;
         var combo = this;
         this.store.baseParams[this.queryParam] = value;

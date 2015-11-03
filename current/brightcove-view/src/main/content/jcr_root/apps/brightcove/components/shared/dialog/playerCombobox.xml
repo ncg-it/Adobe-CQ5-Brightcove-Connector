@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jcr:root xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+<jcr:root xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0"
     jcr:primaryType="cq:Widget"
-    allowBlank="true"
+    allowBlank="{Boolean}true"
+    brcAccountFieldName="./account"
     fieldDescription=""
     fieldLabel="Player:"
     fieldSubLabel=""
+    forceSelection="{Boolean}true"
     hiddenName="./playerPath"
-    xtype="BrightcovePlayerCombo">
-    <listeners
-        jcr:primaryType="nt:unstructured"
-        focus="function(){this.store.baseParams['account_id']=$(&quot;#accountSelector&quot;).val();}"/>
-</jcr:root>
+    storePath="/apps/brightcove/components/tools/players.html"
+    xtype="brc_combobox"/>

@@ -5,6 +5,7 @@
     fieldDescription=""
     fieldLabel="Account:"
     fieldSubLabel=""
+    forceSelection="{Boolean}true"
     name="./account"
     options="/bin/brightcove/accounts.json"
     optionsQTipField="text"
@@ -15,6 +16,8 @@
     xtype="selection">
     <optionsConfig
         jcr:primaryType="nt:unstructured"
-        editable="{Boolean}true"
-        id="accountSelector"/>
+        editable="{Boolean}true"/>
+    <listeners
+        jcr:primaryType="nt:unstructured"
+        selectionchanged="function(field,value){Brightcove.setAccount(field, value);}"/>
 </jcr:root>
