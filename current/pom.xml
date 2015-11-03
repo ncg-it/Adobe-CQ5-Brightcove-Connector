@@ -38,9 +38,10 @@
     </properties>
 
     <scm>
-        <connection><!-- TODO --></connection>
-        <developerConnection><!-- TODO --></developerConnection>
-        <url><!-- TODO --></url>
+        <url>https://github.com/coresecure/Adobe-CQ5-Brightcove-Connector</url>
+        <connection>scm:git:https://github.com/coresecure/Adobe-CQ5-Brightcove-Connector.git</connection>
+        <developerConnection>scm:git:https://github.com/coresecure/Adobe-CQ5-Brightcove-Connector.git</developerConnection>
+
     </scm>
 
     <!--<distributionManagement>-->
@@ -216,9 +217,9 @@
                     <version>2.3.7</version>
                     <configuration>
                         <instructions>
-                            <Embed-Dependency>*;scope=compile|runtime</Embed-Dependency>
-                            <Embed-Directory>OSGI-INF/lib</Embed-Directory>
-                            <Embed-Transitive>true</Embed-Transitive>
+                            <!--<Embed-Dependency>*;scope=compile|runtime</Embed-Dependency>-->
+                            <!--<Embed-Directory>OSGI-INF/lib</Embed-Directory>-->
+                            <!--<Embed-Transitive>true</Embed-Transitive>-->
                         </instructions>
                     </configuration>
                 </plugin>

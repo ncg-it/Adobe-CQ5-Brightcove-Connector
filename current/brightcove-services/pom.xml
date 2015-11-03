@@ -225,7 +225,7 @@
 
     <profiles>
         <profile>
-            <id>auto-deploy</id>
+            <id>auto-deploy-bundle</id>
             <build>
                 <plugins>
                     <!--
