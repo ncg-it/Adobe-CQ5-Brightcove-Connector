@@ -22,10 +22,19 @@
 
 --%>
 
+<%@ page import="com.day.cq.i18n.I18n" %>
 <%@ page import="com.day.cq.wcm.api.WCMMode" %>
+<%@ page import="java.util.ResourceBundle" %>
 
 <%@include file="/libs/foundation/global.jsp" %>
 <%
+    // Localization
+
+    final ResourceBundle resourceBundle = slingRequest.getResourceBundle(null);
+    I18n i18n = new I18n(resourceBundle);
+
+    // WCMMode
+
     WCMMode currentWCMMode = WCMMode.fromRequest(request);
 
     boolean isEditMode = (currentWCMMode == WCMMode.EDIT);
