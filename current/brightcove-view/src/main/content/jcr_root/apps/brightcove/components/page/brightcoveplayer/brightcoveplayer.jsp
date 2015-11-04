@@ -26,39 +26,59 @@
          import="com.coresecure.brightcove.wrapper.sling.ConfigurationGrabber,
                  com.coresecure.brightcove.wrapper.sling.ConfigurationService,
                  com.coresecure.brightcove.wrapper.sling.ServiceUtil,
-                 com.day.cq.i18n.I18n,
-                 com.day.text.Text,
-                 java.util.ResourceBundle" %>
+                 com.coresecure.brightcove.wrapper.utils.TextUtil" %>
+<%@ page import="com.day.text.Text" %>
 
-<%@include file="/libs/foundation/global.jsp" %>
+<%@include file="/apps/brightcove/components/shared/global.jsp" %>
 
 <%
 
-
-    final ResourceBundle resourceBundle = slingRequest.getResourceBundle(null);
-    I18n i18n = new I18n(resourceBundle);
 
     String segmentPath = Text.getRelativeParent(resource.getPath(), 1);
 
     String title = properties.get("jcr:title", Text.getName(segmentPath));
     String description = properties.get("jcr:description", "");
-    String width = "480";
-    String height = "270";
-    String account = properties.get("account", "");
-    String playerID = "";
-    String playerKey = properties.get("playerKey", "");
-    ;
-    String data_embedded = "default";
-    if (!account.trim().isEmpty()) {
+
+    String dialogPath = "";
+    if (editContext != null && editContext.getComponent() != null) {
+        dialogPath = editContext.getComponent().getDialogPath();
+    }
+
+
+    // Player Settings
+
+    String account = properties.get("account", "").trim();
+    String playerID = properties.get("playerID", "").trim();
+    String playerKey = properties.get("playerKey", "").trim();
+
+    String playerDataEmbed = properties.get("data_embedded", "default");
+
+
+    // Dimensions
+
+    String width = properties.get("width", "480");
+    String height = properties.get("width", "270");
+
+
+    // Adjust size accordingly
+    if (TextUtil.notEmpty(width) || TextUtil.notEmpty(height)) {
+        if (TextUtil.isEmpty(width)) {
+            width = String.valueOf((480 * Integer.parseInt(height, 10)) / 270);
+        } else if (TextUtil.isEmpty(height)) {
+            height = String.valueOf((270 * Integer.parseInt(width, 10)) / 480);
+        }
+    }
+
+
+    //fallback to default
+    if (TextUtil.isEmpty(playerID) && TextUtil.notEmpty(account)) {
         ConfigurationGrabber cg = ServiceUtil.getConfigurationGrabber();
         ConfigurationService cs = cg.getConfigurationService(account);
         if (cs != null) {
             playerID = cs.getDefVideoPlayerID();
-            data_embedded = cs.getDefVideoPlayerDataEmbedded();
+            playerDataEmbed = cs.getDefVideoPlayerDataEmbedded();
         }
     }
-    data_embedded = properties.get("data_embedded", data_embedded);
-    playerID = properties.get("playerID", playerID);
 
     ValueMap playerProperties = currentPage.getProperties();
 
@@ -75,22 +95,19 @@
         width = String.valueOf(480 * playerProperties.get("height", 1) / 270);
     }
 
-    String dialogPath = "";
-    if (editContext != null && editContext.getComponent() != null) {
-        dialogPath = editContext.getComponent().getDialogPath();
-    }
 
 // Update Page Context
-
-    pageContext.setAttribute("account", account);
-    pageContext.setAttribute("playerID", playerID);
-    pageContext.setAttribute("playerKey", playerKey);
-    pageContext.setAttribute("data_embedded", data_embedded);
 
     pageContext.setAttribute("title", title);
     pageContext.setAttribute("description", description);
 
     pageContext.setAttribute("dialogPath", dialogPath);
+
+    pageContext.setAttribute("account", account);
+    pageContext.setAttribute("playerID", playerID);
+    pageContext.setAttribute("playerKey", playerKey);
+    pageContext.setAttribute("playerDataEmbed", playerDataEmbed);
+
 
     pageContext.setAttribute("width", width);
     pageContext.setAttribute("height", height);
@@ -155,7 +172,7 @@
             <video
                     data-account="${account}"
                     data-player="${playerID}"
-                    data-embed="${data_embedded}"
+                    data-embed="${playerDataEmbed}"
                     data-video-id=""
                     class="video-js"
                     width="${width}px"
