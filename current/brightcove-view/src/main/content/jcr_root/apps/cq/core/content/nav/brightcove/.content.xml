@@ -4,4 +4,4 @@
           jcr:primaryType="nt:unstructured"
           jcr:title="Brightcove Console"
           href="/apps/brightcove/console/brightcove.html"
-          id="acs-commons-oak-index-manager"/>
+          id="brightcove-admin-touch-nav"/>
