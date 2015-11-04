@@ -26,7 +26,7 @@
  */
 var Brightcove = Brightcove || {};
 
-Brightcove.ComboBox = CQ.Ext.extend(CQ.Ext.form.ComboBox, {
+Brightcove.Combo = CQ.Ext.extend(CQ.Ext.form.ComboBox, {
 
     /**
      * @cfg {String} url
@@ -60,22 +60,7 @@ Brightcove.ComboBox = CQ.Ext.extend(CQ.Ext.form.ComboBox, {
     storeConfig: null,
 
     constructor: function (config) {
-
-        var template = '<tpl for=".">' +
-            '<div class="search-item" qtip="{id}">' +
-            '<div class="search-thumb"' +
-            ' style="background-image:url({[values.thumbnailURL ? values.thumbnailURL : "/etc/designs/cs/brightcove/images/noThumbnailP.png"]});">' +
-            '</div>' +
-            '<div class="search-text-wrapper">' +
-            '<div class="search-title">{name}</div>' +
-            '<div class="search-excerpt">{id}</div>' +
-            '</div>' +
-            '<div class="search-separator"></div>' +
-            '</div>' +
-            '</tpl>';
-
         config = CQ.Util.applyDefaults(config, {
-            "brcAccountFieldName": "/.acccount", //Dependent field
             "width": 300,
             "autoSelect": true,
             "mode": "remote",
@@ -90,17 +75,23 @@ Brightcove.ComboBox = CQ.Ext.extend(CQ.Ext.form.ComboBox, {
             "triggerAction": 'query',
             "emptyText": CQ.I18n.getMessage("Enter search query"),
             "loadingText": CQ.I18n.getMessage("Searching..."),
-            "tpl": new CQ.Ext.XTemplate(template),
+            "tpl": new CQ.Ext.XTemplate(
+                '<tpl for=".">',
+                '<div class="search-item" qtip="{id}">',
+                '<div class="search-thumb"',
+                ' style="background-image:url({[values.thumbnailURL]});"></div>' +
+                '<div class="search-text-wrapper">' +
+                '<div class="search-title">{name}</div>',
+                '<div class="search-excerpt">{id}</div>',
+                '</div>',
+                '<div class="search-separator"></div>',
+                '</div>',
+                '</tpl>'),
             "itemSelector": "div.search-item"
         });
-
-
-        var storePath = config.storePath;
-        //console.log(storePath);
-
         var storeConfig = CQ.Util.applyDefaults(config.storeConfig, {
             "proxy": new CQ.Ext.data.HttpProxy({
-                "url": storePath,
+                "url": "/bin/brightcove/api?a=5",
                 "method": "GET"
             }),
             "baseParams": {
@@ -113,68 +104,32 @@ Brightcove.ComboBox = CQ.Ext.extend(CQ.Ext.form.ComboBox, {
                 "fields": ["id", "name", "thumbnailURL"]
             })
         });
-
         config.store = new CQ.Ext.data.Store(storeConfig);
-
-        Brightcove.ComboBox.superclass.constructor.call(this, config);
-    },
-    initComponent: function () {
-        Brightcove.ComboBox.superclass.initComponent.call(this);
-
-        //this.on('loadcontent', ...);
+        Brightcove.Combo.superclass.constructor.call(this, config);
     },
     asyncSetDisplayValue: function (v) {
-
-
-        var combobox = this,
-            dialogObject = combobox.findParentByType('dialog'),
-            brcAccountFieldName = combobox.initialConfig['brcAccountFieldName'],
-            accountField = dialogObject.getField(brcAccountFieldName),
-            value = CQ.Ext.isEmpty(v) ? '' : v;
-
-        combobox.store.baseParams[this.queryParam] = value;
-        combobox.store.baseParams['isID'] = !CQ.Ext.isEmpty(value);
-        combobox.store.baseParams['account_id'] = accountField.getValue();
-
-        console.log('asyncSetDisplayValue baseParams', combobox.store.baseParams);
-
-        var success = combobox.store.load({
-            params: combobox.getParams(value),
+        //console.log('asyncSetDisplayValue');
+        var value = CQ.Ext.isEmpty(v) ? '' : v;
+        var combo = this;
+        this.store.baseParams[this.queryParam] = value;
+        this.store.baseParams['isID'] = !CQ.Ext.isEmpty(v);
+        this.store.baseParams['account_id'] = $("#accountSelector").val();
+        var success = this.store.load({
+            params: this.getParams(value),
             callback: function () {
-                combobox.setDisplayValue(combobox.value, false);
-                if (value != combobox.value) {
-                    combobox.setValue(value);
-                }
+                combo.setDisplayValue(combo.value, false);
+                if (value != combo.value)            combo.setValue(value);
             }
         });
         if (!success) {
             // Load was cancelled, so we'll just have to make do with the valueField:
-            combobox.setDisplayValue(combobox.value, false);
+            combo.setDisplayValue(combo.value, false);
 
         }
-        combobox.store.baseParams['isID'] = false;
+        this.store.baseParams['isID'] = false;
 
     }
 
 
 });
-CQ.Ext.reg("brc_combobox", Brightcove.ComboBox);
-
-
-// Set as a listener
-
-Brightcove.setAccount = function (selectField, value) {
-    var dialogObject = selectField.findParentByType('dialog'),
-        dependentFields = dialogObject.find('brcAccountFieldName', './account');
-
-    for (var i = 0; i < dependentFields.length; i++) {
-        var field = dependentFields[i];
-        try {
-            console.log('Brightcove.setAccount - dependentField', field);
-            field.setValue();
-        } catch (e) {
-            console.warn(e);
-        }
-    }
-
-};
+CQ.Ext.reg("BrightcoveCombo", Brightcove.Combo);

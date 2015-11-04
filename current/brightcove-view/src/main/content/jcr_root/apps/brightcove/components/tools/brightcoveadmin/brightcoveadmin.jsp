@@ -28,7 +28,7 @@
                  com.coresecure.brightcove.wrapper.sling.ServiceUtil,
                  java.util.Set" %>
 
-<%@include file="/apps/brightcove/global/global.jsp" %>
+<%@include file="/apps/brightcove/components/shared/global.jsp" %>
 
 <%
 

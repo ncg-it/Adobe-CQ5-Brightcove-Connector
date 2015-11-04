@@ -14,10 +14,8 @@
     optionsValueField="value"
     type="select"
     xtype="selection">
-    <optionsConfig
-        jcr:primaryType="nt:unstructured"
-        editable="{Boolean}true"/>
     <listeners
         jcr:primaryType="nt:unstructured"
-        selectionchanged="function(field,value){Brightcove.setAccount(field, value);}"/>
+        loadcontent="function(field, record, path){ Brightcove.Account.initValue(field); }"
+        selectionchanged="function(field,value){console.log(&quot; selectionchanged &quot;); Brightcove.Account.updateValue(field, value); }"/>
 </jcr:root>
