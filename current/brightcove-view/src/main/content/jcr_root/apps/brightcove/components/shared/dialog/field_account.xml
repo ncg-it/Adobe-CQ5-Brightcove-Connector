@@ -17,5 +17,5 @@
     <listeners
         jcr:primaryType="nt:unstructured"
         loadcontent="function(field, record, path){ Brightcove.Account.initValue(field); }"
-        selectionchanged="function(field,value){console.log(&quot; selectionchanged &quot;); Brightcove.Account.updateValue(field, value); }"/>
+        selectionchanged="function(field,value){ Brightcove.Account.updateValue(field, value); }"/>
 </jcr:root>

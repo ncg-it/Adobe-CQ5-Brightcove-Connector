@@ -72,7 +72,6 @@ Brightcove Reference:
             controls>
     </video>
 
-    <ol class="vjs-playlist"></ol>
 
     <script src="//players.brightcove.net/${brc_account}/${brc_playerID}_${brc_playerDataEmbed}/index.min.js"></script>
 

@@ -63,9 +63,9 @@ Brightcove.Account.updateValue = function (accountField, newValue) {
 
     var oldValue = accountField.oldValue;
 
-    console.log('old vs new', oldValue, newValue);
+
     if (oldValue !== newValue) {
-        console.log('value has changed... update oldValue property then reset dependentFields');
+
 
         Brightcove.Account.resetDependentFields(accountField);
 
