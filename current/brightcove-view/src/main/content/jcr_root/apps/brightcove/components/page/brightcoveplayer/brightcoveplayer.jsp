@@ -98,8 +98,8 @@
 
 // Update Page Context
 
-    pageContext.setAttribute("title", title);
-    pageContext.setAttribute("description", description);
+    pageContext.setAttribute("playerTitle", title);
+    pageContext.setAttribute("playerDescription", description);
 
     pageContext.setAttribute("dialogPath", dialogPath);
 
@@ -140,10 +140,10 @@
 
 <body>
 
-<h1>Brightcove Player Config | &quot;${title}&quot;</h1>
+<h1>Brightcove Player Config | &quot;${playerTitle}&quot;</h1>
 
 <div class="definition-container">
-    <p>${description}</p>
+    <p>${playerDescription}</p>
 </div>
 
 
