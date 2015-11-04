@@ -1,12 +1,12 @@
 /*
 
-
  Adobe CQ5 Brightcove Connector
 
  Copyright (C) 2015 Coresecure Inc.
 
- Authors:    Alessandro Bonfatti
- Yan Kisen
+ Authors:
+    Alessandro Bonfatti
+    Yan Kisen
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -24,28 +24,28 @@
 
 
  */
+
 /* Z-index of #mask must lower than #boxes .window */
 #mask {
-  position:absolute;
-  z-index:9000;
-  background-color:#000;
-  display:none;
+  position: absolute;
+  z-index: 9000;
+  background-color: #000;
+  display: none;
 }
-   
+
 #boxes .window {
-  position:absolute;
-  width:440px;
-  height:200px;
-  display:none;
-  z-index:9999;
-  padding:20px;
-  top:50%;
-  left:50%;
+  position: absolute;
+  width: 440px;
+  height: 200px;
+  display: none;
+  z-index: 9999;
+  padding: 20px;
+  top: 50%;
+  left: 50%;
 }
- 
- 
+
 /* Customize your modal window here, you can add background image too */
 #boxes #dialog {
-  width:375px; 
-  height:203px;
+  width: 375px;
+  height: 203px;
 }

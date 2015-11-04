@@ -11,5 +11,9 @@
             jcr:primaryType="cq:Widget"
             path="/apps/brightcove/components/shared/dialog/field_videoPlayer.infinity.json"
             xtype="cqinclude"/>
+        <playerPath
+            jcr:primaryType="cq:Widget"
+            path="/apps/brightcove/components/shared/dialog/field_playerPath.infinity.json"
+            xtype="cqinclude"/>
     </items>
 </jcr:root>

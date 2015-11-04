@@ -136,7 +136,7 @@ Brightcove.ComboBox = CQ.Ext.extend(CQ.Ext.form.ComboBox, {
         combobox.store.baseParams['isID'] = !CQ.Ext.isEmpty(value);
         combobox.store.baseParams['account_id'] = accountField.getValue();
 
-        console.log('asyncSetDisplayValue baseParams', combobox.store.baseParams);
+        //console.log('asyncSetDisplayValue', combobox, v);
 
         var success = combobox.store.load({
             params: combobox.getParams(value),
@@ -158,23 +158,6 @@ Brightcove.ComboBox = CQ.Ext.extend(CQ.Ext.form.ComboBox, {
 
 
 });
+
 CQ.Ext.reg("brc_combobox", Brightcove.ComboBox);
 
-
-// Set as a listener
-
-Brightcove.setAccount = function (selectField, value) {
-    var dialogObject = selectField.findParentByType('dialog'),
-        dependentFields = dialogObject.find('brcAccountFieldName', './account');
-
-    for (var i = 0; i < dependentFields.length; i++) {
-        var field = dependentFields[i];
-        try {
-            console.log('Brightcove.setAccount - dependentField', field);
-            field.setValue();
-        } catch (e) {
-            console.warn(e);
-        }
-    }
-
-};

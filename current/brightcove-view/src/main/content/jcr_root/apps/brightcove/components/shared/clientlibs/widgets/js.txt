@@ -6,4 +6,6 @@ brightcovePlayercombo.js
 brightcovePlayerListcombo.js
 brightcoveRemotePlayercombo.js
 
+brc_account_utils.js
+
 brc_combobox.js

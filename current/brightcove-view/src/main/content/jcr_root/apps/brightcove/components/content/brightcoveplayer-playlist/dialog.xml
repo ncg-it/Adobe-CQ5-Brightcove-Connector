@@ -9,9 +9,9 @@
                 jcr:primaryType="cq:Widget"
                 path="/apps/brightcove/components/shared/dialog/tab_playlist_config.infinity.json"
                 xtype="cqinclude"/>
-            <tab-player
+            <tab-styles
                 jcr:primaryType="cq:Widget"
-                path="/apps/brightcove/components/shared/dialog/tab_player_config.infinity.json"
+                path="/apps/brightcove/components/shared/dialog/tab_component_styles.infinity.json"
                 xtype="cqinclude"/>
         </items>
     </items>
