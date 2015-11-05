@@ -15,7 +15,7 @@
     <filter root="/apps/cq/core/content/nav/brightcove"/>
     <filter root="/etc/clientlibs/brightcove"/>
 	<filter root="/etc/designs/cs/brightcove">
-        <exclude pattern="/etc/designs/cs/brightcove/jcr:content.*"/>
+        <!--<exclude pattern="/etc/designs/cs/brightcove/jcr:content.*"/>-->
     </filter>
     <filter root="/libs/cq/gui/content/common/links/brightcove"/>
 
