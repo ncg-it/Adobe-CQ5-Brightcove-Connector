@@ -66,13 +66,12 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; utf-8"/>
+
     <cq:includeClientLib categories="cq.wcm.edit"/>
 
-    <cq:includeClientLib css="brc.bootstrap"/>
-    <cq:includeClientLib css="brc.brightcove-api"/>
 
-    <cq:includeClientLib js="brc.bootstrap"/>
-    <cq:includeClientLib js="brc.brightcove-api"/>
+    <cq:includeClientLib categories="brc.brightcove-api"/>
+
 
     <title>VideoManager - Brightcove Admin API</title>
     <script>
