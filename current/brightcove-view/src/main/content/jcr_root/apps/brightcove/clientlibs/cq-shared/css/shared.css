@@ -24,13 +24,9 @@
 
 
  */
-.brightcove-container div,
-.brightcove-container embed,
-.brightcove-container object,
-.BrightcoveExperience {
-  height: 100%;
-  left: 0;
-  position: absolute;
-  top: 0;
-  width: 100%;
+#brightcoveadmin {
+    background-image: url("ico_brightcove.png");
+}
+div .brightcoveadmin  {
+    background-image:url(../../images/brightcove-welcome.png);
 }

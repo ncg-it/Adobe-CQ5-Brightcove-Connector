@@ -24,55 +24,27 @@
 
 
  *//*vm_wire.js
-*functions for communication
+ *functions for communication
  */
- 
-/********************** 
-*The Ajile library is used *
-*to parse json responses  *
-**********************/
- 
+
+/**********************
+ *The Ajile library is used *
+ *to parse json responses  *
+ **********************/
+
 /*!***************************!*
-*!! write functionality disabled:      *
-* the functions for write methods  *
-* have been modified, they are not *
-* good examples.  Please see the     *
-* actual docs for this page to see   *
-* how the write methods work.        *
-******************************/
- /**
-  * Protect window.console method calls, e.g. console is not defined on IE
-  * unless dev tools are open, and IE doesn't define console.debug
-  *
-  * Chrome 41.0.2272.118: debug,error,info,log,warn,dir,dirxml,table,trace,assert,count,markTimeline,profile,profileEnd,time,timeEnd,timeStamp,timeline,timelineEnd,group,groupCollapsed,groupEnd,clear
-  * Firefox 37.0.1: log,info,warn,error,exception,debug,table,trace,dir,group,groupCollapsed,groupEnd,time,timeEnd,profile,profileEnd,assert,count
-  * Internet Explorer 11: select,log,info,warn,error,debug,assert,time,timeEnd,timeStamp,group,groupCollapsed,groupEnd,trace,clear,dir,dirxml,count,countReset,cd
-  * Safari 6.2.4: debug,error,log,info,warn,clear,dir,dirxml,table,trace,assert,count,profile,profileEnd,time,timeEnd,timeStamp,group,groupCollapsed,groupEnd
-  * Opera 28.0.1750.48: debug,error,info,log,warn,dir,dirxml,table,trace,assert,count,markTimeline,profile,profileEnd,time,timeEnd,timeStamp,timeline,timelineEnd,group,groupCollapsed,groupEnd,clear
-  */
- (function() {
-   // Union of Chrome, Firefox, IE, Opera, and Safari console methods
-   var methods = ["assert", "assert", "cd", "clear", "count", "countReset",
-     "debug", "dir", "dirxml", "dirxml", "dirxml", "error", "error", "exception",
-     "group", "group", "groupCollapsed", "groupCollapsed", "groupEnd", "info",
-     "info", "log", "log", "markTimeline", "profile", "profileEnd", "profileEnd",
-     "select", "table", "table", "time", "time", "timeEnd", "timeEnd", "timeEnd",
-     "timeEnd", "timeEnd", "timeStamp", "timeline", "timelineEnd", "trace",
-     "trace", "trace", "trace", "trace", "warn"];
-   var length = methods.length;
-   var console = (window.console = window.console || {});
-   var method;
-   var noop = function() {};
-   while (length--) {
-     method = methods[length];
-     // define undefined methods as noops to prevent errors
-     if (!console[method])
-       console[method] = noop;
-   }
- })();
-//CONFIG 
-//This should be set to point to proxy.jsp on your server
-var apiLocation =  CQ.shared.HTTP.getContextPath() +"/apps/brightcove/console/brightcove.proxy.html";
+ *!! write functionality disabled:      *
+ * the functions for write methods  *
+ * have been modified, they are not *
+ * good examples.  Please see the     *
+ * actual docs for this page to see   *
+ * how the write methods work.        *
+ ******************************/
+
+//CONFIG
+
+var brc_admin = brc_admin || {},
+    apiLocation = brc_admin.apiProxy; //This should be set to point to proxy.jsp on your server
 
 
 //Default Fields
@@ -85,192 +57,192 @@ var oCurrentVideoList;
 var oCurrentPlaylistList;
 
 function getAllVideosURL() {
-	$(".sortable", $("#nameCol").parent()).not($("#nameCol")).addClass("NONE");
-	$("#nameCol").removeClass("ASC");
-	$("#nameCol").removeClass("DESC");
-	$("#nameCol").removeClass("NONE");
-	$("#nameCol").addClass("ASC");
-	$("#nameCol").attr("data-sortType","ASC");
-	return getAllVideosURLOrdered("DISPLAY_NAME","ASC");
-    
+    $(".sortable", $("#nameCol").parent()).not($("#nameCol")).addClass("NONE");
+    $("#nameCol").removeClass("ASC");
+    $("#nameCol").removeClass("DESC");
+    $("#nameCol").removeClass("NONE");
+    $("#nameCol").addClass("ASC");
+    $("#nameCol").attr("data-sortType", "ASC");
+    return getAllVideosURLOrdered("DISPLAY_NAME", "ASC");
+
 }
 function getAllVideosURLOrdered(sort_by, sort_type) {
     loadStart();
     //If currentFunction == this function name, then the current view already correspdonds to this function, so use the generic holder value
     //otherwise, we're switching from a different view so use the last stored value.
-    paging.allVideos = (paging.currentFunction == getAllVideosURL)?paging.generic:paging.allVideos;
+    paging.allVideos = (paging.currentFunction == getAllVideosURL) ? paging.generic : paging.allVideos;
     paging.currentFunction = getAllVideosURL;
-    if(typeof searchField != "undefined" && searchVal != "" && searchVal != "Search Videos"){
+    if (typeof searchField != "undefined" && searchVal != "" && searchVal != "Search Videos") {
         if (!isNumber(searchVal)) {
-        	if (typeof searchField == "undefined" || searchField == "every_field" || searchField == "") {
-		        return apiLocation +
-		        '?command=search_videos&callback=showAllVideosCallBack&any=search_text:'+searchVal+'&sort_by='+sort_by+"%3A"+sort_type
-		            + '&any=tag:'+searchVal+'&get_item_count=true&page_size=' + paging.size + '&page_number='+paging.textSearch
-		            +'&fields='+fields;
-        	} else {
-        		return apiLocation +
-		        '?command=search_videos&callback=showAllVideosCallBack&any='+searchField+':'+searchVal+'&sort_by='+sort_by+"%3A"+sort_type
-		            + '&get_item_count=true&page_size=' + paging.size + '&page_number='+paging.textSearch
-		            +'&fields='+fields;
-        	}
+            if (typeof searchField == "undefined" || searchField == "every_field" || searchField == "") {
+                return apiLocation +
+                    '?command=search_videos&callback=showAllVideosCallBack&any=search_text:' + searchVal + '&sort_by=' + sort_by + "%3A" + sort_type
+                    + '&any=tag:' + searchVal + '&get_item_count=true&page_size=' + paging.size + '&page_number=' + paging.textSearch
+                    + '&fields=' + fields;
+            } else {
+                return apiLocation +
+                    '?command=search_videos&callback=showAllVideosCallBack&any=' + searchField + ':' + searchVal + '&sort_by=' + sort_by + "%3A" + sort_type
+                    + '&get_item_count=true&page_size=' + paging.size + '&page_number=' + paging.textSearch
+                    + '&fields=' + fields;
+            }
         } else {
-        	return apiLocation +
-	        '?command=find_videos_by_ids&callback=showAllVideosCallBack&video_ids='+searchVal
-	            + '&get_item_count=true&fields='+fields; 
+            return apiLocation +
+                '?command=find_videos_by_ids&callback=showAllVideosCallBack&video_ids=' + searchVal
+                + '&get_item_count=true&fields=' + fields;
         }
     } else {
-	    return apiLocation +
-	     '?command=search_videos&callback=showAllVideosCallBack&sort_by='+sort_by+"%3A"+sort_type
-	        + '&get_item_count=true&page_size=' + paging.size + '&page_number='+paging.allVideos
-	        +'&fields='+fields;
+        return apiLocation +
+            '?command=search_videos&callback=showAllVideosCallBack&sort_by=' + sort_by + "%3A" + sort_type
+            + '&get_item_count=true&page_size=' + paging.size + '&page_number=' + paging.allVideos
+            + '&fields=' + fields;
     }
 }
 
 function isNumber(n) {
-	  return !isNaN(parseFloat(n)) && isFinite(n);
-	}
-function getAllPlaylistsURL(){
+    return !isNaN(parseFloat(n)) && isFinite(n);
+}
+function getAllPlaylistsURL() {
     loadStart();
-    paging.allPlaylists = (paging.currentFunction == getAllPlaylistsURL)?paging.generic:paging.allPlaylists;
+    paging.allPlaylists = (paging.currentFunction == getAllPlaylistsURL) ? paging.generic : paging.allPlaylists;
     paging.currentFunction = getAllPlaylistsURL;
     return apiLocation +
-    '?command=find_all_playlists&callback=showAllPlaylistsCallBack'
-        + '&get_item_count=true&page_size=' + paging.size + '&page_number='+paging.allPlaylists;
+        '?command=find_all_playlists&callback=showAllPlaylistsCallBack'
+        + '&get_item_count=true&page_size=' + paging.size + '&page_number=' + paging.allPlaylists;
 }
 
-function getFindPlaylistsURL(){
+function getFindPlaylistsURL() {
     loadStart();
-    paging.allPlaylists = (paging.currentFunction == getAllPlaylistsURL)?paging.generic:paging.allPlaylists;
+    paging.allPlaylists = (paging.currentFunction == getAllPlaylistsURL) ? paging.generic : paging.allPlaylists;
     paging.currentFunction = getAllPlaylistsURL;
-    if(searchVal != "" && searchVal != "Search Playlists"){
-    	if (searchField == "find_playlist_by_id") {
-		    return apiLocation +
-		    '?command=find_playlists_by_ids&playlist_ids='+searchVal+'&callback=showSearchPlaylistsCallBack'
-		        + '&get_item_count=true&page_size=' + paging.size + '&page_number='+paging.allPlaylists;
-    	} else if (searchField == "find_playlist_by_reference_id") {
-    		return apiLocation +
-		    '?command=find_playlists_by_reference_ids&reference_ids='+searchVal+'&callback=showSearchPlaylistsCallBack'
-		        + '&get_item_count=true&page_size=' + paging.size + '&page_number='+paging.allPlaylists;
-    	}
+    if (searchVal != "" && searchVal != "Search Playlists") {
+        if (searchField == "find_playlist_by_id") {
+            return apiLocation +
+                '?command=find_playlists_by_ids&playlist_ids=' + searchVal + '&callback=showSearchPlaylistsCallBack'
+                + '&get_item_count=true&page_size=' + paging.size + '&page_number=' + paging.allPlaylists;
+        } else if (searchField == "find_playlist_by_reference_id") {
+            return apiLocation +
+                '?command=find_playlists_by_reference_ids&reference_ids=' + searchVal + '&callback=showSearchPlaylistsCallBack'
+                + '&get_item_count=true&page_size=' + paging.size + '&page_number=' + paging.allPlaylists;
+        }
     } else {
-    	return apiLocation +
-        '?command=find_all_playlists&callback=showAllPlaylistsCallBack'
-            + '&get_item_count=true&page_size=' + paging.size + '&page_number='+paging.allPlaylists;
+        return apiLocation +
+            '?command=find_all_playlists&callback=showAllPlaylistsCallBack'
+            + '&get_item_count=true&page_size=' + paging.size + '&page_number=' + paging.allPlaylists;
     }
 }
-function searchVideoURL(){
+function searchVideoURL() {
     loadStart();
-    paging.textSearch = (paging.currentFunction == searchVideoURL)?paging.generic:paging.textSearch;
-    paging.currentFunction  = searchVideoURL;
+    paging.textSearch = (paging.currentFunction == searchVideoURL) ? paging.generic : paging.textSearch;
+    paging.currentFunction = searchVideoURL;
     var sort_by = $("#trHeader th.sortable").not("NONE").attr("data-sortby");
     var data_sorttype = $("#trHeader th.sortable").not("NONE").attr("data-sorttype");
-    if(searchVal != "" && searchVal != "Search Videos"){
+    if (searchVal != "" && searchVal != "Search Videos") {
         if (!isNumber(searchVal)) {
-        	if (searchField == "every_field" || searchField == "" || typeof searchField == "undefined") {
-		        return apiLocation +
-		        '?command=search_videos&sort_by='+sort_by+'%3A'+data_sorttype+'&callback=searchVideoCallBack&any=search_text:'+searchVal
-		            + '&any=tag:'+searchVal+'&get_item_count=true&page_size=' + paging.size + '&page_number='+paging.textSearch
-		            +'&fields='+fields;
-        	} else {
-        		return apiLocation +
-		        '?command=search_videos&sort_by='+sort_by+'%3A'+data_sorttype+'&callback=searchVideoCallBack&any='+searchField+':'+searchVal
-		            + '&get_item_count=true&page_size=' + paging.size + '&page_number='+paging.textSearch
-		            +'&fields='+fields;
-        	}
+            if (searchField == "every_field" || searchField == "" || typeof searchField == "undefined") {
+                return apiLocation +
+                    '?command=search_videos&sort_by=' + sort_by + '%3A' + data_sorttype + '&callback=searchVideoCallBack&any=search_text:' + searchVal
+                    + '&any=tag:' + searchVal + '&get_item_count=true&page_size=' + paging.size + '&page_number=' + paging.textSearch
+                    + '&fields=' + fields;
+            } else {
+                return apiLocation +
+                    '?command=search_videos&sort_by=' + sort_by + '%3A' + data_sorttype + '&callback=searchVideoCallBack&any=' + searchField + ':' + searchVal
+                    + '&get_item_count=true&page_size=' + paging.size + '&page_number=' + paging.textSearch
+                    + '&fields=' + fields;
+            }
         } else {
-        	return apiLocation +
-	        '?command=find_videos_by_ids&callback=searchVideoCallBack&video_ids='+searchVal
-	            + '&get_item_count=true&fields='+fields; 
+            return apiLocation +
+                '?command=find_videos_by_ids&callback=searchVideoCallBack&video_ids=' + searchVal
+                + '&get_item_count=true&fields=' + fields;
         }
     }
 }
 
-function findByTag(){
+function findByTag() {
     loadStart();
-    paging.tagSearch = (paging.currentFunction == findByTag)?paging.generic:paging.tagSearch;
+    paging.tagSearch = (paging.currentFunction == findByTag) ? paging.generic : paging.tagSearch;
     paging.currentFunction = findByTag;
-    return apiLocation + '?command=find_videos_by_tags&and_tags='+searchVal+
-        '&get_item_count=true&page_size='+paging.size+'&page_number='+paging.tagSearch+'&callback=findByTagCallBack&fields='
-        +fields;
+    return apiLocation + '?command=find_videos_by_tags&and_tags=' + searchVal +
+        '&get_item_count=true&page_size=' + paging.size + '&page_number=' + paging.tagSearch + '&callback=findByTagCallBack&fields='
+        + fields;
 }
 
 /*delete_video is a write method, and needs to be submitted to the api server as a multipart/post request.
-* however, since there are only a few fields of data being sent from this request, we'll send it as a GEt request to the proxy
-* server and let it format the multipart request.~
-* the line '}else if ( write_methods.contains(request.getParameter("command")) && request.getMethod() == "GET"){'
-* in proxy.jsp handles this kind of request.
-*/
-function deleteVideoURL(videoId){
+ * however, since there are only a few fields of data being sent from this request, we'll send it as a GEt request to the proxy
+ * server and let it format the multipart request.~
+ * the line '}else if ( write_methods.contains(request.getParameter("command")) && request.getMethod() == "GET"){'
+ * in proxy.jsp handles this kind of request.
+ */
+function deleteVideoURL(videoId) {
     loadStart();
-    return apiLocation + '?command=delete_video&ids='+videoId+'&callback=showAllVideosCallBack';
-    
+    return apiLocation + '?command=delete_video&ids=' + videoId + '&callback=showAllVideosCallBack';
+
 }
 
 function showAllVideosCallBack(o) {
-    if(null == o.error){
+    if (null == o.error) {
         oCurrentVideoList = o.items;
         buildMainVideoList("All Videos");
         doPageList(o.total_count, "Videos");
-    }else{
-        var message = (null!=o.error.message)?o.error.message:o.error;
-        console.log("Server Error: "+ message);
+    } else {
+        var message = (null != o.error.message) ? o.error.message : o.error;
+        console.log("Server Error: " + message);
     }
     loadEnd();
 }
 
-function showSearchPlaylistsCallBack(o){
-    if(null == o.error){
+function showSearchPlaylistsCallBack(o) {
+    if (null == o.error) {
         oCurrentPlaylistList = o.items;
         buildPlaylistList();
         var total = o.total_count;
-        if (total< o.items.length)total =   o.items.length;
+        if (total < o.items.length)total = o.items.length;
         doPageList(total, "Playlists");
-    }else{
-        var message = (null!=o.error.message)?o.error.message:o.error;
-        console.log("Server Error: "+ message);
+    } else {
+        var message = (null != o.error.message) ? o.error.message : o.error;
+        console.log("Server Error: " + message);
     }
     loadEnd();
 }
-function showAllPlaylistsCallBack(o){
-    if(null == o.error){
+function showAllPlaylistsCallBack(o) {
+    if (null == o.error) {
         oCurrentPlaylistList = o.items;
         buildPlaylistList();
         doPageList(o.total_count, "Playlists");
-    }else{
-        var message = (null!=o.error.message)?o.error.message:o.error;
-        console.log("Server Error: "+ message);
+    } else {
+        var message = (null != o.error.message) ? o.error.message : o.error;
+        console.log("Server Error: " + message);
     }
     loadEnd();
 }
 
-function searchVideoCallBack(o){
-    if(null == o.error){
+function searchVideoCallBack(o) {
+    if (null == o.error) {
         oCurrentVideoList = o.items;
-        buildMainVideoList("Search: "+searchVal);
+        buildMainVideoList("Search: " + searchVal);
         var count = (o.total_count >= 0) ? o.total_count : o.items.length;
         doPageList(count, "Videos");
-    }else{  
-        var message = (null!=o.error.message)?o.error.message:o.error;
-        console.log("Server Error: "+ message);
+    } else {
+        var message = (null != o.error.message) ? o.error.message : o.error;
+        console.log("Server Error: " + message);
     }
     loadEnd();
 }
 
-function findByTagCallBack(o){
-    if(null == o.error){
+function findByTagCallBack(o) {
+    if (null == o.error) {
         oCurrentVideoList = o.items;
-        buildMainVideoList("Tag Search: "+searchVal);
+        buildMainVideoList("Tag Search: " + searchVal);
         doPageList(o.total_count, "Videos");
-    }else{  
-        var message = (null!=o.error.message)?o.error.message:o.error;
-        console.log("Server Error: "+ message);
+    } else {
+        var message = (null != o.error.message) ? o.error.message : o.error;
+        console.log("Server Error: " + message);
     }
     loadEnd();
 }
 
 //Function calls update_video to change metadata
 //Also see metaEdit in vm_ui.js
-function metaSubmit(){
+function metaSubmit() {
     var form = document.getElementById("metaEditForm");
     form.action = apiLocation;
     form.submit();
@@ -280,32 +252,32 @@ function metaSubmit(){
     Load(getAllVideosURL());
 }
 
-function delConfYes(){
+function delConfYes() {
     var checkedVideos = $("#tblMainList input:checked");
     var IDs = "";
-    checkedVideos.each(function() {
-        IDs = IDs+$(this).val() + ",";
-    }
+    checkedVideos.each(function () {
+            IDs = IDs + $(this).val() + ",";
+        }
     );
     Load(deleteVideoURL(IDs));
     closeBox('delConfPop');
     Load(getAllVideosURL());
 }
 
-function buildJSONRequest(form){
-    if(document.getElementById('name').value =="" || document.getElementById('shortDescription').value =="" || document.getElementById('filePath').value ==""){
+function buildJSONRequest(form) {
+    if (document.getElementById('name').value == "" || document.getElementById('shortDescription').value == "" || document.getElementById('filePath').value == "") {
         alert("Require Name, Short Description and File");
         return;
-    }else{
+    } else {
         json = document.getElementById('video').value
         //Construct the JSON request:
-        json.value = '{"name": "' + 
-        document.getElementById('name').value + '", "shortDescription": "' + document.getElementById('shortDescription').value + 
-        '"}';
+        json.value = '{"name": "' +
+            document.getElementById('name').value + '", "shortDescription": "' + document.getElementById('shortDescription').value +
+            '"}';
         document.getElementById('video').value = json.value;
     }
 }
-function startUpload(){
+function startUpload() {
     var form = document.getElementById("uploadForm");
     buildJSONRequest(form);
     form.action = apiLocation;
@@ -315,7 +287,7 @@ function startUpload(){
     closeBox('uploadDiv', form);
     Load(getAllVideosURL());
 }
-function startExtUpload(window, formid){
+function startExtUpload(window, formid) {
     var form = document.getElementById(formid);
     buildJSONRequest(form);
     form.action = apiLocation;
@@ -326,7 +298,7 @@ function startExtUpload(window, formid){
     //closeBox('uploadDiv', form);
     Load(getAllVideosURL());
 }
-function startImageUpload(){
+function startImageUpload() {
     var form = document.getElementById("uploadImageForm");
     form.action = apiLocation;
     form.submit();
@@ -335,7 +307,7 @@ function startImageUpload(){
     closeBox('uploadImageDiv', form);
     Load(getAllVideosURL());
 }
-function startVideoImageUpload(){
+function startVideoImageUpload() {
     var form = document.getElementById("uploadVideoImageForm");
     form.action = apiLocation;
     form.submit();
@@ -345,9 +317,9 @@ function startVideoImageUpload(){
     Load(getAllVideosURL());
 }
 //See createPlaylistBox for more info
-function createPlaylistSubmit(){
+function createPlaylistSubmit() {
     var form = document.getElementById("createPlaylistForm");
-    
+
     form.action = apiLocation;
     form.submit();
     $('#createPlstVideoTable').empty();
@@ -357,7 +329,7 @@ function createPlaylistSubmit(){
     Load(getAllPlaylistsURL());
 }
 
-function modPlstSubmit(){
+function modPlstSubmit() {
     loadStart();
     noWrite();
     closeBox('modPlstPop');

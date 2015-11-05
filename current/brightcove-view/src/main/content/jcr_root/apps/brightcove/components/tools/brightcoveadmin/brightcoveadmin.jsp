@@ -70,15 +70,22 @@
     <cq:includeClientLib categories="cq.wcm.edit"/>
 
 
-    <cq:includeClientLib categories="brc.brightcove-api"/>
+    <cq:includeClientLib css="brc.brightcove-api"/>
 
 
     <title>VideoManager - Brightcove Admin API</title>
-    <script>
+    <script type="text/javascript">
+        var brc_admin = brc_admin || {};
+
+        brc_admin.apiProxy = "${resource.path}.proxy.html";
+
         //This should be the direct URL to a preview player,  corresponding to the account of the tokens
-        var previewPlayerLoc = "${previewPlayerLoc}";
-        var previewPlayerListLoc = "${previewPlayerListLoc}";
+        brc_admin.previewPlayerLoc = "${previewPlayerLoc}";
+        brc_admin.previewPlayerListLoc = "${previewPlayerListLoc}";
+
     </script>
+
+    <cq:includeClientLib js="brc.brightcove-api"/>
 </head>
 
 <body>
