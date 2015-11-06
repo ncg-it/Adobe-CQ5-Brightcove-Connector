@@ -83,9 +83,9 @@
             "items": {
                 "tpl":
                     '<tpl for=".">' +
-                            '<div class="cq-cft-search-item" title="{thumbnailURL}" ondblclick="window.location= CQ.shared.HTTP.getContextPath() +\'/apps/brightcove/console/brightcove.html\';">' +
+                            '<div class="cq-cft-search-item" title="{thumbnailURL}" ondblclick="window.location= CQ.shared.HTTP.getContextPath() +\'/brightcove/admin\';">' +
                                     '<div class="cq-cft-search-thumb-top"' +
-                                    ' style="background-image:url(\'/etc/designs/cs/brightcove/images/noThumbnailPL.png\');"></div>' +
+                                    ' style="background-image:url(\'/etc/designs/cs/brightcove/shared/img/noThumbnailPL.png\');"></div>' +
                                          '<div class="cq-cft-search-text-wrapper">' +
                                             '<div class="cq-cft-search-title"><p class="cq-cft-search-title">{name}</p><p>{path}</p></div>' +
                                         '</div>' +

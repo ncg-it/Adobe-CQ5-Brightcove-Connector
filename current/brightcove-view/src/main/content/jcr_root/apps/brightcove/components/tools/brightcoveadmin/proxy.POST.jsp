@@ -74,7 +74,7 @@
     boolean success = false;
     JSONObject root = new JSONObject();
     String msg = "";
-//try{
+
 
     if (slingRequest.getMethod().equals("POST")) {
         String command = slingRequest.getRequestParameter("command").getString();
@@ -160,28 +160,12 @@
                         video.setName(request.getParameter("name"));
                         video.setShortDescription(request.getParameter("shortDescription"));
 
-
-                        // Optional fields
-                        //video.setAccountId(accountId);
-                        //video.setEconomics(EconomicsEnum.FREE);
                         video.setItemState(ItemStateEnum.ACTIVE);
                         video.setLinkText(request.getParameter("linkText"));
                         video.setLinkUrl(request.getParameter("linkURL"));
                         video.setLongDescription(request.getParameter("longDescription"));
                         video.setReferenceId(request.getParameter("referenceId"));
-                        //video.setStartDate(new Date((new Date()).getTime() - 30*1000*60 )); // 30 minutes ago
 
-                        // Complex fields (all optional)
-                        //Date endDate = new Date();
-                        //endDate.setTime(endDate.getTime() + (30*1000*60)); // 30 minutes from now
-                        //video.setEndDate(endDate);
-
-                        //video.setGeoFiltered(true);
-                        //List<GeoFilterCodeEnum> geoFilteredCountries = new ArrayList<GeoFilterCodeEnum>();
-                        //geoFilteredCountries.add(GeoFilterCodeEnum.lookupByName("UNITED STATES"));
-                        //geoFilteredCountries.add(GeoFilterCodeEnum.CA);
-                        //video.setGeoFilteredCountries(geoFilteredCountries);
-                        //video.setGeoFilteredExclude(false);
 
                         if (request.getParameter("tags") != null) {
 
@@ -198,19 +182,6 @@
                         Boolean preserveSourceRendition = true;
                         Boolean h264NoProcessing = false;
 
-                        // Image meta data
-                        /*Image thumbnail  = new Image();
-                        Image videoStill = new Image();
-                          
-                        thumbnail.setReferenceId("this is the thumbnail refid");
-                        videoStill.setReferenceId("this is the video still refid");
-                          
-                        thumbnail.setDisplayName("this is the thumbnail");
-                        videoStill.setDisplayName("this is the video still");
-                          
-                        thumbnail.setType(ImageTypeEnum.THUMBNAIL);
-                        videoStill.setType(ImageTypeEnum.VIDEO_STILL);
-                        */
                         try {
                             // Write the video
                             logger.info("Writing video to Media API");
@@ -219,14 +190,7 @@
                             tempFile.delete();
                             success = true;
                             root.put("videoid", newVideoId);
-                           /*
-                           // Delete the video
-                           log.info("Deleting created video");
-                           Boolean cascade        = true; // Deletes even if it is in use by playlists/players
-                           Boolean deleteShares   = true; // Deletes if shared to child accounts
-                           String  deleteResponse = wapi.DeleteVideo(writeToken, newVideoId, null, cascade, deleteShares);
-                           log.info("Response from server for delete (no message is perfectly OK): '" + deleteResponse + "'.");
-                           */
+
 
                         } catch (Exception e) {
                             logger.error("Exception caught: '" + e + "'.");
@@ -263,9 +227,6 @@
                     video.setEconomics(EconomicsEnum.valueOf(request.getParameter("meta.economics")));
                     video.setReferenceId(request.getParameter("meta.referenceId"));
 
-                    //video.setGeoFiltered(null);
-                    //video.setGeoFilteredCountries(null);
-                    //video.setGeoFilteredExclude(null);
 
                     List<String> tagsToAdd = new ArrayList<String>();
 
@@ -368,15 +329,7 @@
                         //logger.info("Video still image: " + stillReturn + ".");
 
                         tempImageFile.delete();
-                       
-                       /*
-                       // Delete the video
-                       log.info("Deleting created video");
-                       Boolean cascade        = true; // Deletes even if it is in use by playlists/players
-                       Boolean deleteShares   = true; // Deletes if shared to child accounts
-                       String  deleteResponse = wapi.DeleteVideo(writeToken, newVideoId, null, cascade, deleteShares);
-                       log.info("Response from server for delete (no message is perfectly OK): '" + deleteResponse + "'.");
-                       */
+
 
                     } catch (Exception e) {
                         logger.error("Exception caught: '" + e + "'.");
@@ -414,15 +367,6 @@
                         logger.info("Video still image: " + stillReturn + ".");
 
                         tempImageFile.delete();
-                       
-                       /*
-                       // Delete the video
-                       log.info("Deleting created video");
-                       Boolean cascade        = true; // Deletes even if it is in use by playlists/players
-                       Boolean deleteShares   = true; // Deletes if shared to child accounts
-                       String  deleteResponse = wapi.DeleteVideo(writeToken, newVideoId, null, cascade, deleteShares);
-                       log.info("Response from server for delete (no message is perfectly OK): '" + deleteResponse + "'.");
-                       */
 
                     } catch (Exception e) {
                         logger.error("Exception caught: '" + e + "'.");
@@ -433,10 +377,7 @@
         }
 
     }
-//} catch(Exception e){
-//  out.write("{\"error\": \"Proxy Error, please check your tomcat logs.\", \"result\":null, \"id\": null}"),
 
-//}
     root.put("success", success);
     root.put("msg", msg);
     out.write(root.toString());

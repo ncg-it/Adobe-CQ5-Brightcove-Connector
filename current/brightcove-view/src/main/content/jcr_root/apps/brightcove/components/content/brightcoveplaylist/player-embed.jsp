@@ -59,7 +59,7 @@ Brightcove Reference:
 <div id="container-${brc_componentID}" class="brightcove-container"></div>
 
 
-<cq:includeClientLib js="brc.BrightcoveExperiences-custom"/>
+<cq:includeClientLib js="brc.smart-player"/>
 
 <script type="text/javascript">
 

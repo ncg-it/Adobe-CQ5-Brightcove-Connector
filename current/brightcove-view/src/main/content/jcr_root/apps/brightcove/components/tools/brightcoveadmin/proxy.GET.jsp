@@ -79,13 +79,10 @@
  *       *Make sure you include the '.' at the end of the token*
  ******************************************************************/
     final String apiReadLoc = "http://api.brightcove.com:80/services/library";
-//final String apiReadLoc =         "http://localhost:8080/services/library";
     final String apiWriteLoc = "http://api.brightcove.com:80/services/post";
-//final String apiWriteLoc =        "http://localhost:8080/services/post";
     final String apiReadToken = ReadToken;
-//final String apiReadToken =   "riBfgveLvpQ5OS4_D9jZxXushEmUmH9WoT4dBuEskrU.";//localhost
     final String apiWriteToken = WriteToken;
-//final String apiWriteToken =  "riBfgveLvpRb-rHAkx3mBISAQXs-Q8NmphGxt0z04kE.";//localhost
+
     /*************************************************************
      *Don't do any error checking for paramters here, just forward them along
      * since the api server will check them anyway.

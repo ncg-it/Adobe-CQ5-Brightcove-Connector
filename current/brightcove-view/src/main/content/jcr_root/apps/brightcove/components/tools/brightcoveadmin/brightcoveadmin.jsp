@@ -54,11 +54,14 @@
 
 
     //Update Page Context
+
     pageContext.setAttribute("previewPlayerLoc", previewPlayerLoc);
     pageContext.setAttribute("previewPlayerListLoc", previewPlayerListLoc);
 
     pageContext.setAttribute("services", services);
     pageContext.setAttribute("selectedAccount", selectedAccount);
+
+    pageContext.setAttribute("favIcon", "/etc/designs/cs/brightcove/favicon.ico");
 
 
 %><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">
@@ -77,7 +80,7 @@
     <script type="text/javascript">
         var brc_admin = brc_admin || {};
 
-        brc_admin.apiProxy = "${resource.path}.proxy.html";
+        brc_admin.apiProxy = "${resource.path}.proxy.json";
 
         //This should be the direct URL to a preview player,  corresponding to the account of the tokens
         brc_admin.previewPlayerLoc = "${previewPlayerLoc}";
@@ -90,26 +93,25 @@
 
 <body>
 <div id="CQ"></div>
+
 <div id="brightcove">
     <div class="navbar">
         <div class="navbar-inner">
             <div class="container">
                 <ul class="nav">
                     <li class="active">
-                        <a id="allVideos"
-                           onclick='searchVal="";$(this).parent("li").parent("ul").children("li").attr("class","");$(this).parent("li").attr("class","active");Load(getAllVideosURL());'>
+                        <a id="allVideos" data-click="loadVideos">
                             All Videos
                         </a>
                     </li>
                     <li>
-                        <a id="allPlaylists"
-                           onclick='searchVal="";$(this).parent("li").parent("ul").children("li").attr("class","");$(this).parent("li").attr("class","active");Load(getAllPlaylistsURL())'>
+                        <a id="allPlaylists" data-click="loadPlaylists">
                             All Playlists
                         </a>
                     </li>
                 </ul>
                 <div class="pull-right">
-                    <img src="/etc/designs/cs/brightcove/images/logo_brightcove.png" alt="Brightcove Console">
+                    <img src="/etc/designs/cs/brightcove/shared/img/logo_brightcove.png" alt="Brightcove Console">
                 </div>
 
             </div>
@@ -142,8 +144,8 @@
                                 <div id="divVideoCount" style="float:left"></div>
 
                                 <div id="searchDiv" style="float:right;padding:5px">
-
-                                    <input id="search" type="text" value="Search Video" onClick="this.value=''">
+                                    <label for="search"></label>
+                                    <input id="search" type="text" placeholder="Search Video">
                                     <!--Store the search query in searchBut.value so we can use it as the title of the page once the results are returned.  See searchVideoCallBack -->
                                     <select id='selField' name="selField" style="position: relative;top: 5px;">
                                         <option value="every_field">In Every Field</option>
@@ -154,10 +156,11 @@
                                         <option value="longDescription">In Long Description</option>
                                         <option value="captioning">In Captioning</option>
                                     </select>
-                                    <button id="searchBut"
-                                            onClick="searchVal=document.getElementById('search').value;searchField=document.getElementById('selField').value;Load(searchVideoURL())">
+                                    <%-- class="btn" id="searchBut" onClick="searchVal=document.getElementById('search').value;searchField=document.getElementById('selField').value;Load(searchVideoURL())"--%>
+                                    <button id="searchBut" onClick="searchVideos()" data-click="searchVideos">
                                         Search
                                     </button>
+
                                 </div>
                                 <div id="searchDiv_pl" style="float:right;padding:5px;display:none;">
 
@@ -168,8 +171,8 @@
                                         <option value="find_playlist_by_id">In Playlist ID</option>
                                         <option value="find_playlist_by_reference_id">In Reference ID</option>
                                     </select>
-                                    <button id="searchBut"
-                                            onClick="searchVal=document.getElementById('search_pl').value;searchField=document.getElementById('selField_pl').value;Load(getFindPlaylistsURL())">
+                                    <%-- class="btn" id="searchBut" onClick="searchVal=document.getElementById('search_pl').value;searchField=document.getElementById('selField_pl').value;Load(getFindPlaylistsURL())"--%>
+                                    <button id="searchBut" onClick="searchPlaylists()" data-click="searchPlaylists">
                                         Search
                                     </button>
                                 </div>
