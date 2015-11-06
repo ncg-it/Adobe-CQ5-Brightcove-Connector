@@ -24,6 +24,7 @@
 
 
  */
+
 {
     "tabTip": CQ.I18n.getMessage("Brightcove Players"),
     "id": "cfTab-Brightcove-Players",
@@ -49,17 +50,18 @@
                     id: "cfTab-Brightcove-Players-account",
                     name:"account_id",
                     triggerAction:"all",
+                    lazyInit:true,
                     store: {
                         "url": CQ.shared.HTTP.getContextPath() +'/bin/brightcove/accounts.json',
                         "reader": new CQ.Ext.data.JsonReader({
                             "root": "accounts",
                             "fields": [
                                 "text", "value"
-                            ]                            
+                            ]
                         })
                     },
-                	valueField: 'value',  
-   					displayField: 'text',  
+                	valueField: 'value',
+   					displayField: 'text',
                     editable: false,
                     emptyText: CQ.I18n.getMessage("Filter by account"),
                 	style:"",
@@ -84,9 +86,9 @@
             "items": {
                 "tpl":
                     '<tpl for=".">' +
-                '<div class="cq-cft-search-item" title="{thumbnailURL}" ondblclick="window.location= CQ.shared.HTTP.getContextPath() +\'/apps/brightcove/console/brightcove.html\';">' +
+                '<div class="cq-cft-search-item" title="{thumbnailURL}" ondblclick="window.location= CQ.shared.HTTP.getContextPath() +\'/brightcove/admin\';">' +
                                     '<div class="cq-cft-search-thumb-top"' +
-                                    ' style="background-image:url(\'/etc/designs/cs/brightcove/images/noThumbnailP.png\');"></div>' +
+                                    ' style="background-image:url(\'/etc/designs/cs/brightcove/shared/img/noThumbnailP.png\');"></div>' +
                                          '<div class="cq-cft-search-text-wrapper">' +
                                             '<div class="cq-cft-search-title"><p class="cq-cft-search-title">{name}</p><p>{path}</p></div>' +
                                         '</div>' +
@@ -100,7 +102,7 @@
                 {
                     text: "Export CSV",
                     handler: function() {
-                        var url= CQ.shared.HTTP.getContextPath() +'/bin/brightcove/api?a=3&query='+$("#cfTab-Brightcove-QueryBox input[name=query]").val();  
+                        var url= CQ.shared.HTTP.getContextPath() +'/bin/brightcove/api?a=3&query='+$("#cfTab-Brightcove-QueryBox input[name=query]").val();
                         window.open(url, 'Download');
 
                    }
@@ -118,9 +120,9 @@
                     {name:"thumbnailURL", type:"string", mapping:"thumbnailURL"}
                 ],
                 "id": "path"
-                
+
             })
-        
+
         })
     ]
 

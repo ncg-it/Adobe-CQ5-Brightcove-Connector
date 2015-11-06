@@ -1,9 +1,9 @@
-<%
-/*    
-    Adobe CQ5 Brightcove Connector  
-    
+<%--
+
+    Adobe CQ5 Brightcove Connector
+
     Copyright (C) 2015 Coresecure Inc.
-        
+
         Authors:    Alessandro Bonfatti
                     Yan Kisen
 
@@ -19,60 +19,52 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-%>
+
+--%>
 <%@ page contentType="text/html"
-             pageEncoding="utf-8"
-             import="com.day.cq.widget.HtmlLibraryManager,
-                     com.day.text.Text,
-                     java.util.Iterator,
-                     com.day.cq.wcm.api.Page,
-                     java.io.IOException,
-                     com.day.cq.wcm.foundation.ParagraphSystem,
-                     com.day.cq.wcm.foundation.Paragraph,
-                     com.day.cq.wcm.api.components.IncludeOptions,
-                     java.util.ResourceBundle,
-                     com.day.cq.i18n.I18n,
-com.coresecure.brightcove.wrapper.sling.*,
-org.apache.sling.api.resource.*,
-org.apache.sling.commons.json.JSONArray,
-org.apache.sling.commons.json.JSONException,
-org.apache.sling.commons.json.JSONObject" %>
-<%@ page import="com.day.cq.wcm.api.NameConstants" %>
-<%@include file="/libs/foundation/global.jsp"%><%
+         pageEncoding="utf-8"
+         import="com.coresecure.brightcove.wrapper.sling.ConfigurationGrabber,
+                 com.coresecure.brightcove.wrapper.sling.ConfigurationService,
+                 com.coresecure.brightcove.wrapper.sling.ServiceUtil,
+                 com.coresecure.brightcove.wrapper.utils.TextUtil,
+                 org.apache.sling.commons.json.JSONArray,
+                 org.apache.sling.commons.json.JSONObject" %>
+<%@ page import="java.util.Iterator" %>
 
-JSONObject root = new JSONObject();
-JSONArray items = new JSONArray();
-int results = 0;
+<%@include file="/libs/foundation/global.jsp" %>
 
+<%
+    JSONObject root = new JSONObject();
+    JSONArray items = new JSONArray();
 
+    ConfigurationGrabber cg = ServiceUtil.getConfigurationGrabber();
+    String defaultAccount = (String) cg.getAvailableServices().toArray()[0];
+    ConfigurationService cs = cg.getConfigurationService(defaultAccount);
 
-ConfigurationGrabber cg = ServiceUtil.getConfigurationGrabber();
-String defaultAccount = (String) cg.getAvailableServices().toArray()[0];
-ConfigurationService cs = cg.getConfigurationService(defaultAccount);
+    String playersPath = cs.getPlayersLoc();
+    Resource res = resourceResolver.resolve(playersPath);
+    Iterator<Resource> playersItr = res.listChildren();
+    String selectedAccount = request.getParameter("account_id");
+    if (TextUtil.notEmpty(selectedAccount)) {
+        while (playersItr.hasNext()) {
+            Page playerRes = playersItr.next().adaptTo(Page.class);
+            if (playerRes != null && "brightcove/components/page/brightcoveplayer".equals(playerRes.getContentResource().getResourceType())) {
+                JSONObject item = new JSONObject();
+                String path = playerRes.getPath();
+                String title = playerRes.getTitle();
+                String account = playerRes.getProperties().get("account", "");
+                if (TextUtil.notEmpty(account) && account.equals(selectedAccount)) {
+                    item.put("id", path);
+                    item.put("name", title);
+//                item.put("thumbnailURL", path);
 
-String playersPath = cs.getPlayersLoc();
-Resource res = resourceResolver.resolve(playersPath);
-Iterator<Resource>  playersItr = res.listChildren();
-String selectedAccount = request.getParameter("account_id");
-while (playersItr.hasNext()){
-    Page playerRes = playersItr.next().adaptTo(Page.class);
-    if (playerRes != null && "brightcove/components/page/brightcoveplayer".equals(playerRes.getContentResource().getResourceType())) {
-		org.apache.sling.commons.json.JSONObject item = new JSONObject();
-        String path = playerRes.getPath();
-        String title = playerRes.getTitle();
-        String account = playerRes.getProperties().get("account","");
-        if (!account.trim().isEmpty() && account.equals(selectedAccount)){
-            item.put("path", path);
-            item.put("name", title);
-            item.put("thumbnailURL", path);
-        	results++;
-			items.put(item);
+                    items.put(item);
+                }
+            }
         }
-    } 
-}
+    }
 
-root.put("items",items);
-root.put("results",results);
-out.write(root.toString());
+    root.put("items", items);
+    root.put("results", items.length());
+    out.write(root.toString());
 %>

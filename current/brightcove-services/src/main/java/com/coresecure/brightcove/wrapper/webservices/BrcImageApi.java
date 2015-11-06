@@ -21,6 +21,7 @@
  */
 package com.coresecure.brightcove.wrapper.webservices;
 
+import com.coresecure.brightcove.wrapper.BrightcoveAPI;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Property;
 import org.apache.felix.scr.annotations.Service;
@@ -38,131 +39,129 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
 
-import com.coresecure.brightcove.wrapper.BrightcoveAPI;
 @Service
 @Component
 @Property(name = "sling.servlet.paths", value = "/bin/brightcove/image")
 public class BrcImageApi extends SlingAllMethodsServlet {
-	
-	@Override
-	protected void doPost(final SlingHttpServletRequest request,
-            final SlingHttpServletResponse response) throws ServletException,
+
+    @Override
+    protected void doPost(final SlingHttpServletRequest request,
+                          final SlingHttpServletResponse response) throws ServletException,
             IOException {
-    		PrintWriter outWriter = response.getWriter();
-    		response.setStatus(404);
-    		
-			
+        PrintWriter outWriter = response.getWriter();
+        response.setStatus(404);
+
 
     }
+
     @Override
     protected void doGet(final SlingHttpServletRequest request,
-            final SlingHttpServletResponse response) throws ServletException,
+                         final SlingHttpServletResponse response) throws ServletException,
             IOException {
 
-    	int requestedAPI = 0;
-    	String requestedToken="";
-    	if (request.getParameter("id") != null) {
-			Logger logger = LoggerFactory.getLogger(BrcImageApi.class);
-			String VideoIDStr = request.getParameter("id");
-			String accountKeyStr = request.getParameter("key");
-			try{
-				BrightcoveAPI brAPI = new BrightcoveAPI(accountKeyStr);
+        int requestedAPI = 0;
+        String requestedToken = "";
+        if (request.getParameter("id") != null) {
+            Logger logger = LoggerFactory.getLogger(BrcImageApi.class);
+            String VideoIDStr = request.getParameter("id");
+            String accountKeyStr = request.getParameter("key");
+            try {
+                BrightcoveAPI brAPI = new BrightcoveAPI(accountKeyStr);
 
-				JSONObject video = brAPI.cms.getVideoByRef(VideoIDStr);
-
-
-
-			   // Find a single video
-			   if (video != null && video.has("images")) {
-				   JSONObject images = video.getJSONObject("images");
-				   JSONObject poster = images.getJSONObject("poster");
-				   String urlStr = poster.getString("url");
-
-				   URL url = new URL(urlStr);
-				   BufferedImage img = null;
-				   try{
-					   img = ImageIO.read(url);
-					   //out.println(" READ SUCCESS" + "<br>");
-				   }catch(Exception e) {
-					   response.setStatus(404);
-					   PrintWriter outWriter = response.getWriter();
-					   outWriter.println("READ ERROR "  + "<br>");
-				   }
-				   if (img != null) {
-						try {
-							response.setContentType("image/jpeg");
-							ImageIO.write(img, "jpeg", response.getOutputStream());
-						}catch(Exception ee) {
-									response.setStatus(404);
-									response.setContentType("text/html");
-									PrintWriter outWriter = response.getWriter();
-									outWriter.println("ENCODING ERROR "  + "<br>");
-						}
-				   }
-    	       } else {
-    	           response.setStatus(404);
-
-    	       }
-		   } catch(Exception e){
-			   //System.out.println("Exception caught: '" + e + "'.");
-			   //System.exit(1);
-			   response.setStatus(404);
-		   }
-    	} else {
-			if (request.getRequestPathInfo().getSuffix() != null) {
-				String suffix = request.getRequestPathInfo().getSuffix();
-				String[] sections = suffix.split("/");
-				if (sections.length == 3) {
-					String VideoIDStr = sections[2];
-					VideoIDStr = VideoIDStr.substring(1, VideoIDStr.indexOf("."));
-					String accountKeyStr = sections[1];
-					try {
-						BrightcoveAPI brAPI = new BrightcoveAPI(accountKeyStr);
-
-						JSONObject video = brAPI.cms.getVideoByRef(VideoIDStr);
+                JSONObject video = brAPI.cms.getVideoByRef(VideoIDStr);
 
 
-						// Find a single video
-						if (video != null && video.has("images")) {
-							JSONObject images = video.getJSONObject("images");
-							JSONObject poster = images.getJSONObject("poster");
-							String urlStr = poster.getString("url");
+                // Find a single video
+                if (video != null && video.has("images")) {
+                    JSONObject images = video.getJSONObject("images");
+                    JSONObject poster = images.getJSONObject("poster");
+                    String urlStr = poster.getString("url");
 
-							URL url = new URL(urlStr);
-							BufferedImage img = null;
-							try {
-								img = ImageIO.read(url);
-								//out.println(" READ SUCCESS" + "<br>");
-							} catch (Exception e) {
-								response.setStatus(404);
-								PrintWriter outWriter = response.getWriter();
-								outWriter.println("READ ERROR " + "<br>");
-							}
-							if (img != null) {
-								try {
-									response.setContentType("image/jpeg");
-									ImageIO.write(img, "jpeg", response.getOutputStream());
-								} catch (Exception ee) {
-									response.setStatus(404);
-									response.setContentType("text/html");
-									PrintWriter outWriter = response.getWriter();
-									outWriter.println("ENCODING ERROR " + "<br>");
-								}
-							}
-						} else {
-							response.setStatus(404);
+                    URL url = new URL(urlStr);
+                    BufferedImage img = null;
+                    try {
+                        img = ImageIO.read(url);
+                        //out.println(" READ SUCCESS" + "<br>");
+                    } catch (Exception e) {
+                        response.setStatus(404);
+                        PrintWriter outWriter = response.getWriter();
+                        outWriter.println("READ ERROR " + "<br>");
+                    }
+                    if (img != null) {
+                        try {
+                            response.setContentType("image/jpeg");
+                            ImageIO.write(img, "jpeg", response.getOutputStream());
+                        } catch (Exception ee) {
+                            response.setStatus(404);
+                            response.setContentType("text/html");
+                            PrintWriter outWriter = response.getWriter();
+                            outWriter.println("ENCODING ERROR " + "<br>");
+                        }
+                    }
+                } else {
+                    response.setStatus(404);
 
-						}
-					} catch (Exception e) {
-						//System.out.println("Exception caught: '" + e + "'.");
-						//System.exit(1);
-						response.setStatus(404);
-					}
+                }
+            } catch (Exception e) {
+                //System.out.println("Exception caught: '" + e + "'.");
+                //System.exit(1);
+                response.setStatus(404);
+            }
+        } else {
+            if (request.getRequestPathInfo().getSuffix() != null) {
+                String suffix = request.getRequestPathInfo().getSuffix();
+                String[] sections = suffix.split("/");
+                if (sections.length == 3) {
+                    String VideoIDStr = sections[2];
+                    VideoIDStr = VideoIDStr.substring(1, VideoIDStr.indexOf("."));
+                    String accountKeyStr = sections[1];
+                    try {
+                        BrightcoveAPI brAPI = new BrightcoveAPI(accountKeyStr);
 
-					//out.write(vidID);
-				}
-				//{out.write("{\"items\":[],\"results\":0}");}
-			}
-		}
+                        JSONObject video = brAPI.cms.getVideoByRef(VideoIDStr);
+
+
+                        // Find a single video
+                        if (video != null && video.has("images")) {
+                            JSONObject images = video.getJSONObject("images");
+                            JSONObject poster = images.getJSONObject("poster");
+                            String urlStr = poster.getString("url");
+
+                            URL url = new URL(urlStr);
+                            BufferedImage img = null;
+                            try {
+                                img = ImageIO.read(url);
+                                //out.println(" READ SUCCESS" + "<br>");
+                            } catch (Exception e) {
+                                response.setStatus(404);
+                                PrintWriter outWriter = response.getWriter();
+                                outWriter.println("READ ERROR " + "<br>");
+                            }
+                            if (img != null) {
+                                try {
+                                    response.setContentType("image/jpeg");
+                                    ImageIO.write(img, "jpeg", response.getOutputStream());
+                                } catch (Exception ee) {
+                                    response.setStatus(404);
+                                    response.setContentType("text/html");
+                                    PrintWriter outWriter = response.getWriter();
+                                    outWriter.println("ENCODING ERROR " + "<br>");
+                                }
+                            }
+                        } else {
+                            response.setStatus(404);
+
+                        }
+                    } catch (Exception e) {
+                        //System.out.println("Exception caught: '" + e + "'.");
+                        //System.exit(1);
+                        response.setStatus(404);
+                    }
+
+                    //out.write(vidID);
+                }
+                //{out.write("{\"items\":[],\"results\":0}");}
+            }
+        }
     }
 }

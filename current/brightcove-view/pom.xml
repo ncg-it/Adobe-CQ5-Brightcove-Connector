@@ -1,14 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
+
+    <!-- ====================================================================== -->
+    <!-- P A R E N T P R O J E C T D E S C R I P T I O N -->
+    <!-- ====================================================================== -->
 
     <parent>
         <groupId>com.coresecure.brightcove.cq5</groupId>
         <artifactId>parent</artifactId>
-        <version>4.0.0-SNAPSHOT</version>
+        <version>4.1.0-SNAPSHOT</version>
     </parent>
+
+
+    <!-- ====================================================================== -->
+    <!-- P R O J E C T D E S C R I P T I O N -->
+    <!-- ====================================================================== -->
 
     <artifactId>brightcove-view</artifactId>
     <packaging>content-package</packaging>
@@ -25,6 +35,10 @@
         It is recommended that this module not contain any Java code and instead Java code should be placed in either
         the brightcove-taglib module or the brightcove-services module as appropriate.
     </description>
+
+    <!-- ====================================================================== -->
+    <!-- B U I L D   D E F I N I T I O N                                        -->
+    <!-- ====================================================================== -->
 
     <build>
         <plugins>
@@ -49,6 +63,7 @@
                                         <exclude>**/.vlt</exclude>
                                         <exclude>**/.vltignore</exclude>
                                         <exclude>**/.DS_Store</exclude>
+                                        <exclude>libs/</exclude>
                                     </excludes>
                                 </resource>
                             </resources>
@@ -64,9 +79,14 @@
         </plugins>
     </build>
 
+    <!-- ====================================================================== -->
+    <!-- P R O F I L E S                                                        -->
+    <!-- ====================================================================== -->
+
     <profiles>
         <profile>
-            <id>auto-deploy</id>
+            <!--  Replace "auto-deploy" with sub-module specific profiles to allow them to be installed individually. -->
+            <id>auto-deploy-view</id>
             <!--
                 when activated, this profile will deploy and install the built CQ package to the target server.
             -->
@@ -94,5 +114,108 @@
             </build>
         </profile>
     </profiles>
+
+    <!-- ====================================================================== -->
+    <!-- D E P E N D E N C I E S                                                -->
+    <!-- ====================================================================== -->
+
+
+    <dependencies>
+
+        <!-- Brightcove Services Bundle -->
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>brightcove-services</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+
+        <!-- CQ Product Dependencies-->
+
+        <dependency>
+            <groupId>org.apache.sling</groupId>
+            <artifactId>org.apache.sling.jcr.jcr-wrapper</artifactId>
+            <!-- javax.jcr -->
+        </dependency>
+        <dependency>
+            <groupId>org.apache.sling</groupId>
+            <artifactId>org.apache.sling.api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.day.cq</groupId>
+            <artifactId>cq-commons</artifactId>
+            <!-- com.day.cq.commons -->
+        </dependency>
+        <dependency>
+            <groupId>com.day.cq.wcm</groupId>
+            <artifactId>cq-wcm-commons</artifactId>
+            <!-- com.day.cq.wcm.commons -->
+        </dependency>
+        <dependency>
+            <groupId>com.day.cq.wcm</groupId>
+            <artifactId>cq-wcm-api</artifactId>
+            <!-- com.day.cq.wcm.api -->
+        </dependency>
+        <dependency>
+            <groupId>com.day.commons</groupId>
+            <artifactId>day-commons-jstl</artifactId>
+            <!-- javax.servlet.jsp.jstl.core -->
+        </dependency>
+        <dependency>
+            <groupId>com.day.cq.wcm</groupId>
+            <artifactId>cq-wcm-taglib</artifactId>
+            <!-- com.day.cq.wcm.tags -->
+        </dependency>
+        <dependency>
+            <groupId>org.apache.sling</groupId>
+            <artifactId>org.apache.sling.scripting.jsp.taglib</artifactId>
+            <!-- org.apache.sling.scripting.jsp.taglib -->
+        </dependency>
+        <dependency>
+            <groupId>com.adobe.granite</groupId>
+            <artifactId>com.adobe.granite.xssprotection</artifactId>
+            <!-- com.adobe.granite.xss -->
+        </dependency>
+        <dependency>
+            <groupId>com.day.cq.wcm</groupId>
+            <artifactId>cq-wcm-core</artifactId>
+            <!-- com.day.cq.wcm.core.components -->
+        </dependency>
+        <dependency>
+            <groupId>com.day.cq.wcm</groupId>
+            <artifactId>cq-wcm-foundation</artifactId>
+        </dependency>
+
+        <!-- Misc Dependencies -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <!-- org.apache.commons.lang3 -->
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+
+        <!-- Submodule Specific Dependencies (Excluded from Parent Dependency Management) -->
+        <dependency>
+            <groupId>com.day.commons</groupId>
+            <artifactId>day-commons-text</artifactId>
+            <version>1.1.8</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.adobe.granite</groupId>
+            <artifactId>com.adobe.granite.ui.commons</artifactId>
+            <version>5.5.76</version>
+            <scope>provided</scope>
+            <!-- Widgets-->
+        </dependency>
+
+
+    </dependencies>
 
 </project>
