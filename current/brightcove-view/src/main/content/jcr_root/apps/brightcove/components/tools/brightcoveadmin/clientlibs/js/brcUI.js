@@ -103,7 +103,7 @@ function sort(object) {
     }
 }
 function buildMainVideoList(title) {
-    console.log('buildMainVideoList');
+
     //Wipe out the old results
     $("#tbData").empty();
     if (!$("#nameCol").hasClass("ASC") && !$("#nameCol").hasClass("DESC") && !$("#nameCol").hasClass("NONE")) {
@@ -591,7 +591,6 @@ function metaEdit() {
 //Alerts the user that communication is happening, useful for accounts with lots of videos
 //where loading times might be a little long.
 function loadStart() {
-    console.log('loadStart');
     if (!$.browser.msie) {
         $("#loading").slideDown("fast");
     } else {
