@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.coresecure.brightcove.cq5</groupId>
         <artifactId>parent</artifactId>
-        <version>4.0.1-SNAPSHOT</version>
+        <version>4.1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>brightcove-config</artifactId>
@@ -66,9 +66,15 @@
         </plugins>
     </build>
 
+
+    <!-- ====================================================================== -->
+    <!-- P R O F I L E S                                                        -->
+    <!-- ====================================================================== -->
+
     <profiles>
         <profile>
-            <id>auto-deploy</id>
+            <!--  Replace "auto-deploy" with sub-module specific profiles to allow them to be installed individually. -->
+            <id>auto-deploy-config</id>
             <!--
                 when activated, this profile will deploy and install the built CQ package to the target server.
             -->
