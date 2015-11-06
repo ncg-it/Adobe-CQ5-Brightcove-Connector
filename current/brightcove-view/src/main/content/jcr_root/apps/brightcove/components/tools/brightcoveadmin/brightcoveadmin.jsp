@@ -100,12 +100,14 @@
             <div class="container">
                 <ul class="nav">
                     <li class="active">
-                        <a id="allVideos" data-click="loadVideos">
+                        <a id="allVideos"
+                           onclick='searchVal="";$(this).parent("li").parent("ul").children("li").attr("class","");$(this).parent("li").attr("class","active");Load(getAllVideosURL());'>
                             All Videos
                         </a>
                     </li>
                     <li>
-                        <a id="allPlaylists" data-click="loadPlaylists">
+                        <a id="allPlaylists"
+                           onclick='searchVal="";$(this).parent("li").parent("ul").children("li").attr("class","");$(this).parent("li").attr("class","active");Load(getAllPlaylistsURL())'>
                             All Playlists
                         </a>
                     </li>
@@ -144,8 +146,8 @@
                                 <div id="divVideoCount" style="float:left"></div>
 
                                 <div id="searchDiv" style="float:right;padding:5px">
-                                    <label for="search"></label>
-                                    <input id="search" type="text" placeholder="Search Video">
+
+                                    <input id="search" type="text" value="Search Video" onClick="this.value=''">
                                     <!--Store the search query in searchBut.value so we can use it as the title of the page once the results are returned.  See searchVideoCallBack -->
                                     <select id='selField' name="selField" style="position: relative;top: 5px;">
                                         <option value="every_field">In Every Field</option>
@@ -156,11 +158,10 @@
                                         <option value="longDescription">In Long Description</option>
                                         <option value="captioning">In Captioning</option>
                                     </select>
-                                    <%-- class="btn" id="searchBut" onClick="searchVal=document.getElementById('search').value;searchField=document.getElementById('selField').value;Load(searchVideoURL())"--%>
-                                    <button id="searchBut" onClick="searchVideos()" data-click="searchVideos">
+                                    <button id="searchBut"
+                                            onClick="searchVal=document.getElementById('search').value;searchField=document.getElementById('selField').value;Load(searchVideoURL())">
                                         Search
                                     </button>
-
                                 </div>
                                 <div id="searchDiv_pl" style="float:right;padding:5px;display:none;">
 
@@ -171,8 +172,8 @@
                                         <option value="find_playlist_by_id">In Playlist ID</option>
                                         <option value="find_playlist_by_reference_id">In Reference ID</option>
                                     </select>
-                                    <%-- class="btn" id="searchBut" onClick="searchVal=document.getElementById('search_pl').value;searchField=document.getElementById('selField_pl').value;Load(getFindPlaylistsURL())"--%>
-                                    <button id="searchBut" onClick="searchPlaylists()" data-click="searchPlaylists">
+                                    <button id="searchBut"
+                                            onClick="searchVal=document.getElementById('search_pl').value;searchField=document.getElementById('selField_pl').value;Load(getFindPlaylistsURL())">
                                         Search
                                     </button>
                                 </div>

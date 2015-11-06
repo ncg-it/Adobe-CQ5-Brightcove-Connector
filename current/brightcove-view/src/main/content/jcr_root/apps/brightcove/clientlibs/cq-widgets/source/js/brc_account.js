@@ -25,7 +25,7 @@
 
 
 /**
- *  Utility Library for working with Brightcove Accounts in Widgets
+ *  Library for working with Brightcove Accounts in Widgets
  *
  */
 

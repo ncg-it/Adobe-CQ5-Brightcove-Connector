@@ -79,7 +79,7 @@ buildNumber.properties
 *.iws
 
 ## Plugin-specific files:
-*.dir
+#*.dir
 # IntelliJ
 /out/
 

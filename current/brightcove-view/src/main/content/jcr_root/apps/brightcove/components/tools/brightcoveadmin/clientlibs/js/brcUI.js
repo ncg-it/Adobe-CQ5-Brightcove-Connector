@@ -69,7 +69,9 @@ $(function () {
     //app = new CQ.HomeLink({});
     //app.render(document.body);
     $("#selAccount").change(function () {
-        createCookie("brc_act", $(this).val(), 1);
+        var accountVal = $(this).val();
+        CQ.Ext.util.Cookies.set('brc_act', accountVal);
+        //createCookie("brc_act",accountVal, 1);
         window.location.reload();
     });
 
@@ -103,7 +105,7 @@ function sort(object) {
     }
 }
 function buildMainVideoList(title) {
-    console.log('buildMainVideoList');
+
     //Wipe out the old results
     $("#tbData").empty();
     if (!$("#nameCol").hasClass("ASC") && !$("#nameCol").hasClass("DESC") && !$("#nameCol").hasClass("NONE")) {
@@ -591,7 +593,6 @@ function metaEdit() {
 //Alerts the user that communication is happening, useful for accounts with lots of videos
 //where loading times might be a little long.
 function loadStart() {
-    console.log('loadStart');
     if (!$.browser.msie) {
         $("#loading").slideDown("fast");
     } else {

@@ -44,12 +44,16 @@
 
     String playerDataEmbed = "default";
 
+    String containerID = properties.get("containerID", "");
+    String containerClass = properties.get("containerClass", "");
+
+
 
     // Default Values
 
     String marginLeft = "auto";
     String marginRight = "auto";
-    String position = "center";
+    String align = "center";
     String width = "";
     String height = "";
     boolean hasSize = false;
@@ -73,10 +77,12 @@
                 playerDataEmbed = playerProperties.get("data_embedded", playerDataEmbed);
 
 
-                position = playerProperties.get("align", position);
+                align = playerProperties.get("align", align);
                 width = playerProperties.get("width", width);
                 height = playerProperties.get("height", height);
 
+                //append the class to the container wrap
+                containerClass += " " + playerProperties.get("containerClass", "");
             }
 
         }
@@ -85,11 +91,11 @@
 
     // Override with local component properties
 
-    position = properties.get("align", position);
+    align = properties.get("align", align);
 
-    if (position.equals("left")) {
+    if (align.equals("left")) {
         marginLeft = "0";
-    } else if (position.equals("right")) {
+    } else if (align.equals("right")) {
         marginRight = "0";
     }
 
@@ -131,7 +137,7 @@
     pageContext.setAttribute("brc_playerKey", playerKey, PageContext.REQUEST_SCOPE);
     pageContext.setAttribute("brc_playerDataEmbed", playerDataEmbed, PageContext.REQUEST_SCOPE);
 
-    pageContext.setAttribute("brc_position", position, PageContext.REQUEST_SCOPE);
+    pageContext.setAttribute("brc_align", align, PageContext.REQUEST_SCOPE);
     pageContext.setAttribute("brc_marginLeft", marginLeft, PageContext.REQUEST_SCOPE);
     pageContext.setAttribute("brc_marginRight", marginRight, PageContext.REQUEST_SCOPE);
     pageContext.setAttribute("brc_width", width, PageContext.REQUEST_SCOPE);
@@ -140,5 +146,9 @@
 
 
     pageContext.setAttribute("brc_componentID", componentID, PageContext.REQUEST_SCOPE);
+
+    //Component Container
+    pageContext.setAttribute("brc_containerID", containerID);
+    pageContext.setAttribute("brc_containerClass", containerClass);
 
 %>

@@ -57,22 +57,16 @@ var oCurrentVideoList;
 var oCurrentPlaylistList;
 
 function getAllVideosURL() {
-    console.log('getAllVideosURL');
-    var $nameCol = $("#nameCol"),
-        $tableHeader = $nameCol.parent();
-
-    $(".sortable", $tableHeader).addClass("NONE");
-
-    $nameCol.removeClass("DESC")
-        .removeClass("NONE")
-        .addClass("ASC")
-        .attr("data-sortType", "ASC");
-
+    $(".sortable", $("#nameCol").parent()).not($("#nameCol")).addClass("NONE");
+    $("#nameCol").removeClass("ASC");
+    $("#nameCol").removeClass("DESC");
+    $("#nameCol").removeClass("NONE");
+    $("#nameCol").addClass("ASC");
+    $("#nameCol").attr("data-sortType", "ASC");
     return getAllVideosURLOrdered("DISPLAY_NAME", "ASC");
 
 }
 function getAllVideosURLOrdered(sort_by, sort_type) {
-    console.log('getAllVideosURLOrdered');
     loadStart();
     //If currentFunction == this function name, then the current view already correspdonds to this function, so use the generic holder value
     //otherwise, we're switching from a different view so use the last stored value.
@@ -107,7 +101,6 @@ function getAllVideosURLOrdered(sort_by, sort_type) {
 function isNumber(n) {
     return !isNaN(parseFloat(n)) && isFinite(n);
 }
-
 function getAllPlaylistsURL() {
     loadStart();
     paging.allPlaylists = (paging.currentFunction == getAllPlaylistsURL) ? paging.generic : paging.allPlaylists;
@@ -117,8 +110,6 @@ function getAllPlaylistsURL() {
         + '&get_item_count=true&page_size=' + paging.size + '&page_number=' + paging.allPlaylists;
 }
 
-
-//TODO: remove after migration
 function getFindPlaylistsURL() {
     loadStart();
     paging.allPlaylists = (paging.currentFunction == getAllPlaylistsURL) ? paging.generic : paging.allPlaylists;
@@ -187,64 +178,63 @@ function deleteVideoURL(videoId) {
 
 }
 
-function showAllVideosCallBack(data) {
-    if (null == data.error) {
-        oCurrentVideoList = data.items;
+function showAllVideosCallBack(o) {
+    if (null == o.error) {
+        oCurrentVideoList = o.items;
         buildMainVideoList("All Videos");
-        doPageList(data.total_count, "Videos");
+        doPageList(o.total_count, "Videos");
     } else {
-        var message = (null != data.error.message) ? data.error.message : data.error;
+        var message = (null != o.error.message) ? o.error.message : o.error;
         console.log("Server Error: " + message);
     }
     loadEnd();
 }
 
-function showSearchPlaylistsCallBack(data) {
-    if (null == data.error) {
-        oCurrentPlaylistList = data.items;
+function showSearchPlaylistsCallBack(o) {
+    if (null == o.error) {
+        oCurrentPlaylistList = o.items;
         buildPlaylistList();
-        var total = data.total_count;
-        if (total < data.items.length)total = data.items.length;
+        var total = o.total_count;
+        if (total < o.items.length)total = o.items.length;
         doPageList(total, "Playlists");
     } else {
-        var message = (null != data.error.message) ? data.error.message : data.error;
+        var message = (null != o.error.message) ? o.error.message : o.error;
         console.log("Server Error: " + message);
     }
     loadEnd();
 }
-
-function showAllPlaylistsCallBack(data) {
-    if (null == data.error) {
-        oCurrentPlaylistList = data.items;
+function showAllPlaylistsCallBack(o) {
+    if (null == o.error) {
+        oCurrentPlaylistList = o.items;
         buildPlaylistList();
-        doPageList(data.total_count, "Playlists");
+        doPageList(o.total_count, "Playlists");
     } else {
-        var message = (null != data.error.message) ? data.error.message : data.error;
+        var message = (null != o.error.message) ? o.error.message : o.error;
         console.log("Server Error: " + message);
     }
     loadEnd();
 }
 
-function searchVideoCallBack(data) {
-    if (null == data.error) {
-        oCurrentVideoList = data.items;
+function searchVideoCallBack(o) {
+    if (null == o.error) {
+        oCurrentVideoList = o.items;
         buildMainVideoList("Search: " + searchVal);
-        var count = (data.total_count >= 0) ? data.total_count : data.items.length;
+        var count = (o.total_count >= 0) ? o.total_count : o.items.length;
         doPageList(count, "Videos");
     } else {
-        var message = (null != data.error.message) ? data.error.message : data.error;
+        var message = (null != o.error.message) ? o.error.message : o.error;
         console.log("Server Error: " + message);
     }
     loadEnd();
 }
 
-function findByTagCallBack(data) {
-    if (null == data.error) {
-        oCurrentVideoList = data.items;
+function findByTagCallBack(o) {
+    if (null == o.error) {
+        oCurrentVideoList = o.items;
         buildMainVideoList("Tag Search: " + searchVal);
-        doPageList(data.total_count, "Videos");
+        doPageList(o.total_count, "Videos");
     } else {
-        var message = (null != data.error.message) ? data.error.message : data.error;
+        var message = (null != o.error.message) ? o.error.message : o.error;
         console.log("Server Error: " + message);
     }
     loadEnd();
@@ -345,130 +335,3 @@ function modPlstSubmit() {
     closeBox('modPlstPop');
     Load(getAllPlaylistsURL());
 }
-
-
-/// Start Cleanup
-
-
-function loadVideos() {
-    console.log('getAllVideosURL');
-    var $nameCol = $("#nameCol"),
-        $tableHeader = $nameCol.parent();
-
-    $(".sortable", $tableHeader).addClass("NONE");
-
-    $nameCol.removeClass("DESC")
-        .removeClass("NONE")
-        .addClass("ASC")
-        .attr("data-sortType", "ASC");
-
-    loadVideosSorted("DISPLAY_NAME", "ASC");
-
-}
-
-function loadVideosSorted(sortBy, sortType) {
-    loadStart();
-
-    //defaults
-    sortBy = sortBy || "DISPLAY_NAME";
-    sortType = sortType || "ASC";
-
-    //If currentFunction == this function name, then the current view already correspdonds to this function, so use the generic holder value
-    //otherwise, we're switching from a different view so use the last stored value.
-    paging.allVideos = (paging.currentFunction == loadVideosSorted) ? paging.generic : paging.allVideos;
-    paging.currentFunction = loadVideosSorted;
-
-    var searchType = $('#selField').val(),
-        searchVal = $('#search').val();
-
-    var requestData = {
-        command: 'find_all_playlists',
-        get_item_count: true,
-        page_size: paging.size,
-        page_number: paging.allPlaylists
-    };
-
-    $.ajax({
-        url: apiLocation,
-        data: requestData,
-        success: function (data, status, jqxhr) {
-            console.log("Data Loaded", data);
-            showAllVideosCallBack(data);
-        }
-    });
-
-
-
-    if (typeof searchField != "undefined" && searchVal != "" && searchVal != "Search Videos") {
-        if (!isNumber(searchVal)) {
-            if (typeof searchField == "undefined" || searchField == "every_field" || searchField == "") {
-                return apiLocation +
-                    '?command=search_videos&callback=showAllVideosCallBack&any=search_text:' + searchVal + '&sort_by=' + sort_by + "%3A" + sort_type
-                    + '&any=tag:' + searchVal + '&get_item_count=true&page_size=' + paging.size + '&page_number=' + paging.textSearch
-                    + '&fields=' + fields;
-            } else {
-                return apiLocation +
-                    '?command=search_videos&callback=showAllVideosCallBack&any=' + searchField + ':' + searchVal + '&sort_by=' + sort_by + "%3A" + sort_type
-                    + '&get_item_count=true&page_size=' + paging.size + '&page_number=' + paging.textSearch
-                    + '&fields=' + fields;
-            }
-        } else {
-            return apiLocation +
-                '?command=find_videos_by_ids&callback=showAllVideosCallBack&video_ids=' + searchVal
-                + '&get_item_count=true&fields=' + fields;
-        }
-    } else {
-        return apiLocation +
-            '?command=search_videos&callback=showAllVideosCallBack&sort_by=' + sort_by + "%3A" + sort_type
-            + '&get_item_count=true&page_size=' + paging.size + '&page_number=' + paging.allVideos
-            + '&fields=' + fields;
-    }
-}
-
-
-function loadPlaylists(sort_by, sort_type) {
-    loadStart();
-    paging.allPlaylists = (paging.currentFunction == loadPlaylists) ? paging.generic : paging.allPlaylists;
-    paging.currentFunction = loadPlaylists;
-
-    var requestData = {
-        command: 'find_all_playlists',
-        get_item_count: true,
-        page_size: paging.size,
-        page_number: paging.allPlaylists
-    };
-
-    $.ajax({
-        url: apiLocation,
-        data: requestData,
-        success: function (data, status, jqxhr) {
-            console.log("Data Loaded", data);
-            showAllPlaylistsCallBack(data);
-        }
-    });
-}
-
-
-// Document Ready
-$(function () {
-
-    //Top Navigation
-
-    var $topNavItems = $('.navbar li'),
-        $topNavLinks = $('a', $topNavItems);
-
-    $topNavLinks.click(function () {
-        var $this = $(this);
-
-        $topNavItems.removeClass('active');
-        $this.parent().addClass('active');
-
-        var clickEvent = $this.data('click');
-        if (typeof clickEvent !== 'undefined') {
-            console.log(clickEvent);
-            window[clickEvent]();
-        }
-
-    });
-
-});

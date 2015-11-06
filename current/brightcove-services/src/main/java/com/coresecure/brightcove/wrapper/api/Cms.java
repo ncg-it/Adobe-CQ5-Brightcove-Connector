@@ -285,7 +285,7 @@ public class Cms {
                     if (video.has("images") && video.getJSONObject("images").has("thumbnail")) {
                         video.put("thumbnailURL", video.getJSONObject("images").getJSONObject("thumbnail").getString("src"));
                     } else {
-                        video.put("thumbnailURL", "/etc/designs/cs/brightcove/images/noThumbnail.jpg");
+                        video.put("thumbnailURL", "/etc/designs/cs/brightcove/shared/img/noThumbnail.jpg");
                     }
                     videos.put(video);
                 }
