@@ -56,7 +56,7 @@ Brightcove Reference:
 
 --%>
 
-<div class="brightcove-container playlist-${brc_align}">
+<div id="container-${brc_componentID}" class="brightcove-container">
 
 
     <c:if test="${brc_align eq 'right'}">

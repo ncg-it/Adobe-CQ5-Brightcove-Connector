@@ -29,6 +29,8 @@
         Placeholder script to allow overlaying custom styles if this component is set as the resourceSuperType.
 
         ${brc_componentID} is defined in /apps/brightcove/components/shared/component-global.jsp
+
+        //TODO: verify if all of these inline styles are still needed for the HTML5 player.
      */
 
 %>
@@ -42,13 +44,21 @@
 
     #component-wrap-${brc_componentID} .drop-target-player {
         margin-bottom: 0;
-        margin-left: ${brc_marginLeft};
-        margin-right: ${brc_marginRight};
+        margin-left: auto;
+        margin-right: auto;
         margin-top: 0;
         overflow-x: hidden;
         overflow-y: hidden;
         width: 100%;
         text-align: ${brc_align};
+    }
+
+    #component-wrap-${brc_componentID}.brc-align-left .drop-target-player {
+        margin-left: 0;
+    }
+
+    #component-wrap-${brc_componentID}.brc-align-right .drop-target-player {
+        margin-right: 0;
     }
 
     #component-wrap-${brc_componentID} .drop-target-video {

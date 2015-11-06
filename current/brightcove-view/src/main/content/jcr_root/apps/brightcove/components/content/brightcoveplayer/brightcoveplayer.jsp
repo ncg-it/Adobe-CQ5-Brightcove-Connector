@@ -40,7 +40,7 @@
 
 
 <div id="${brc_containerID}" class="${brc_containerClass}">
-    <div id="component-wrap-${brc_componentID}">
+    <div id="component-wrap-${brc_componentID}" class="brc-align-${brc_align}">
         <c:choose>
             <c:when test="${(not empty brc_account) or (not empty brc_playerID)}">
 
@@ -84,8 +84,6 @@
     pageContext.removeAttribute("brc_playerDataEmbed");
 
     pageContext.removeAttribute("brc_align");
-    pageContext.removeAttribute("brc_marginLeft");
-    pageContext.removeAttribute("brc_marginRight");
     pageContext.removeAttribute("brc_width");
     pageContext.removeAttribute("brc_height");
     pageContext.removeAttribute("brc_hasSize");

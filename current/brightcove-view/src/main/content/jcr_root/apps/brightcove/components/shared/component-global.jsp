@@ -48,11 +48,8 @@
     String containerClass = properties.get("containerClass", "");
 
 
-
     // Default Values
 
-    String marginLeft = "auto";
-    String marginRight = "auto";
     String align = "center";
     String width = "";
     String height = "";
@@ -93,11 +90,6 @@
 
     align = properties.get("align", align);
 
-    if (align.equals("left")) {
-        marginLeft = "0";
-    } else if (align.equals("right")) {
-        marginRight = "0";
-    }
 
     //we must override BOTH width and height to prevent one being set on Player Page and other set in component.
     if (properties.containsKey("width") || properties.containsKey("height")) {
@@ -127,7 +119,6 @@
 
 
     // Update Page Context
-
     pageContext.setAttribute("brc_account", account, PageContext.REQUEST_SCOPE);
     pageContext.setAttribute("brc_videoID", videoID, PageContext.REQUEST_SCOPE);
     pageContext.setAttribute("brc_playlistID", playlistID, PageContext.REQUEST_SCOPE);
@@ -138,8 +129,6 @@
     pageContext.setAttribute("brc_playerDataEmbed", playerDataEmbed, PageContext.REQUEST_SCOPE);
 
     pageContext.setAttribute("brc_align", align, PageContext.REQUEST_SCOPE);
-    pageContext.setAttribute("brc_marginLeft", marginLeft, PageContext.REQUEST_SCOPE);
-    pageContext.setAttribute("brc_marginRight", marginRight, PageContext.REQUEST_SCOPE);
     pageContext.setAttribute("brc_width", width, PageContext.REQUEST_SCOPE);
     pageContext.setAttribute("brc_height", height, PageContext.REQUEST_SCOPE);
     pageContext.setAttribute("brc_hasSize", hasSize, PageContext.REQUEST_SCOPE);
