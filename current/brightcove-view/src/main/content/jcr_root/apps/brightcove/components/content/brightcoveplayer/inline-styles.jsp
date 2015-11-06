@@ -48,7 +48,7 @@
         overflow-x: hidden;
         overflow-y: hidden;
         width: 100%;
-        text-align: ${brc_position};
+        text-align: ${brc_align};
     }
 
     #component-wrap-${brc_componentID} .drop-target-video {

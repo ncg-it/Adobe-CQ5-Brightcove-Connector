@@ -14,8 +14,15 @@
             title="Miscellaneous"
             xtype="dialogfieldset">
             <items jcr:primaryType="cq:WidgetCollection">
+                <playerClass
+                    jcr:primaryType="cq:Widget"
+                    fieldDescription="Add an optional CSS class to all instances of this player."
+                    fieldLabel="Player Class"
+                    name="./playerClass"
+                    xtype="textfield"/>
                 <embed
                     jcr:primaryType="cq:Widget"
+                    fieldDescription="Consult Brightcove Docs for more info."
                     fieldLabel="Embed"
                     fieldSubLabel="(data-embed)"
                     name="./data_embedded"

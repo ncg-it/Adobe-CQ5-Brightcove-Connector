@@ -56,8 +56,13 @@ Brightcove Reference:
 
 --%>
 
-<div class="brightcove-container">
+<div class="brightcove-container playlist-${brc_align}">
 
+
+    <c:if test="${brc_align eq 'right'}">
+        <%-- If the Alignment--%>
+        <ol class="vjs-playlist"></ol>
+    </c:if>
     <video
             id="video-${brc_componentID}"
             data-account="${brc_account}"
@@ -71,6 +76,12 @@ Brightcove Reference:
             class="video-js"
             controls>
     </video>
+
+    <%-- --%>
+    <c:if test="${brc_align  ne 'right'}">
+        <ol class="vjs-playlist"></ol>
+    </c:if>
+
 
 
     <script src="//players.brightcove.net/${brc_account}/${brc_playerID}_${brc_playerDataEmbed}/index.min.js"></script>

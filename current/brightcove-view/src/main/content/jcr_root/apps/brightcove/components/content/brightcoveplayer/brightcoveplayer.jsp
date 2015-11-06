@@ -25,15 +25,21 @@
 <%@include file="/apps/brightcove/components/shared/component-global.jsp" %>
 
 <%
-    //Component Container
-    pageContext.setAttribute("containerID", properties.get("containerID", ""));
-    pageContext.setAttribute("containerClass", properties.get("containerClass", ""));
+
 
 %>
 
 <cq:include script="inline-styles.jsp"/>
 
-<div id="${containerID}" class="${containerClass}">
+<%-- Allow for inline CSS to be added at the component level for tweaks --%>
+<c:if test="${not empty properties['inlineCSS']}">
+    <style type="text/css">
+        <c:out value="${properties['inlineCSS']}" escapeXml="true"/>
+    </style>
+</c:if>
+
+
+<div id="${brc_containerID}" class="${brc_containerClass}">
     <div id="component-wrap-${brc_componentID}">
         <c:choose>
             <c:when test="${(not empty brc_account) or (not empty brc_playerID)}">
@@ -77,11 +83,14 @@
     pageContext.removeAttribute("brc_playerKey");
     pageContext.removeAttribute("brc_playerDataEmbed");
 
-    pageContext.removeAttribute("brc_position");
+    pageContext.removeAttribute("brc_align");
     pageContext.removeAttribute("brc_marginLeft");
     pageContext.removeAttribute("brc_marginRight");
     pageContext.removeAttribute("brc_width");
     pageContext.removeAttribute("brc_height");
     pageContext.removeAttribute("brc_hasSize");
+
+    pageContext.removeAttribute("brc_containerID");
+    pageContext.removeAttribute("brc_containerClass");
 
 %>

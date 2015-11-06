@@ -1,5 +1,8 @@
 #base=source/js
 
 brightcoveUpload.js
-brc_account_utils.js
+
+brc_util.js
+
+brc_account.js
 brc_combobox.js
