@@ -436,8 +436,18 @@ div.hLine {
   width: 100%;
 }
 
-#delButton, #uplButton, #newplstButton, #searchBut, .btn, .btn:hover, #bmetaSubmit, #bmetaCancel, #startUploadButton, #cancelUploadButton,
-#createPlstSubmit, #createPlstCancel {
+#delButton,
+#uplButton,
+#newplstButton,
+#searchBut,
+.btn,
+.btn:hover,
+#bmetaSubmit,
+#bmetaCancel,
+#startUploadButton,
+#cancelUploadButton,
+#createPlstSubmit,
+#createPlstCancel {
   display: inline-block;
   *display: inline;
   padding: 5px 20px;
