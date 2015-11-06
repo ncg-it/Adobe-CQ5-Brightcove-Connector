@@ -60,8 +60,9 @@ Brightcove Reference:
 
 
     <c:if test="${brc_align eq 'right'}">
-        <%-- If the Alignment--%>
-        <ol class="vjs-playlist"></ol>
+        <div class="playlist-wrapper">
+            <ol class="vjs-playlist vjs-csspointerevents vjs-mouse"></ol>
+        </div>
     </c:if>
     <video
             id="video-${brc_componentID}"
@@ -77,11 +78,13 @@ Brightcove Reference:
             controls>
     </video>
 
+
     <%-- --%>
     <c:if test="${brc_align  ne 'right'}">
-        <ol class="vjs-playlist"></ol>
+        <div class="playlist-wrapper">
+            <ol class="vjs-playlist vjs-csspointerevents vjs-mouse"></ol>
+        </div>
     </c:if>
-
 
 
     <script src="//players.brightcove.net/${brc_account}/${brc_playerID}_${brc_playerDataEmbed}/index.min.js"></script>
