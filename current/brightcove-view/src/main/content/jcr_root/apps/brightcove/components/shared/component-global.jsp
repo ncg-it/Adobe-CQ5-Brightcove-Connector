@@ -55,6 +55,8 @@
     String height = "";
     boolean hasSize = false;
 
+    boolean ignoreComponentProperties = false;
+
     // Load Player Configuration
 
     if (!playerPath.isEmpty()) {
@@ -80,21 +82,25 @@
 
                 //append the class to the container wrap
                 containerClass += " " + playerProperties.get("containerClass", "");
+
+                ignoreComponentProperties = playerProperties.get("ignoreComponentProperties", ignoreComponentProperties);
             }
 
         }
 
     }
 
-    // Override with local component properties
+    // Override with local component properties IF enabled
 
-    align = properties.get("align", align);
+    if (ignoreComponentProperties) {
 
+        align = properties.get("align", align);
 
-    //we must override BOTH width and height to prevent one being set on Player Page and other set in component.
-    if (properties.containsKey("width") || properties.containsKey("height")) {
-        width = properties.get("width", width);
-        height = properties.get("height", height);
+        //we must override BOTH width and height to prevent one being set on Player Page and other set in component.
+        if (properties.containsKey("width") || properties.containsKey("height")) {
+            width = properties.get("width", width);
+            height = properties.get("height", height);
+        }
     }
 
     // Adjust size accordingly
@@ -106,6 +112,7 @@
             height = String.valueOf((270 * Integer.parseInt(width, 10)) / 480);
         }
     }
+
 
     //fallback to default
     if (TextUtil.isEmpty(playerID) && TextUtil.notEmpty(account)) {
@@ -127,6 +134,8 @@
     pageContext.setAttribute("brc_playerID", playerID, PageContext.REQUEST_SCOPE);
     pageContext.setAttribute("brc_playerKey", playerKey, PageContext.REQUEST_SCOPE);
     pageContext.setAttribute("brc_playerDataEmbed", playerDataEmbed, PageContext.REQUEST_SCOPE);
+
+    pageContext.setAttribute("brc_ignoreComponentProperties",ignoreComponentProperties, PageContext.REQUEST_SCOPE);
 
     pageContext.setAttribute("brc_align", align, PageContext.REQUEST_SCOPE);
     pageContext.setAttribute("brc_width", width, PageContext.REQUEST_SCOPE);

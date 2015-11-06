@@ -1,3 +1,4 @@
+<%@ page import="com.day.cq.wcm.api.components.DropTarget" %>
 <%--
 
     Adobe CQ5 Brightcove Connector
@@ -26,13 +27,16 @@
 
 <%
 
+    //add DropTarget prefix to page context
+
+    pageContext.setAttribute("dropTargetPrefix", DropTarget.CSS_CLASS_PREFIX);
 
 %>
 
 <cq:include script="inline-styles.jsp"/>
 
 <%-- Allow for inline CSS to be added at the component level for tweaks --%>
-<c:if test="${not empty properties['inlineCSS']}">
+<c:if test="${(not brc_ignoreComponentProperties) and (not empty properties['inlineCSS'])}">
     <style type="text/css">
         <c:out value="${properties['inlineCSS']}" escapeXml="true"/>
     </style>
@@ -44,26 +48,23 @@
         <c:choose>
             <c:when test="${(not empty brc_account) or (not empty brc_playerID)}">
 
-                <div data-sly-test="${isEditMode}"
-                     class="cq-dd-brightcove_player md-dropzone-video drop-target-player"
-                     data-sly-text="Drop player here">
+                <div class="${dropTargetPrefix}brightcove_player md-dropzone-video drop-target-player" data-emptytext="Add Player Here">
 
                     <c:if test="${(not empty brc_videoID) or (not empty brc_playlistID)}">
 
-                            <cq:include script="player-embed.jsp"/>
+                        <cq:include script="player-embed.jsp"/>
 
                     </c:if>
                     <c:if test="${isEditMode}">
-                        <div data-sly-test="${isEditMode}"
-                             class="cq-dd-brightcove_video cq-video-placeholder cq-block-sm-placeholder md-dropzone-video drop-target-video"
-                             data-sly-text="Drop video here"></div>
+                        <div class="${dropTargetPrefix}brightcove_video cq-video-placeholder cq-block-sm-placeholder md-dropzone-video drop-target-video"  data-emptytext="Add Media Here"></div>
                     </c:if>
                 </div>
             </c:when>
             <c:otherwise>
-                <div data-sly-test="${isEditMode}"
-                     class="cq-dd-brightcove_player cq-video-placeholder cq-block-sm-placeholder md-dropzone-video drop-target-player-empty"
-                     data-sly-text="Drop player here"></div>
+                <c:if test="${isEditMode}">
+                    <div class="${dropTargetPrefix}brightcove_player cq-video-placeholder cq-block-sm-placeholder md-dropzone-video drop-target-player-empty"  data-emptytext="Add Player Here"></div>
+                </c:if>
+
             </c:otherwise>
         </c:choose>
     </div>
@@ -82,6 +83,9 @@
     pageContext.removeAttribute("brc_playerID");
     pageContext.removeAttribute("brc_playerKey");
     pageContext.removeAttribute("brc_playerDataEmbed");
+
+
+    pageContext.removeAttribute("brc_ignoreComponentProperties");
 
     pageContext.removeAttribute("brc_align");
     pageContext.removeAttribute("brc_width");
