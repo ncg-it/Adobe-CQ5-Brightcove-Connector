@@ -92,7 +92,7 @@
 
     // Override with local component properties IF enabled
 
-    if (ignoreComponentProperties) {
+    if (!ignoreComponentProperties) {
 
         align = properties.get("align", align);
 
@@ -146,7 +146,7 @@
     pageContext.setAttribute("brc_componentID", componentID, PageContext.REQUEST_SCOPE);
 
     //Component Container
-    pageContext.setAttribute("brc_containerID", containerID);
-    pageContext.setAttribute("brc_containerClass", containerClass);
+    pageContext.setAttribute("brc_containerID", containerID.trim());
+    pageContext.setAttribute("brc_containerClass", containerClass.trim());
 
 %>

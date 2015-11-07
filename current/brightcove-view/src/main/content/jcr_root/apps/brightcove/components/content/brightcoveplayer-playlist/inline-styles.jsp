@@ -88,7 +88,6 @@
         margin-right: 0;
     }
 
-    <%-- ???: Do we really want to always be setting width to 100% ? --%>
     #component-wrap-${brc_componentID} .brightcove-container {
         width: 100%;
     }

@@ -48,21 +48,25 @@
         <c:choose>
             <c:when test="${(not empty brc_account) or (not empty brc_playerID)}">
 
-                <div class="${dropTargetPrefix}brightcove_player md-dropzone-video drop-target-player" data-emptytext="Add Player Here">
+                <div class="${dropTargetPrefix}brightcove_player md-dropzone-video drop-target-player"
+                     data-emptytext="Add Player Here">
 
                     <c:if test="${(not empty brc_videoID) or (not empty brc_playlistID)}">
-
-                        <cq:include script="player-embed.jsp"/>
+                        <div class="player-embed-wrap">
+                            <cq:include script="player-embed.jsp"/>
+                        </div>
 
                     </c:if>
                     <c:if test="${isEditMode}">
-                        <div class="${dropTargetPrefix}brightcove_video cq-video-placeholder cq-block-sm-placeholder md-dropzone-video drop-target-video"  data-emptytext="Add Media Here"></div>
+                        <div class="${dropTargetPrefix}brightcove_video cq-video-placeholder cq-block-sm-placeholder md-dropzone-video drop-target-video"
+                             data-emptytext="Add Media Here"></div>
                     </c:if>
                 </div>
             </c:when>
             <c:otherwise>
                 <c:if test="${isEditMode}">
-                    <div class="${dropTargetPrefix}brightcove_player cq-video-placeholder cq-block-sm-placeholder md-dropzone-video drop-target-player-empty"  data-emptytext="Add Player Here"></div>
+                    <div class="${dropTargetPrefix}brightcove_player cq-video-placeholder cq-block-sm-placeholder md-dropzone-video drop-target-player-empty"
+                         data-emptytext="Add Player Here"></div>
                 </c:if>
 
             </c:otherwise>
