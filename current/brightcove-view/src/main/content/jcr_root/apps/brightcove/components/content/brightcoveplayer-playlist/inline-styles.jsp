@@ -131,6 +131,12 @@
         margin-top:10px;
     }
 
+    /**
+     * Edit mode Styles
+     **/
+    #component-wrap-${brc_componentID} .drop-target-video{
+        width:100%;
+    }
 
 </style>
 
