@@ -75,6 +75,24 @@
                 <groupId>com.day.jcr.vault</groupId>
                 <artifactId>maven-vault-plugin</artifactId>
                 <extensions>true</extensions>
+                <executions>
+                <execution>
+                <goals>
+                    <goal>package</goal>
+                </goals>
+                <configuration>
+                <embeddedTarget>/apps/brightcove/install</embeddedTarget>
+                <embeddeds>
+                <embedded>
+                    <groupId>${project.groupId}</groupId>
+                    <artifactId>brightcove-services</artifactId>
+                    <filter>true</filter>
+                </embedded>
+                </embeddeds>
+                </configuration>
+                </execution>
+                </executions>
+
             </plugin>
         </plugins>
     </build>
