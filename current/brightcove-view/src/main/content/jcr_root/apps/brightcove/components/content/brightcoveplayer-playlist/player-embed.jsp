@@ -56,7 +56,7 @@ Brightcove Reference:
 
 --%>
 
-<div id="container-${brc_componentID}" class="brightcove-container">
+<div id="container-${brc_componentID}" class="brightcove-container clearfix">
 
 
     <c:if test="${brc_align eq 'right'}">
