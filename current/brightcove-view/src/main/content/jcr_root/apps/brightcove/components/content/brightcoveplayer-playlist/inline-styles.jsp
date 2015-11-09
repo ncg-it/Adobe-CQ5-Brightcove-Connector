@@ -33,33 +33,30 @@
      */
 
 %>
-
+<%-- TODO: create flexible base styles for out of the box usage. --%>
 
 <c:if test="${not brc_hasSize}">
     <style type="text/css">
-        #component-wrap-${brc_componentID} .brightcove-container {
-            width: 80%;
+        #component-wrap-${brc_componentID} .brightcove-container .video-js {
             display: block;
             position: relative;
             margin: 20px auto;
+
+            width: 55%;
+            height: 100%;
         }
 
-        #component-wrap-${brc_componentID} .brightcove-container:after {
+        #component-wrap-${brc_componentID}.brc-align-center .brightcove-container .video-js {
+            width: 80%;
+        }
+
+        #component-wrap-${brc_componentID} .brightcove-container .video-js:after {
             padding-top: 56.25%;
             display: block;
             content: '';
         }
 
-        #component-wrap-${brc_componentID} .brightcove-container object,
-        #component-wrap-${brc_componentID} .brightcove-container .video-js {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            right: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
+
     </style>
 </c:if>
 
@@ -69,27 +66,69 @@
 
     }
 
-    #component-wrap-${brc_componentID} .player-embed-wrap {
+    #component-wrap-${brc_componentID} .brightcove-container,
+    #component-wrap-${brc_componentID} .brightcove-container .player-embed-wrap {
+        width: 100%;
+    }
+
+    #component-wrap-${brc_componentID} .brightcove-container .video-js {
         margin-bottom: 0;
         margin-left: auto;
         margin-right: auto;
         margin-top: 0;
         overflow-x: hidden;
         overflow-y: hidden;
-        width: 100%;
-        text-align: ${brc_align};
+        width: 55%;
+        display: inline-block;
+
+    <%--text-align: ${brc_align};--%>
     }
 
-    #component-wrap-${brc_componentID}.brc-align-left .player-embed-wrap {
+    #component-wrap-${brc_componentID} .brightcove-container .playlist-wrapper {
+        display: inline-block;
+        width: 42%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    #component-wrap-${brc_componentID} .brightcove-container .playlist-wrapper .vjs-playlist{
+        margin:0;
+    }
+
+    /**
+     * Alignment Rules
+     ******************/
+
+    /* Left */
+    #component-wrap-${brc_componentID}.brc-align-left .brightcove-container .video-js {
         margin-left: 0;
+        float: left;
     }
 
-    #component-wrap-${brc_componentID}.brc-align-right .player-embed-wrap {
+    #component-wrap-${brc_componentID}.brc-align-left .brightcove-container .playlist-wrapper {
+        float: right;
+    }
+
+    /* Right */
+    #component-wrap-${brc_componentID}.brc-align-right .brightcove-container .video-js {
         margin-right: 0;
+        float: right;
     }
 
-    #component-wrap-${brc_componentID} .brightcove-container {
+    #component-wrap-${brc_componentID}.brc-align-right .brightcove-container .playlist-wrapper {
+        float: left;
+    }
+
+    /* Center */
+    #component-wrap-${brc_componentID}.brc-align-center .brightcove-container .video-js {
+        display: block;
         width: 100%;
+    }
+
+    #component-wrap-${brc_componentID}.brc-align-center .brightcove-container .playlist-wrapper {
+        width: 100%;
+        display: block;
+        margin-top:10px;
     }
 
 
