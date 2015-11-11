@@ -39,6 +39,8 @@ public interface ConfigurationService {
 
     String getDefVideoPlayerID();
 
+    String getDefVideoPlayerKey();
+
     String getDefVideoPlayerDataEmbedded();
 
     String getDefPlaylistPlayerID();

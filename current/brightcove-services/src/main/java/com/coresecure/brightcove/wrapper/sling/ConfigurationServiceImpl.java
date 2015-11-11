@@ -47,6 +47,7 @@ import java.util.*;
         @Property(name = "writetoken", label = "Write Token", description = "Write Token", value = ""),
         @Property(name = "playersstore", label = "Players Store Path", description = "Path of the players store locatione", value = "/content/brightcovetools/players"),
         @Property(name = "defVideoPlayerID", label = "Default Video Player ID", description = "Default Video Player ID", value = ""),
+        @Property(name = "defVideoPlayerKey", label="Default Video Player Key", description="Default Video Player Key", value=""),
         @Property(name = "defVideoPlayerDataEmbedded", label = "Default Data Embedded", description = "Default Data Embedded", value = ""),
         @Property(name = "defPlaylistPlayerID", label = "Default Playlist Player ID", description = "Default Playlist Player ID", value = ""),
         @Property(name = "defPlaylistPlayerKey", label = "Default Playlist Player Key", description = "Default Playlist Player Key", value = ""),
@@ -110,6 +111,9 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         return (String) getProperties().get("defVideoPlayerID");
     }
 
+    public String getDefVideoPlayerKey() {
+        return (String) getProperties().get("defVideoPlayerKey");
+    }
     public String getDefVideoPlayerDataEmbedded() {
         return (String) getProperties().get("defVideoPlayerDataEmbedded");
     }

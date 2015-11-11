@@ -39,8 +39,8 @@
 
     String account = properties.get("account", "").trim();
     String playerPath = properties.get("playerPath", "").trim();
-    String playerID = "";
-    String playerKey = "";
+    String playerID = properties.get("playerID","").trim();
+    String playerKey = properties.get("playerKey","").trim();;
 
     String playerDataEmbed = "default";
 
@@ -115,12 +115,13 @@
 
 
     //fallback to default
-    if (TextUtil.isEmpty(playerID) && TextUtil.notEmpty(account)) {
+    if (TextUtil.notEmpty(account)) {
         ConfigurationGrabber cg = ServiceUtil.getConfigurationGrabber();
         ConfigurationService cs = cg.getConfigurationService(account);
         if (cs != null) {
             playerID = cs.getDefVideoPlayerID();
             playerDataEmbed = cs.getDefVideoPlayerDataEmbedded();
+            playerKey= cs.getDefVideoPlayerKey();
         }
     }
 
