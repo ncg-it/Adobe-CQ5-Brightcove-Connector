@@ -61,8 +61,10 @@ public class BrcImageApi extends SlingAllMethodsServlet {
 
         int requestedAPI = 0;
         String requestedToken = "";
+        Logger logger = LoggerFactory.getLogger(BrcImageApi.class);
+        logger.debug("request image:");
+
         if (request.getParameter("id") != null) {
-            Logger logger = LoggerFactory.getLogger(BrcImageApi.class);
             String VideoIDStr = request.getParameter("id");
             String accountKeyStr = request.getParameter("key");
             try {
@@ -110,22 +112,26 @@ public class BrcImageApi extends SlingAllMethodsServlet {
         } else {
             if (request.getRequestPathInfo().getSuffix() != null) {
                 String suffix = request.getRequestPathInfo().getSuffix();
+                logger.debug("suffix:" + suffix);
                 String[] sections = suffix.split("/");
                 if (sections.length == 3) {
                     String VideoIDStr = sections[2];
-                    VideoIDStr = VideoIDStr.substring(1, VideoIDStr.indexOf("."));
+                    VideoIDStr = VideoIDStr.substring(0, VideoIDStr.indexOf("."));
                     String accountKeyStr = sections[1];
+                    logger.debug("VideoIDStr:" + VideoIDStr);
+                    logger.debug("accountKeyStr:" + accountKeyStr);
+
                     try {
                         BrightcoveAPI brAPI = new BrightcoveAPI(accountKeyStr);
 
-                        JSONObject video = brAPI.cms.getVideoByRef(VideoIDStr);
+                        JSONObject video = brAPI.cms.getVideoImages(VideoIDStr);
+                        logger.debug("video:" + video.toString(1));
 
 
                         // Find a single video
-                        if (video != null && video.has("images")) {
-                            JSONObject images = video.getJSONObject("images");
-                            JSONObject poster = images.getJSONObject("poster");
-                            String urlStr = poster.getString("url");
+                        if (video != null && video.has("poster")) {
+                            JSONObject poster = video.getJSONObject("poster");
+                            String urlStr = poster.getString("src");
 
                             URL url = new URL(urlStr);
                             BufferedImage img = null;
@@ -155,6 +161,8 @@ public class BrcImageApi extends SlingAllMethodsServlet {
                     } catch (Exception e) {
                         //System.out.println("Exception caught: '" + e + "'.");
                         //System.exit(1);
+                        logger.error("Exception:",e);
+
                         response.setStatus(404);
                     }
 

@@ -114,6 +114,7 @@ public class Cms {
             String targetURL = "/accounts/" + account.getAccount_ID() + "/videos/" + ID;
             try {
                 String response = account.platform.getAPI(targetURL, urlParameters, headers);
+                LOGGER.debug("getVideo response "+ response);
                 if (response != null && !response.isEmpty()) json = JsonReader.readJsonFromString(response);
             } catch (IOException e) {
                 LOGGER.error("IOException", e);
@@ -227,6 +228,8 @@ public class Cms {
             String targetURL = "/accounts/" + account.getAccount_ID() + "/videos/" + ID + "/images";
             try {
                 String response = account.platform.getAPI(targetURL, "", headers);
+                LOGGER.debug("getVideoImages response "+ response);
+
                 if (response != null && !response.isEmpty()) json = JsonReader.readJsonFromString(response);
             } catch (IOException e) {
                 LOGGER.error("IOException", e);
