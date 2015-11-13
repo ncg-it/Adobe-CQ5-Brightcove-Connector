@@ -70,14 +70,13 @@ public class BrcImageApi extends SlingAllMethodsServlet {
             try {
                 BrightcoveAPI brAPI = new BrightcoveAPI(accountKeyStr);
 
-                JSONObject video = brAPI.cms.getVideoByRef(VideoIDStr);
+                JSONObject video = brAPI.cms.getVideoImages(VideoIDStr);
 
 
                 // Find a single video
-                if (video != null && video.has("images")) {
-                    JSONObject images = video.getJSONObject("images");
-                    JSONObject poster = images.getJSONObject("poster");
-                    String urlStr = poster.getString("url");
+                if (video != null && video.has("poster")) {
+                    JSONObject poster = video.getJSONObject("poster");
+                    String urlStr = poster.getString("src");
 
                     URL url = new URL(urlStr);
                     BufferedImage img = null;
