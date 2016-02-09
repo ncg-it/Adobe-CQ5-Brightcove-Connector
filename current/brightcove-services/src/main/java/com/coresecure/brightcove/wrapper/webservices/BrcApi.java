@@ -155,19 +155,25 @@ public class BrcApi extends SlingAllMethodsServlet {
                         outWriter.write(players.toString());
                         break;
                     case 2:
+                        LOGGER.debug("query: " + request.getParameter("query"));
                         if (request.getParameter("query") != null && !request.getParameter("query").trim().isEmpty()) {
                             int start = 0;
                             try {
                                 start = Integer.parseInt(request.getParameter("start"));
                             } catch (NumberFormatException e) {
+                                LOGGER.error("NumberFormatException",e);
+
                             }
                             int limit = serviceUtil.DEFAULT_LIMIT;
                             try {
                                 limit = Integer.parseInt(request.getParameter("limit"));
                             } catch (NumberFormatException e) {
+                                LOGGER.error("NumberFormatException",e);
+
                             }
                             outWriter.write(serviceUtil.getList(false, start, limit, false, request.getParameter("query")));
                         } else {
+                            LOGGER.debug("getListSideMenu");
                             outWriter.write(serviceUtil.getListSideMenu(request.getParameter("limit")));
                         }
                         break;

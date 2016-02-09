@@ -54,7 +54,7 @@ Brightcove Reference:
 
 --%>
 
-<div class="brightcove-container">
+<div id="container-${brc_componentID}" class="brightcove-container">
 
     <video
             id="video-${brc_componentID}"

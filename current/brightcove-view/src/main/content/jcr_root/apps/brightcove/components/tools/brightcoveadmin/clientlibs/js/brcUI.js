@@ -69,7 +69,9 @@ $(function () {
     //app = new CQ.HomeLink({});
     //app.render(document.body);
     $("#selAccount").change(function () {
-        createCookie("brc_act", $(this).val(), 1);
+        var accountVal = $(this).val();
+        CQ.Ext.util.Cookies.set('brc_act', accountVal);
+        //createCookie("brc_act",accountVal, 1);
         window.location.reload();
     });
 

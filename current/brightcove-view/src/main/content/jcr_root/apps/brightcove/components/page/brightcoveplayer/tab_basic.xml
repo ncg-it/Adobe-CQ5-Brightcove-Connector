@@ -20,7 +20,7 @@
                     fieldSubLabel="(For authors)"
                     name="./jcr:description"
                     xtype="textarea"/>
-                <hideinnav
+                <hideInNav
                     jcr:primaryType="cq:Widget"
                     fieldLabel="Hide in Navigation"
                     inputValue="{Boolean}true"
@@ -44,28 +44,20 @@
                     jcr:primaryType="cq:Widget"
                     allowBlank="{Boolean}false"
                     brcAccountFieldName="./account"
-                    fieldDescription=""
+                    fieldDescription="&lt;b>HTML5 Player&lt;/b>: Select a player.&lt;br/>&lt;b>Legacy Player&lt;/b>: Paste a value&lt;/b>"
                     fieldLabel="Player ID:"
-                    fieldSubLabel="(HTML5)"
+                    forceSelection="{Boolean}false"
                     hiddenName="./playerID"
                     storePath="/bin/brightcove/api?a=1"
                     xtype="brc_combobox"/>
-            </items>
-        </player_information>
-        <legacy-player
-            jcr:primaryType="cq:Widget"
-            collapsed="{Boolean}true"
-            collapsible="{Boolean}true"
-            title="Legacy Settings (Non-HTML5)"
-            xtype="dialogfieldset">
-            <items jcr:primaryType="cq:WidgetCollection">
                 <playerKey
                     jcr:primaryType="cq:Widget"
                     allowBlank="{Boolean}true"
                     fieldLabel="Player Key:"
+                    fieldSubLabel="&lt;i>Legacy Player only&lt;/i>"
                     name="./playerKey"
                     xtype="textfield"/>
             </items>
-        </legacy-player>
+        </player_information>
     </items>
 </jcr:root>

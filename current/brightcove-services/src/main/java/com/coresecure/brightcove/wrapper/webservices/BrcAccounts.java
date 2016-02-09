@@ -88,6 +88,8 @@ public class BrcAccounts extends SlingAllMethodsServlet {
         response.setContentType("application/json");
         JSONObject root = new JSONObject();
         boolean is_authorized = false;
+
+        LOGGER.debug("get account");
         try {
             Session session = request.getResourceResolver().adaptTo(Session.class);
             UserManager userManager = request.getResourceResolver().adaptTo(UserManager.class);
@@ -106,6 +108,7 @@ public class BrcAccounts extends SlingAllMethodsServlet {
                 LOGGER.debug("accounts: " + accounts.toString());
                 int i = 0;
                 for (String account : cg.getAvailableServices()) {
+                    LOGGER.debug("get account: " + account);
                     ConfigurationService cs = cg.getConfigurationService(account);
                     List<String> allowedGroups = new ArrayList<String>();
                     allowedGroups.addAll(cs.getAllowedGroupsList());
@@ -127,11 +130,16 @@ public class BrcAccounts extends SlingAllMethodsServlet {
                 }
                 root.put("accounts", accounts);
 
+            } else {
+                LOGGER.debug("not authorized");
+
             }
             outWriter.write(root.toString(1));
-        } catch (JSONException je) {
-            outWriter.write("{\"accounts\":[],\"error\":\"" + je.getMessage() + "\"}");
+        } catch (JSONException e) {
+            LOGGER.error("JSONException", e);
+            outWriter.write("{\"accounts\":[],\"error\":\"" + e.getMessage() + "\"}");
         } catch (RepositoryException e) {
+            LOGGER.error("RepositoryException", e);
             outWriter.write("{\"accounts\":[],\"error\":\"" + e.getMessage() + "\"}");
         }
 

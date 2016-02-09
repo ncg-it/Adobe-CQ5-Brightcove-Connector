@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>com.coresecure.brightcove.cq5</groupId>
         <artifactId>parent</artifactId>
-        <version>4.0.1-SNAPSHOT</version>
+        <version>4.1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>brightcove-all</artifactId>
@@ -16,7 +17,8 @@
     <name>${project.groupId} - ${project.artifactId}</name>
 
     <description>
-        Builds a CQ package containing all components of the 'Adobe CQ5 Brightcove Connector API' project. Useful for making formal
+        Builds a CQ package containing all components of the 'Adobe CQ5 Brightcove Connector API' project. Useful for
+        making formal
         releases to QA and production environments for example.
     </description>
 
@@ -111,9 +113,16 @@
         </plugins>
     </build>
 
+
+    <!-- ====================================================================== -->
+    <!-- P R O F I L E S                                                        -->
+    <!-- ====================================================================== -->
+
     <profiles>
+
         <profile>
-            <id>auto-deploy</id>
+            <!--  Replace "auto-deploy" with sub-module specific profiles to allow them to be installed individually. -->
+            <id>auto-deploy-all</id>
             <!--
                 when activated, this profile will deploy and install the built CQ package to the target server.
             -->
@@ -141,5 +150,6 @@
             </build>
         </profile>
     </profiles>
+
 
 </project>

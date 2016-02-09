@@ -39,20 +39,23 @@
 
     String account = properties.get("account", "").trim();
     String playerPath = properties.get("playerPath", "").trim();
-    String playerID = "";
-    String playerKey = "";
+    String playerID = properties.get("playerID","").trim();
+    String playerKey = properties.get("playerKey","").trim();;
 
     String playerDataEmbed = "default";
+
+    String containerID = properties.get("containerID", "");
+    String containerClass = properties.get("containerClass", "");
 
 
     // Default Values
 
-    String marginLeft = "auto";
-    String marginRight = "auto";
-    String position = "center";
+    String align = "center";
     String width = "";
     String height = "";
     boolean hasSize = false;
+
+    boolean ignoreComponentProperties = false;
 
     // Load Player Configuration
 
@@ -73,30 +76,31 @@
                 playerDataEmbed = playerProperties.get("data_embedded", playerDataEmbed);
 
 
-                position = playerProperties.get("align", position);
+                align = playerProperties.get("align", align);
                 width = playerProperties.get("width", width);
                 height = playerProperties.get("height", height);
 
+                //append the class to the container wrap
+                containerClass += " " + playerProperties.get("containerClass", "");
+
+                ignoreComponentProperties = playerProperties.get("ignoreComponentProperties", ignoreComponentProperties);
             }
 
         }
 
     }
 
-    // Override with local component properties
+    // Override with local component properties IF enabled
 
-    position = properties.get("align", position);
+    if (!ignoreComponentProperties) {
 
-    if (position.equals("left")) {
-        marginLeft = "0";
-    } else if (position.equals("right")) {
-        marginRight = "0";
-    }
+        align = properties.get("align", align);
 
-    //we must override BOTH width and height to prevent one being set on Player Page and other set in component.
-    if (properties.containsKey("width") || properties.containsKey("height")) {
-        width = properties.get("width", width);
-        height = properties.get("height", height);
+        //we must override BOTH width and height to prevent one being set on Player Page and other set in component.
+        if (properties.containsKey("width") || properties.containsKey("height")) {
+            width = properties.get("width", width);
+            height = properties.get("height", height);
+        }
     }
 
     // Adjust size accordingly
@@ -109,19 +113,20 @@
         }
     }
 
+
     //fallback to default
-    if (TextUtil.isEmpty(playerID) && TextUtil.notEmpty(account)) {
+    if (TextUtil.notEmpty(account)) {
         ConfigurationGrabber cg = ServiceUtil.getConfigurationGrabber();
         ConfigurationService cs = cg.getConfigurationService(account);
         if (cs != null) {
             playerID = cs.getDefVideoPlayerID();
             playerDataEmbed = cs.getDefVideoPlayerDataEmbedded();
+            playerKey= cs.getDefVideoPlayerKey();
         }
     }
 
 
     // Update Page Context
-
     pageContext.setAttribute("brc_account", account, PageContext.REQUEST_SCOPE);
     pageContext.setAttribute("brc_videoID", videoID, PageContext.REQUEST_SCOPE);
     pageContext.setAttribute("brc_playlistID", playlistID, PageContext.REQUEST_SCOPE);
@@ -131,14 +136,18 @@
     pageContext.setAttribute("brc_playerKey", playerKey, PageContext.REQUEST_SCOPE);
     pageContext.setAttribute("brc_playerDataEmbed", playerDataEmbed, PageContext.REQUEST_SCOPE);
 
-    pageContext.setAttribute("brc_position", position, PageContext.REQUEST_SCOPE);
-    pageContext.setAttribute("brc_marginLeft", marginLeft, PageContext.REQUEST_SCOPE);
-    pageContext.setAttribute("brc_marginRight", marginRight, PageContext.REQUEST_SCOPE);
+    pageContext.setAttribute("brc_ignoreComponentProperties",ignoreComponentProperties, PageContext.REQUEST_SCOPE);
+
+    pageContext.setAttribute("brc_align", align, PageContext.REQUEST_SCOPE);
     pageContext.setAttribute("brc_width", width, PageContext.REQUEST_SCOPE);
     pageContext.setAttribute("brc_height", height, PageContext.REQUEST_SCOPE);
     pageContext.setAttribute("brc_hasSize", hasSize, PageContext.REQUEST_SCOPE);
 
 
     pageContext.setAttribute("brc_componentID", componentID, PageContext.REQUEST_SCOPE);
+
+    //Component Container
+    pageContext.setAttribute("brc_containerID", containerID.trim());
+    pageContext.setAttribute("brc_containerClass", containerClass.trim());
 
 %>

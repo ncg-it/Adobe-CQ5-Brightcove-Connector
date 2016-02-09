@@ -29,40 +29,13 @@
         Placeholder script to allow overlaying custom styles if this component is set as the resourceSuperType.
 
         ${brc_componentID} is defined in /apps/brightcove/components/shared/component-global.jsp
+
      */
 
 %>
 
 
-<style type="text/css">
-
-    #component-wrap-${brc_componentID} {
-
-    }
-
-    #component-wrap-${brc_componentID} .drop-target-player {
-        margin-bottom: 0;
-        margin-left: ${brc_marginLeft};
-        margin-right: ${brc_marginRight};
-        margin-top: 0;
-        overflow-x: hidden;
-        overflow-y: hidden;
-        width: 100%;
-        text-align: ${brc_position};
-    }
-
-    #component-wrap-${brc_componentID} .drop-target-video {
-        width: 99%;
-    }
-
-    #component-wrap-${brc_componentID} .brightcove-container {
-        width: 100%;
-    }
-
-
-</style>
-
-<c:if test="${brc_hasSize}">
+<c:if test="${not brc_hasSize}">
     <style type="text/css">
         #component-wrap-${brc_componentID} .brightcove-container {
             width: 80%;
@@ -77,7 +50,8 @@
             content: '';
         }
 
-        #component-wrap-${brc_componentID} .brightcove-container object {
+        #component-wrap-${brc_componentID} .brightcove-container object,
+        #component-wrap-${brc_componentID} .brightcove-container .video-js {
             position: absolute;
             top: 0;
             bottom: 0;
@@ -88,4 +62,38 @@
         }
     </style>
 </c:if>
+
+<style type="text/css">
+
+    #component-wrap-${brc_componentID} {
+
+    }
+
+    #component-wrap-${brc_componentID} .player-embed-wrap {
+        margin-bottom: 0;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 0;
+        overflow-x: hidden;
+        overflow-y: hidden;
+        width: 100%;
+        text-align: ${brc_align};
+    }
+
+    #component-wrap-${brc_componentID}.brc-align-left .player-embed-wrap {
+        margin-left: 0;
+    }
+
+    #component-wrap-${brc_componentID}.brc-align-right .player-embed-wrap {
+        margin-right: 0;
+    }
+
+    <%-- ???: Do we really want to always be setting width to 100% ? --%>
+    #component-wrap-${brc_componentID} .brightcove-container {
+        width: 100%;
+    }
+
+
+</style>
+
 

@@ -11,7 +11,7 @@
     <parent>
         <groupId>com.coresecure.brightcove.cq5</groupId>
         <artifactId>parent</artifactId>
-        <version>4.0.1-SNAPSHOT</version>
+        <version>4.1.0-SNAPSHOT</version>
     </parent>
 
     <!-- ====================================================================== -->
@@ -225,7 +225,8 @@
 
     <profiles>
         <profile>
-            <id>auto-deploy-bundle</id>
+            <!--  Replace "auto-deploy" with sub-module specific profiles to allow them to be installed individually. -->
+            <id>auto-deploy-services</id>
             <build>
                 <plugins>
                     <!--

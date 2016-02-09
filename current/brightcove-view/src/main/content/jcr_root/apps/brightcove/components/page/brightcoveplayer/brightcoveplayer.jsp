@@ -33,6 +33,10 @@
 
 <%
 
+    /*
+    TODO: separate "HTML5" and "Legacy" players into separate configuration pages so that only relevant players will appear as options when configuring a component.
+     */
+
 
     String segmentPath = Text.getRelativeParent(resource.getPath(), 1);
 
@@ -116,7 +120,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">
 <html>
 <head>
-    <title>${title} | Brightcove Player</title>
+    <title>${playerTitle} | Brightcove Player</title>
 
     <meta http-equiv="Content-Type" content="text/html; utf-8"/>
 
@@ -163,6 +167,14 @@
     <cq:text property="playerKey" placeholder="NONE" tagName="strong"/>
 </div>
 
+<cq:text value="Data Embed" tagName="h2" tagClass="no-icon"/>
+
+<p>Use the Page Properties editor to edit the Data Embed.</p>
+
+<div class="edit-box">
+    <cq:text value="${playerDataEmbed}" tagName="strong"/>
+</div>
+
 <cq:text value="Player Preview" tagName="h2" tagClass="no-icon"/>
 <p></p>
 
@@ -179,7 +191,7 @@
                     height="${height}px"
                     class="video-js" controls>
             </video>
-            <script src="//players.brightcove.net/${account}/${playerID}_${data_embedded}/index.min.js"></script>
+            <script src="//players.brightcove.net/${account}/${playerID}_${playerDataEmbed}/index.min.js"></script>
         </c:when>
         <c:otherwise>
             <c:if test="${(not empty width) and (not empty height)}">
