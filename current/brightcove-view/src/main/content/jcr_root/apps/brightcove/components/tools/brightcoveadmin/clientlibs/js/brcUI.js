@@ -41,68 +41,73 @@ var tUploadBar,
 
 //called once body loads.  sets the api location and loads all videos
 $(function () {
-    if ($.browser.msie) {
-        //IE css opacity hack
-        $("#screen").css("filter", "alpha(opacity = 65)")
-            .css("zoom", 1);
-    }
+  if ($.browser.msie) {
+    //IE css opacity hack
+    $('#screen').css('filter', 'alpha(opacity = 65)')
+        .css('zoom', 1);
+  }
 
-    //Initialize the paging object
-    //each member variable stores the current page
-    //for different views in the console.
-    //currentFunction calls the corresponding function
-    //on a page change.
-    paging = {
-        allVideos: 0,
-        allPlaylists: 0,
-        curPlaylist: 0,
-        textSearch: 0,
-        tagSearch: 0,
-        generic: 0,     //used as a placeholder
-        currentFunction: null,  //called when a page is changed
-        size: 30     //Default Page Size [30], can be no larger than 100.
-    };
+  //Initialize the paging object
+  //each member variable stores the current page
+  //for different views in the console.
+  //currentFunction calls the corresponding function
+  //on a page change.
+  paging = {
+    allVideos: 0,
+    allPlaylists: 0,
+    curPlaylist: 0,
+    textSearch: 0,
+    tagSearch: 0,
+    generic: 0,     //used as a placeholder
+    currentFunction: null,  //called when a page is changed
+    size: 30     //Default Page Size [30], can be no larger than 100.
+  };
 
-    Load(getAllVideosURL());
-    var app = new CQ.Switcher({});
-    app.render(document.body);
-    //app = new CQ.HomeLink({});
-    //app.render(document.body);
-    $("#selAccount").change(function () {
-        var accountVal = $(this).val();
-        CQ.Ext.util.Cookies.set('brc_act', accountVal);
-        //createCookie("brc_act",accountVal, 1);
-        window.location.reload();
-    });
+  Load(getAllVideosURL());
+  var app = new CQ.Switcher({});
+  app.render(document.body);
+  //app = new CQ.HomeLink({});
+  //app.render(document.body);
+  $('#selAccount').change(function () {
+    var accountVal = $(this).val();
+    CQ.Ext.util.Cookies.set('brc_act', accountVal);
+    //createCookie('brc_act',accountVal, 1);
+    window.location.reload();
+  });
 
 });
 
 //function to move the progress bar on the video upload progress window
 function uploadProgressBar() {
-    progressPos += 10;
-    document.getElementById("progress").style.left = (progressPos % 80) + '%';
+  progressPos += 10;
+  $('#progress').css('left', (progressPos % 80) + '%');
 }
 function switchSort(sortIn) {
-    if ("DESC" == sortIn) {
-        return "ASC";
-    } else if ("ASC" == sortIn) {
-        return "DESC";
-    } else {
-        return "ASC";
+  if ('DESC' == sortIn) {
+    return 'ASC';
+  }
+  else {
+    if ('ASC' == sortIn) {
+      return 'DESC';
     }
+    else {
+      return 'ASC';
+    }
+  }
 }
 function sort(object) {
-    if ($(object).hasClass("ASC") || $(object).hasClass("DESC") || $(object).hasClass("NONE")) {
-        var sortBy = $(object).attr("data-sortBy"),
-            oldSortType = $(object).attr("data-sortType"),
-            sortType = switchSort(oldSortType);
-        $(".sortable", $(object).parent()).not($(object)).addClass("NONE");
-        $(object).toggleClass(oldSortType);
-        $(object).toggleClass(sortType);
-        $(object).removeClass("NONE");
-        $(object).attr("data-sortType", sortType);
-        Load(getAllVideosURLOrdered(sortBy, sortType));
-    }
+  var $object = $(object);
+  if ($object.hasClass('ASC') || $object.hasClass('DESC') || $object.hasClass('NONE')) {
+    var sortBy = $object.attr('data-sortBy'),
+        oldSortType = $object.attr('data-sortType'),
+        sortType = switchSort(oldSortType);
+    $('.sortable', $object.parent()).not($object).addClass('NONE');
+    $object.toggleClass(oldSortType);
+    $object.toggleClass(sortType);
+    $object.removeClass('NONE');
+    $object.attr('data-sortType', sortType);
+    Load(getAllVideosURLOrdered(sortBy, sortType));
+  }
 }
 function buildMainVideoList(title) {
 
@@ -126,52 +131,53 @@ function buildMainVideoList(title) {
     $(":button[name=delFromPlstButton]").hide();
 
 
-    //For each retrieved video, add a row to the table
+  //For each retrieved video, add a row to the table
+
+  $.each(oCurrentVideoList, function (i, n) {
     var modDate = new Date();
-    $.each(oCurrentVideoList, function (i, n) {
-        modDate.setTime(n.lastModifiedDate);
-        $("#tbData").append(
-            "<tr style=\"cursor:pointer;\" id=\"" + (i) + "\"> \
+    modDate.setTime(n.lastModifiedDate);
+    $('#tbData').append(
+        '<tr style="cursor:pointer;" id="' + (i) + '"> \
             <td>\
-                <input type=\"checkbox\" value=\"" + (n.id) + "\" id=\"" + (i) + "\" onclick=\"checkCheck()\">\
-            </td><td>"
-            + n.name +
-            "</td><td>"
-            + (modDate.getMonth() + 1) + "/" + modDate.getDate() + "/" + modDate.getFullYear() + "\
-            </td><td>"
-            + ((n.referenceId) ? n.referenceId : '') +
-            "</td><td>"
-            + n.id +
-            "</td></tr>"
-        ).children("tr").bind('click', function () {
-                showMetaData(this.id);
-            })
-    });
+                <input type="checkbox" value="' + (n.id) + '" id="' + (i) + '" onclick="checkCheck()">\
+            </td><td>'
+        + n.name +
+        '</td><td>'
+        + (modDate.getMonth() + 1) + '/' + modDate.getDate() + '/' + modDate.getFullYear() + '\
+            </td><td>'
+        + ((n.referenceId) ? n.referenceId : '') +
+        '</td><td>'
+        + n.id +
+        '</td></tr>'
+    ).children('tr').bind('click', function () {
+          showMetaData(this.id);
+        })
+  });
 
-    //Zebra stripe the table
-    $("#tbData>tr:even").addClass("oddLine");
+  //Zebra stripe the table
+  $('#tbData>tr:even').addClass('oddLine');
 
-    //And add a hover effect
-    $("#tbData>tr").hover(function () {
-        $(this).addClass("hover");
-    }, function () {
-        $(this).removeClass("hover");
-    });
+  //And add a hover effect
+  $('#tbData>tr').hover(function () {
+    $(this).addClass('hover');
+  }, function () {
+    $(this).removeClass('hover');
+  });
 
-    //if there are videos, show the metadata window, else hide it
-    if (oCurrentVideoList.length > 0) {
-        showMetaData(0);
-    }
-    else {
-        closeBox("tdMeta");
-    }
+  //if there are videos, show the metadata window, else hide it
+  if (oCurrentVideoList.length > 0) {
+    showMetaData(0);
+  }
+  else {
+    closeBox('tdMeta');
+  }
 }
 
 function buildPlaylistList() {
 
-    //Wipe out the old results
-    $("#tbData").empty();
-    $("#trHeader th.sortable").removeClass("NONE").removeClass("ASC").removeClass("DESC");
+  //Wipe out the old results
+  $('#tbData').empty();
+  $('#trHeader th.sortable').removeClass('NONE').removeClass('ASC').removeClass('DESC');
 
     // Display Playlist count
     document.getElementById('divVideoCount').innerHTML = oCurrentPlaylistList.length + " playlists";
@@ -186,426 +192,438 @@ function buildPlaylistList() {
     $(":button[name=delFromPlstButton]").hide();
 
 
-    //For each retrieved playlist, add a row to the table
-    $.each(oCurrentPlaylistList, function (i, n) {
-        $("#tbData").append(
-            "<tr style=\"cursor:pointer;\" id=\"" + i + "\">\
+  //For each retrieved playlist, add a row to the table
+  $.each(oCurrentPlaylistList, function (i, n) {
+    $('#tbData').append(
+        '<tr style="cursor:pointer;" id="' + i + '">\
             <td>\
-            </td><td>"
-            + n.name +
-            "</td><td>\
-                <center>---</center>\
-            </td><td>"
-            + ((n.referenceId) ? n.referenceId : '') +
-            "</td><td>"
-            + n.id +
-            "</td></tr>"
-        ).children("tr").bind('click', function () {
-                getPlaylist(this.id);
-            })
-    });
+            </td><td>'
+        + n.name +
+        '</td><td>\
+            <center>---</center>\
+        </td><td>'
+        + ((n.referenceId) ? n.referenceId : '') +
+        '</td><td>'
+        + n.id +
+        '</td></tr>'
+    ).children('tr').bind('click', function () {
+          getPlaylist(this.id);
+        })
+  });
 
-    //Zebra stripe the table
-    $("#tbData>tr:even").addClass("oddLine");
+  //Zebra stripe the table
+  $('#tbData>tr:even').addClass('oddLine');
 
-    //And add a hover effect
-    $("#tbData>tr").hover(function () {
-        $(this).addClass("hover");
-    }, function () {
-        $(this).removeClass("hover");
-    });
+  //And add a hover effect
+  $('#tbData>tr').hover(function () {
+    $(this).addClass('hover');
+  }, function () {
+    $(this).removeClass('hover');
+  });
 
 }
 function getPlaylist(idx) {
-    oCurrentPlaylistList = oCurrentPlaylistList[idx];
-    paging.currentFunction = createSubPlaylist;
-    changePage(0);
+  oCurrentPlaylistList = oCurrentPlaylistList[idx];
+  paging.currentFunction = createSubPlaylist;
+  changePage(0);
 }
 
 function createSubPlaylist() {
-    if (oCurrentPlaylistList.videos.length > paging.size) {
-        paging.curPlaylist = paging.generic;
-        oCurrentVideoList = new Array();
-        var i = paging.curPlaylist * paging.size;
-        var lim = (paging.curPlaylist + 1) * paging.size > oCurrentPlaylistList.videos.length ?
-            oCurrentPlaylistList.videos.length :
-        (paging.curPlaylist + 1) * paging.size;
-        for (; i < lim; i++) {
-            oCurrentVideoList.push(oCurrentPlaylistList.videos[i]);
-        }
-    } else {
-        oCurrentVideoList = oCurrentPlaylistList.videos;
+  if (oCurrentPlaylistList.videos.length > paging.size) {
+    paging.curPlaylist = paging.generic;
+    oCurrentVideoList = new Array();
+    var i = paging.curPlaylist * paging.size;
+    var lim = (paging.curPlaylist + 1) * paging.size > oCurrentPlaylistList.videos.length ?
+        oCurrentPlaylistList.videos.length :
+    (paging.curPlaylist + 1) * paging.size;
+    for (; i < lim; i++) {
+      oCurrentVideoList.push(oCurrentPlaylistList.videos[i]);
     }
+  }
+  else {
+    oCurrentVideoList = oCurrentPlaylistList.videos;
+  }
 
-    showPlaylist();
-    doPageList(oCurrentPlaylistList.videos.length, "Videos");
-    paging.generic = paging.allVideos;
+  showPlaylist();
+  doPageList(oCurrentPlaylistList.videos.length, 'Videos');
+  paging.generic = paging.allVideos;
 }
 
 function showPlaylist() {
-    //Wipe out the old results
-    $("#tbData").empty();
+  //Wipe out the old results
+  $('#tbData').empty();
 
-    document.getElementById('divVideoCount').innerHTML = oCurrentVideoList.length + " videos";
-    //$("#divVideoCount").html(oCurrentVideoList.length + " videos");
-    document.getElementById('nameCol').innerHTML = "Video Name";
-    document.getElementById('headTitle').innerHTML = oCurrentPlaylistList.name;
-    document.getElementById('search').value = "Search Videos";
-    document.getElementById('searchDiv').style.display = "inline"
-    document.getElementById('searchDiv_pl').style.display = "none";
+    $('#divVideoCount').text(oCurrentVideoList.length + ' videos');
+  $('#nameCol').text('Video Name');
+  $('#headTitle').text(oCurrentPlaylistList.name);
+  $('#search').val('Search Videos');
+  $('#searchDiv').css('display', 'inline');
+  $('#searchDiv_pl').hide();
 
-    document.getElementById('checkToggle').style.display = "inline"
-    document.getElementById('tdMeta').style.display = "block";
-    $("span[name=buttonRow]").show();
-    $(".uplButton").hide();
-    $(".delButton").hide();
-    $(":button[name=delFromPlstButton]").show();
+  $('#checkToggle').css('display', 'inline');
+  $('#tdMeta').hide();
+  $('span[name=buttonRow]').show();
+  $('.uplButton').hide();
+  $('.delButton').hide();
+  $(':button[name=delFromPlstButton]').show();
 
-    //For each retrieved video, add a row to the table
-    modDate = new Date();
-    $.each(oCurrentVideoList, function (i, n) {
-        modDate.setTime(n.lastModifiedDate);
-        $("#tbData").append(
-            "<tr style=\"cursor:pointer\" id=\"" + (i) + "\"> \
+  //For each retrieved video, add a row to the table
+  var modDate = new Date();
+  $.each(oCurrentVideoList, function (i, n) {
+    modDate.setTime(n.lastModifiedDate);
+    $('#tbData').append(
+        '<tr style="cursor:pointer" id="' + (i) + '"> \
             <td>\
-                <input type=\"checkbox\" value=\"" + (i) + "\" id=\"" + (i) + "\" onclick=\"checkCheck()\">\
-            </td><td>"
-            + n.name +
-            "</td><td>"
-            + (modDate.getMonth() + 1) + "/" + modDate.getDate() + "/" + modDate.getFullYear() + "\
-            </td><td>"
-            + ((n.referenceId) ? n.referenceId : '') +
-            "</td><td>"
-            + n.id +
-            "</td></tr>"
-        ).children("tr").bind('click', function () {
-                showMetaData(this.id);
-            });
-    });
+                <input type="checkbox" value="' + (i) + '" id="' + (i) + '" onclick="checkCheck()">\
+            </td><td>'
+        + n.name +
+        '</td><td>'
+        + (modDate.getMonth() + 1) + '/' + modDate.getDate() + '/' + modDate.getFullYear() + '\
+            </td><td>'
+        + ((n.referenceId) ? n.referenceId : '') +
+        '</td><td>'
+        + n.id +
+        '</td></tr>'
+    ).children('tr').bind('click', function () {
+          showMetaData(this.id);
+        });
+  });
 
-    //Zebra stripe the table
-    $("#tbData>tr:even").addClass("oddLine");
+  //Zebra stripe the table
+  $('#tbData>tr:even').addClass('oddLine');
 
-    //And add a hover effect
-    $("#tbData>tr").hover(function () {
-        $(this).addClass("hover");
-    }, function () {
-        $(this).removeClass("hover");
-    });
+  //And add a hover effect
+  $('#tbData>tr').hover(function () {
+    $(this).addClass('hover');
+  }, function () {
+    $(this).removeClass('hover');
+  });
 
-    if (oCurrentVideoList.length > 0) {
-        showMetaData(0);
-    }
-    else {
-        closeBox("tdMeta");
-    }
+  if (oCurrentVideoList.length > 0) {
+    showMetaData(0);
+  }
+  else {
+    closeBox('tdMeta');
+  }
 
 }
 
 function showMetaData(idx) {
-    $("tr.select").removeClass("select");
-    $("#tbData>tr:eq(" + idx + ")").addClass("select");
+    $('tr.select').removeClass('select');
+  $('#tbData>tr:eq(' + idx + ')').addClass('select');
 
-    var v = oCurrentVideoList[idx];
+  var v = oCurrentVideoList[idx];
 
-    // Populate the metadata panel
-    document.getElementById('divMeta.name').innerHTML = v.name;
-    document.getElementById('divMeta.thumbnailURL').src = v.thumbnailURL;
-    document.getElementById('divMeta.videoStillURL').src = v.videoStillURL;
-    document.getElementById('divMeta.previewDiv').value = v.id;
-    var modDate = new Date();
-    modDate.setTime(v.lastModifiedDate);
-    document.getElementById('divMeta.lastModifiedDate').innerHTML = (modDate.getMonth() + 1) + "/" + modDate.getDate() + "/" + modDate.getFullYear();
+  // Populate the metadata panel
+  $('#divMeta.name').text(v.name);
+  $('#divMeta.thumbnailURL').attr('src', v.thumbnailURL);
+  $('#divMeta.videoStillURL').attr('src', v.videoStillURL);
+  $('#divMeta.previewDiv').val(v.id);
+  var modDate = new Date();
+  modDate.setTime(v.lastModifiedDate);
+  $('#divMeta.lastModifiedDate').text((modDate.getMonth() + 1) + '/' + modDate.getDate() + '/' + modDate.getFullYear());
 
-    //v.length is the running time of the video in ms
-    var sec = String((Math.floor(v.length * .001)) % 60); //The number of seconds not part of a whole minute
-    sec.length < 2 ? sec = sec + "0" : sec;  //Make sure  the one's place 0 is included. 
-    document.getElementById('divMeta.length').innerHTML = Math.floor(v.length / 60000) + ":" + sec;
+  //v.length is the running time of the video in ms
+  var sec = String((Math.floor(v.length * .001)) % 60); //The number of seconds not part of a whole minute
+  sec.length < 2 ? sec = sec + '0' : sec;  //Make sure  the one's place 0 is included.
+  $('#divMeta.length').text(Math.floor(v.length / 60000) + ':' + sec);
 
-    document.getElementById('divMeta.id').innerHTML = v.id;
-    document.getElementById('divMeta.shortDescription').innerHTML = "<pre>" + v.shortDescription + "</pre>";
-
-    //Construct the tag section:
-    var tagsObject = "";
-    if ("" != v.tags) {
-        var tags = v.tags.toString().split(',');
-        for (var k = 0; k < tags.length; k++) {
-            if (k > 0) {
-                tagsObject += ', ';
-            }
-            tagsObject += '<a style="cursor:pointer;color:blue;text-decoration:underline"' +
-                'onclick="searchVal=\'' + tags[k].replace(/\'/gi, "\\\'") + '\';Load(findByTag(\'' + tags[k] + '\'))" >' + tags[k] + '</a>';
-        }
+  $('#divMeta.id').text(v.id);
+  $('#divMeta.shortDescription').html('<pre>' + v.shortDescription + '</pre>');
+  //Construct the tag section:
+  var tagsObject = '';
+  if ('' != v.tags) {
+    var tags = v.tags.toString().split(',');
+    for (var k = 0; k < tags.length; k++) {
+      if (k > 0) {
+        tagsObject += ', ';
+      }
+      tagsObject += '<a style="cursor:pointer;color:blue;text-decoration:underline"' +
+                    'onclick="searchVal="' + tags[k].replace(/\'/gi, "\\\'") + '";Load(findByTag("' + tags[k] + '))" >' + tags[k] + '</a>';
     }
-    document.getElementById('divMeta.tags').innerHTML = tagsObject;
+  }
+  $('#divMeta.tags').html(tagsObject);
 
-    //if there's no link text use the linkURL as the text
-    if ("" != v.linkText && null != v.linkText) {
-        document.getElementById('divMeta.linkURL').innerHTML = v.linkText;
-    } else {
-        document.getElementById('divMeta.linkURL').innerHTML = (v.linkURL == null) ? "" : v.linkURL;
-    }
-    document.getElementById('divMeta.linkURL').href = v.linkURL;
-    document.getElementById('divMeta.linkText').innerHTML = v.linkText;
-    document.getElementById('divMeta.economics').innerHTML = v.economics;
+  //if there's no link text use the linkURL as the text
+  if ('' != v.linkText && null != v.linkText) {
+    $('#divMeta.linkURL').html(v.linkText);
+  }
+  else {
+    $('#divMeta.linkURL').html((v.linkURL == null) ? '' : v.linkURL);
+  }
+  $('#divMeta.linkURL').attr('href', v.linkURL);
+  $('#divMeta.linkText').html(v.linkText);
+  $('#divMeta.economics').html(v.economics);
 
-    modDate.setTime(v.publishedDate);
-    document.getElementById('divMeta.publishedDate').innerHTML = (modDate.getMonth() + 1) + "/" + modDate.getDate() + "/" + modDate.getFullYear();
-    document.getElementById('divMeta.referenceId').innerHTML = (v.referenceId != null) ? v.referenceId : "";
+  modDate.setTime(v.publishedDate);
+  $('#divMeta.publishedDate').html((modDate.getMonth() + 1) + '/' + modDate.getDate() + '/' + modDate.getFullYear());
+  $('#divMeta.referenceId').html((v.referenceId != null) ? v.referenceId : '');
 }
 
 //open an overlay and show the screen
 function openBox(id) {
-    $("#screen")
-        .width($(document).width())
-        .height($(document).height());
+  $('#screen')
+      .width($(document).width())
+      .height($(document).height());
 
-    $('#' + id)
-        .css("left", ($(window).width() / 4))
-        .css("top", ($(window).height() / 6))
-        .draggable();
-    //TODO: replace jquery ui with extjs for consistency
+  $('#' + id)
+      .css('left', ($(window).width() / 4))
+      .css('top', ($(window).height() / 6))
+      .draggable();
+  //TODO: replace jquery ui with extjs for consistency
 
-    if (!$.browser.msie) {
-        $("#screen, #" + id).fadeIn("fast");
-    } else {
-        $("#screen, #" + id).show();
-    }
+  if (!$.browser.msie) {
+    $('#screen, #' + id).fadeIn('fast');
+  }
+  else {
+    $('#screen, #' + id).show();
+  }
 }
 
 //close an open overlay and hide the screen, if a form is passed, reset it.
 function closeBox(id, form) {
-    //Don't close the screen if another window is open
-    var strSelect = '#' + id + (($("div.overlay:visible").length > 1) ? "" : ",#screen");
-    if (!$.browser.msie) {
-        $(strSelect).fadeOut("fast");
-    } else {
-        $(strSelect).hide();
-    }
-    if (null != form) {
-        form.reset();
-    }
+  //Don't close the screen if another window is open
+  var strSelect = '#' + id + (($('div.overlay:visible').length > 1) ? '' : ',#screen');
+  if (!$.browser.msie) {
+    $(strSelect).fadeOut('fast');
+  }
+  else {
+    $(strSelect).hide();
+  }
+  if (null != form) {
+    form.reset();
+  }
 }
 CQ.Ext.brightcove = {};
 
 CQ.Ext.brightcove.economics = new CQ.Ext.data.JsonStore({
-    fields: ['value', 'text'],
-    data: [
-        {value: 'AD_SUPPORTED', text: 'Ad Enabled'},
-        {value: 'FREE', text: 'No Ads'}
-    ]
+  fields: ['value', 'text'],
+  data: [
+    {value: 'AD_SUPPORTED', text: 'Ad Enabled'},
+    {value: 'FREE', text: 'No Ads'}
+  ]
 });
 
 function extMetaEdit() {
-    var v = oCurrentVideoList[$("tr.select").attr("id")],
-        modDate = new Date().setTime(v.lastModifiedDate),
-        tags = ((v.tags != null) ? v.tags : new Array()),
-        sec = String((Math.floor(v.length * .001)) % 60); //The number of seconds not part of a whole minute
+  var v = oCurrentVideoList[$('tr.select').attr('id')],
+      modDate = new Date(),
+      tags = ((v.tags != null) ? v.tags : new Array()),
+      sec = String((Math.floor(v.length * .001)) % 60); //The number of seconds not part of a whole minute
 
-    sec.length < 2 ? sec = sec + "0" : sec;  //Make sure  the one's place 0 is included. 
+  sec.length < 2 ? sec = sec + '0' : sec;  //Make sure  the one's place 0 is included.
+
+  modDate.setTime(v.lastModifiedDate);
 
 
-    var combo = new CQ.Ext.form.ComboBox({
-            store: CQ.Ext.brightcove.economics,
-            fieldLabel: 'Economics:',
-            displayField: 'text',
-            valueField: 'value',
-            mode: 'local',
-            forceSelection: true,
-            editable: false,
-            width: "100%",
-            hiddenName: "meta.economics",
-            id: "meta.economics",
-            triggerAction: "all",
-            value: (v.economics != null) ? v.economics : ""
-        }),
+  var combo = new CQ.Ext.form.ComboBox({
+        store: CQ.Ext.brightcove.economics,
+        fieldLabel: 'Economics:',
+        displayField: 'text',
+        valueField: 'value',
+        mode: 'local',
+        forceSelection: true,
+        editable: false,
+        width: '100%',
+        hiddenName: 'meta.economics',
+        id: 'meta.economics',
+        triggerAction: 'all',
+        value: (v.economics != null) ? v.economics : ''
+      }),
 
-        form = new CQ.Ext.form.FormPanel({
-            baseCls: 'x-plain',
-            labelWidth: 130,
-            url: apiLocation,
-            method: "POST",
-            standardSubmit: false,
-            defaults: {
-                xtype: 'textfield'
-            },
+      form = new CQ.Ext.form.FormPanel({
+        baseCls: 'x-plain',
+        labelWidth: 130,
+        url: apiLocation,
+        method: 'POST',
+        standardSubmit: false,
+        defaults: {
+          xtype: 'textfield'
+        },
 
-            items: [{
-                xtype: 'textfield',
-                fieldLabel: 'Title:',
-                id: 'meta.name',
-                name: 'meta.name',
-                value: v.name,
-                width: "100%",
-                allowBlank: false
-            }, {
-                xtype: 'textfield',
-                fieldLabel: 'Last Updated:',
-                value: (modDate.getMonth() + 1) + "/" + modDate.getDate() + "/" + modDate.getFullYear(),
-                disabled: true,
-                width: "100%"
-            }, {
-                xtype: 'textfield',
-                fieldLabel: 'Date Published:',
-                value: (modDate.getMonth() + 1) + "/" + modDate.getDate() + "/" + modDate.getFullYear(),
-                disabled: true,
-                width: "100%"
-            }, {
-                xtype: 'textfield',
-                fieldLabel: 'Duration:',
-                value: Math.floor(v.length / 60000) + ":" + sec,
-                disabled: true,
-                width: "100%"
-            }, {
-                xtype: 'textfield',
-                fieldLabel: 'Video ID:',
-                value: v.id,
-                disabled: true,
-                width: "100%"
-            }, {
-                xtype: 'textfield',
-                fieldLabel: 'Short Description:',
-                id: 'meta.shortDescription',
-                name: 'meta.shortDescription',
-                value: v.shortDescription,
-                width: "100%",
-                allowBlank: false
-            }, {
-                xtype: 'textfield',
-                fieldLabel: 'Link to Related Item:',
-                id: 'meta.linkURL',
-                name: 'meta.linkURL',
-                value: (v.linkURL != null) ? v.linkURL : "",
-                width: "100%"
-            }, {
-                xtype: 'textfield',
-                fieldLabel: 'Text for Related Item:',
-                id: 'meta.linkText',
-                name: 'meta.linkText',
-                value: (v.linkText != null) ? v.linkText : "",
-                width: "100%"
-            }, {
-                xtype: 'tags',
-                fieldLabel: 'Tags:',
-                id: 'meta.tags',
-                name: 'meta.tags',
-                value: tags,
-                width: "100%"
-            }, {
-                xtype: 'textfield',
-                fieldLabel: 'Reference ID:',
-                id: 'meta.referenceId',
-                name: 'meta.referenceId',
-                value: (v.referenceId != null) ? v.referenceId : "",
-                width: "100%"
-            }, combo, {
-                xtype: 'hidden',
-                id: 'meta.id',
-                name: 'meta.id',
-                value: v.id,
-                width: "100%"
-            }, {
-                xtype: 'hidden',
-                id: 'command',
-                name: 'command',
-                value: 'update_video',
-                width: "100%"
-            }, {
-                xtype: 'hidden',
-                id: 'meta.existingTags',
-                name: 'meta.existingTags',
-                value: tags.join(),
-                width: "100%"
-            }]
-        }),
+        items: [{
+          xtype: 'textfield',
+          fieldLabel: 'Title:',
+          id: 'meta.name',
+          name: 'meta.name',
+          value: v.name,
+          width: '100%',
+          allowBlank: false
+        }, {
+          xtype: 'textfield',
+          fieldLabel: 'Last Updated:',
+          value: (modDate.getMonth() + 1) + '/' + modDate.getDate() + '/' + modDate.getFullYear(),
+          disabled: true,
+          width: '100%'
+        }, {
+          xtype: 'textfield',
+          fieldLabel: 'Date Published:',
+          value: (modDate.getMonth() + 1) + '/' + modDate.getDate() + '/' + modDate.getFullYear(),
+          disabled: true,
+          width: '100%'
+        }, {
+          xtype: 'textfield',
+          fieldLabel: 'Duration:',
+          value: Math.floor(v.length / 60000) + ':' + sec,
+          disabled: true,
+          width: '100%'
+        }, {
+          xtype: 'textfield',
+          fieldLabel: 'Video ID:',
+          value: v.id,
+          disabled: true,
+          width: '100%'
+        }, {
+          xtype: 'textfield',
+          fieldLabel: 'Short Description:',
+          id: 'meta.shortDescription',
+          name: 'meta.shortDescription',
+          value: v.shortDescription,
+          width: '100%',
+          allowBlank: false
+        }, {
+          xtype: 'textfield',
+          fieldLabel: 'Link to Related Item:',
+          id: 'meta.linkURL',
+          name: 'meta.linkURL',
+          value: (v.linkURL != null) ? v.linkURL : '',
+          width: '100%'
+        }, {
+          xtype: 'textfield',
+          fieldLabel: 'Text for Related Item:',
+          id: 'meta.linkText',
+          name: 'meta.linkText',
+          value: (v.linkText != null) ? v.linkText : '',
+          width: '100%'
+        }, {
+          xtype: 'tags',
+          fieldLabel: 'Tags:',
+          id: 'meta.tags',
+          name: 'meta.tags',
+          value: tags,
+          width: '100%'
+        }, {
+          xtype: 'textfield',
+          fieldLabel: 'Reference ID:',
+          id: 'meta.referenceId',
+          name: 'meta.referenceId',
+          value: (v.referenceId != null) ? v.referenceId : '',
+          width: '100%'
+        }, combo, {
+          xtype: 'hidden',
+          id: 'meta.id',
+          name: 'meta.id',
+          value: v.id,
+          width: '100%'
+        }, {
+          xtype: 'hidden',
+          id: 'command',
+          name: 'command',
+          value: 'update_video',
+          width: '100%'
+        }, {
+          xtype: 'hidden',
+          id: 'meta.existingTags',
+          name: 'meta.existingTags',
+          value: tags.join(),
+          width: '100%'
+        }]
+      }),
 
-        w = new CQ.Ext.Window({
-            title: 'Update Video',
-            collapsible: true,
-            maximizable: true,
-            width: 750,
-            height: 500,
-            minWidth: 300,
-            minHeight: 200,
-            bodyStyle: 'padding:5px;',
-            buttonAlign: 'center',
-            items: form,
-            buttons: [{
-                text: 'Send',
-                handler: function (btn, evt) {
-                    var formobj = form.getForm();
-                    if (formobj.isValid()) {
-                        formobj.submit({
-                            success: function (form, action) {
-                                w.destroy();
-                            },
-                            failure: function (form, action) {
-                                CQ.Ext.Msg.alert('Submission Failed', action.result && action.result.msg != "" ? action.result.msg : 'ERROR: Please try again.');
-                            }
-                        });
-                        loadStart();
-                        Load(getAllVideosURL());
-
-                    }
-                    else alert('Invalid form');
+      w = new CQ.Ext.Window({
+        title: 'Update Video',
+        collapsible: true,
+        maximizable: true,
+        width: 750,
+        height: 500,
+        minWidth: 300,
+        minHeight: 200,
+        bodyStyle: 'padding:5px;',
+        buttonAlign: 'center',
+        items: form,
+        buttons: [{
+          text: 'Send',
+          handler: function (btn, evt) {
+            var formobj = form.getForm();
+            if (formobj.isValid()) {
+              formobj.submit({
+                success: function (form, action) {
+                  w.destroy();
+                },
+                failure: function (form, action) {
+                  CQ.Ext.Msg.alert('Submission Failed', action.result && action.result.msg != ''
+                      ? action.result.msg
+                      : 'ERROR: Please try again.');
                 }
-            }, {
-                text: 'Cancel',
-                handler: function (btn, evt) {
-                    w.destroy()
-                }
-            }]
-        });
+              });
+              loadStart();
+              Load(getAllVideosURL());
 
-    w.setPosition(10, 10);
-    w.show();
+            }
+            else {
+              alert('Invalid form');
+            }
+          }
+        }, {
+          text: 'Cancel',
+          handler: function (btn, evt) {
+            w.destroy()
+          }
+        }]
+      });
+
+  w.setPosition(10, 10);
+  w.show();
 
 }
 
 function metaEdit() {
-    var v = oCurrentVideoList[$("tr.select").attr("id")],
-        modDate = new Date().setTime(v.lastModifiedDate);
+  var v = oCurrentVideoList[$('tr.select').attr('id')],
+      modDate = new Date();
 
-    document.getElementById('meta.name').value = v.name;
-    document.getElementById('meta.lastModifiedDate').innerHTML = (modDate.getMonth() + 1) + "/" + modDate.getDate() + "/" + modDate.getFullYear();
+  modDate.setTime(v.lastModifiedDate);
 
-    //v.length is the running time of the video in ms
-    var sec = String((Math.floor(v.length * .001)) % 60); //The number of seconds not part of a whole minute
-    sec.length < 2 ? sec = sec + "0" : sec;  //Make sure  the one's place 0 is included. 
+  $('#meta.name').val(v.name);
+  $('#meta.lastModifiedDate').text((modDate.getMonth() + 1) + '/' + modDate.getDate() + '/' + modDate.getFullYear());
 
-    document.getElementById('meta.preview').value = document.getElementById('divMeta.previewDiv').value;
-    document.getElementById('meta.length').innerHTML = Math.floor(v.length / 60000) + ":" + sec;
-    document.getElementById('tdmeta.id').innerHTML = v.id;
-    document.getElementById('meta.id').value = v.id;
-    document.getElementById('meta.shortDescription').value = v.shortDescription;
-    document.getElementById('meta.tags').value = (v.tags != null) ? v.tags : "";
-    document.getElementById('meta.linkURL').value = (v.linkURL != null) ? v.linkURL : "";
-    document.getElementById('meta.linkText').value = (v.linkText != null) ? v.linkText : "";
-    document.getElementById('meta.economics').value = (v.economics != null) ? v.economics : "";
+  //v.length is the running time of the video in ms
+  var sec = String((Math.floor(v.length * .001)) % 60); //The number of seconds not part of a whole minute
+  sec.length < 2 ? sec = sec + '0' : sec;  //Make sure  the one's place 0 is included.
 
-    modDate.setTime(v.publishedDate);
-    document.getElementById('meta.publishedDate').innerHTML = (modDate.getMonth() + 1) + "/" + modDate.getDate() + "/" + modDate.getFullYear();
-    document.getElementById('meta.referenceId').value = (v.referenceId != null) ? v.referenceId : "";
+  $('#meta.preview').val($('#divMeta.previewDiv').val());
+  $('#meta.length').text(Math.floor(v.length / 60000) + ':' + sec);
+  $('#tdmeta.id').text(v.id);
+  $('#meta.id').val(v.id);
+  $('#meta.shortDescription').val(v.shortDescription);
+  $('#meta.tags').val((v.tags != null) ? v.tags : '');
+  $('#meta.linkURL').val((v.linkURL != null) ? v.linkURL : '');
+  $('#meta.linkText').val((v.linkText != null) ? v.linkText : '');
+  $('#meta.economics').val((v.economics != null) ? v.economics : '');
 
-    openBox('metaEditPop');
+  modDate.setTime(v.publishedDate);
+  $('#meta.publishedDate').text((modDate.getMonth() + 1) + '/' + modDate.getDate() + '/' + modDate.getFullYear());
+  $('#meta.referenceId').val((v.referenceId != null) ? v.referenceId : '');
+
+  openBox('metaEditPop');
 }
 
 //Alerts the user that communication is happening, useful for accounts with lots of videos
 //where loading times might be a little long.
 function loadStart() {
-    if (!$.browser.msie) {
-        $("#loading").slideDown("fast");
-    } else {
-        $("#loading").show();
-    }
+  if (!$.browser.msie) {
+    $('#loading').slideDown('fast');
+  }
+  else {
+    $('#loading').show();
+  }
 }
 
 function loadEnd() {
-    if (!$.browser.msie) {
-        $("#loading").slideUp("fast");
-    } else {
-        $("#loading").hide();
-    }
+  if (!$.browser.msie) {
+    $('#loading').slideUp('fast');
+  }
+  else {
+    $('#loading').hide();
+  }
 }
 
 function createPlaylistBox() {
@@ -617,25 +635,25 @@ function createPlaylistBox() {
 
     form.playlist.value = '';
 
-    for (var i = 2; i < l; i++) {
-        if (inputTags[i].checked) {
-            $("#createPlstVideoTable").append(
-                '<tr ><td>' + oCurrentVideoList[i - 2].name +
-                '</td><td>' + oCurrentVideoList[i - 2].id + '</td></tr>'
-            );
+  for (var i = 2; i < l; i++) {
+    if (inputTags[i].checked) {
+      $('#createPlstVideoTable').append(
+          '<tr ><td>' + oCurrentVideoList[i - 2].name +
+          '</td><td>' + oCurrentVideoList[i - 2].id + '</td></tr>'
+      );
 
-            if (1 != idx) {
-                form.playlist.value += ',';
-            }
-            form.playlist.value += oCurrentVideoList[i - 2].id;
-            idx++;
-        }
+      if (1 != idx) {
+        form.playlist.value += ',';
+      }
+      form.playlist.value += oCurrentVideoList[i - 2].id;
+      idx++;
     }
-    if (1 == idx) {
-        alert("Cannot Create Empty Playlist, Please Select Some Videos");
-        return;
-    }
-    openBox("createPlaylistDiv");
+  }
+  if (1 == idx) {
+    alert('Cannot Create Empty Playlist, Please Select Some Videos');
+    return;
+  }
+  openBox('createPlaylistDiv');
 }
 
 /*show a preview of the selected video 
@@ -646,27 +664,27 @@ function createPlaylistBox() {
  * In the publishing module click get code and select Player URL.
  */
 function doPreview(id) {
-    document.getElementById("playerTitle").innerHTML = "<center>" + document.getElementById("divMeta.name").innerHTML + "</center>";
-    var preview = document.createElement('iframe');
-    //if ($("a#allVideos").parent("li").attr("class").indexOf("active") != -1){
-    preview.setAttribute("src", brc_admin.previewPlayerLoc + "?bctid=" + id);
-    preview.setAttribute("width", 480);
-    preview.setAttribute("height", 270);
-    /*} else {
-     preview.setAttribute("src", previewPlayerListLoc+"?bctid="+id);
-     preview.setAttribute("width", 960);
-     preview.setAttribute("height", 445);
-     }*/
-    preview.setAttribute("frameborder", 0);
-    preview.setAttribute("scrolling", "no");
-    preview.setAttribute("id", "previewPlayer");
-    document.getElementById("playerDiv").appendChild(preview);
+  $('#playerTitle').html('<center>' + $('#divMeta.name').html() + '</center>');
+  var preview = document.createElement('iframe');
+  //if ($('a#allVideos').parent('li').attr('class').indexOf('active') != -1){
+  preview.setAttribute('src', brc_admin.previewPlayerLoc + '?bctid=' + id);
+  preview.setAttribute('width', 480);
+  preview.setAttribute('height', 270);
+  /*} else {
+   preview.setAttribute('src', previewPlayerListLoc+'?bctid='+id);
+   preview.setAttribute('width', 960);
+   preview.setAttribute('height', 445);
+   }*/
+  preview.setAttribute('frameborder', 0);
+  preview.setAttribute('scrolling', 'no');
+  preview.setAttribute('id', 'previewPlayer');
+   document.getElementById("playerDiv").appendChild(preview);
 
-    //This div has a close button, more content can be added  here below the player.  to add content above the player add it to the
-    //playerDiv in default.html
-    $("#playerDiv").append('<div id="previewClose" style="background-color:#fff;color:#5F9CE3;cursor:pointer; text-transform:uppercase; font-weight:bold;"\
+  //This div has a close button, more content can be added  here below the player.  to add content above the player add it to the
+  //playerDiv in default.html
+  $('#playerDiv').append('<div id="previewClose" style="background-color:#fff;color:#5F9CE3;cursor:pointer; text-transform:uppercase; font-weight:bold;"\
     onclick="stopPreview()"><br/><center>Close Preview</center></div>');
-    openBox("playerDiv");
+  openBox('playerDiv');
 
 }
 
@@ -786,197 +804,201 @@ function noWrite() {
 
 function extFormUpload() {
 
-    var form = new CQ.Ext.form.FormPanel({
-        baseCls: 'x-plain',
-        labelWidth: 130,
-        url: apiLocation,
-        method: "POST",
-        standardSubmit: false,
-        defaults: {
-            xtype: 'textfield'
-        },
+  var form = new CQ.Ext.form.FormPanel({
+    baseCls: 'x-plain',
+    labelWidth: 130,
+    url: apiLocation,
+    method: 'POST',
+    standardSubmit: false,
+    defaults: {
+      xtype: 'textfield'
+    },
 
-        items: [{
-            xtype: 'textfield',
-            fieldLabel: 'Title:',
-            id: 'name',
-            name: 'name',
-            width: "100%",
-            allowBlank: false
+    items: [{
+      xtype: 'textfield',
+      fieldLabel: 'Title:',
+      id: 'name',
+      name: 'name',
+      width: '100%',
+      allowBlank: false
+    }, {
+      xtype: 'textfield',
+      fieldLabel: 'Short Description:',
+      id: 'shortDescription',
+      name: 'shortDescription',
+      width: '100%',
+      allowBlank: false
+    }, {
+      xtype: 'textfield',
+      fieldLabel: 'Link to Related Item:',
+      id: 'linkURL',
+      name: 'linkURL',
+      width: '100%'
+    }, {
+      xtype: 'textfield',
+      fieldLabel: 'Text for Related Item:',
+      id: 'linkText',
+      name: 'linkText',
+      width: '100%'
+    }, {
+      xtype: 'tags',
+      fieldLabel: 'Tags:',
+      id: 'tags',
+      name: 'tags',
+      width: '100%'
+    }, {
+      xtype: 'textfield',
+      fieldLabel: 'Reference ID:',
+      id: 'referenceId',
+      name: 'referenceId',
+      width: '100%'
+    }, {
+      xtype: 'textfield',
+      fieldLabel: 'Long Description:',
+      id: 'longDescription',
+      name: 'longDescription',
+      width: '100%'
+    }, {
+      xtype: 'dialogfieldset',
+      collapsible: false,
+      collapsed: false,
+      items: [
+        {
+          xtype: 'fileuploadfield',
+          id: 'filePath',
+          emptyText: 'Select a video',
+          fieldLabel: 'Video',
+          name: 'filePath',
+          buttonText: 'Browse',
+          width: '100%',
+          allowBlank: true
         }, {
-            xtype: 'textfield',
-            fieldLabel: 'Short Description:',
-            id: 'shortDescription',
-            name: 'shortDescription',
-            width: "100%",
-            allowBlank: false
+          xtype: 'label',
+          text: 'OR:',
+          margins: '0 0 0 10'
         }, {
-            xtype: 'textfield',
-            fieldLabel: 'Link to Related Item:',
-            id: 'linkURL',
-            name: 'linkURL',
-            width: "100%"
-        }, {
-            xtype: 'textfield',
-            fieldLabel: 'Text for Related Item:',
-            id: 'linkText',
-            name: 'linkText',
-            width: "100%"
-        }, {
-            xtype: 'tags',
-            fieldLabel: 'Tags:',
-            id: 'tags',
-            name: 'tags',
-            width: "100%"
-        }, {
-            xtype: 'textfield',
-            fieldLabel: 'Reference ID:',
-            id: 'referenceId',
-            name: 'referenceId',
-            width: "100%"
-        }, {
-            xtype: 'textfield',
-            fieldLabel: 'Long Description:',
-            id: 'longDescription',
-            name: 'longDescription',
-            width: "100%"
-        }, {
-            xtype: "dialogfieldset",
-            collapsible: false,
-            collapsed: false,
-            items: [
+          xtype: 'dialogfieldset',
+          collapsible: false,
+          collapsed: false,
+          items: [
+            {
+              xtype: 'textfield',
+              fieldLabel: 'Dynamic Ingest URL:',
+              id: 'filePath_Ingest',
+              name: 'filePath_Ingest',
+              width: '100%'
+            }, {
+              xtype: 'selection',
+              fieldLabel: 'Dynamic Ingest Profile:',
+              name: 'profile_Ingest',
+              type: 'select',
+              options: [
                 {
-                    xtype: 'fileuploadfield',
-                    id: 'filePath',
-                    emptyText: 'Select a video',
-                    fieldLabel: 'Video',
-                    name: 'filePath',
-                    buttonText: 'Browse',
-                    width: "100%",
-                    allowBlank: true
+                  value: 'Express Standard',
+                  text: 'Express Standard'
                 }, {
-                    xtype: 'label',
-                    text: 'OR:',
-                    margins: '0 0 0 10'
+                  value: 'Live - HD',
+                  text: 'Live - HD'
                 }, {
-                    xtype: "dialogfieldset",
-                    collapsible: false,
-                    collapsed: false,
-                    items: [
-                        {
-                            xtype: 'textfield',
-                            fieldLabel: 'Dynamic Ingest URL:',
-                            id: 'filePath_Ingest',
-                            name: 'filePath_Ingest',
-                            width: "100%"
-                        }, {
-                            xtype: "selection",
-                            fieldLabel: "Dynamic Ingest Profile:",
-                            name: "profile_Ingest",
-                            type: "select",
-                            options: [
-                                {
-                                    "value": "Express Standard",
-                                    "text": "Express Standard"
-                                }, {
-                                    "value": "Live - HD",
-                                    "text": "Live - HD"
-                                }, {
-                                    "value": "Live - Premium HD",
-                                    "text": "Live - Premium HD"
-                                }, {
-                                    "value": "Live - Standard",
-                                    "text": "Live - Standard"
-                                }, {
-                                    "value": "audio-only",
-                                    "text": "audio-only"
-                                }, {
-                                    "value": "balanced-high-definition",
-                                    "text": "balanced-high-definition"
-                                }, {
-                                    "value": "balanced-nextgen-player",
-                                    "text": "balanced-nextgen-player"
-                                }, {
-                                    "value": "balanced-standard-definition",
-                                    "text": "balanced-standard-definition"
-                                }, {
-                                    "value": "high-bandwidth-devices",
-                                    "text": "high-bandwidth-devices"
-                                }, {
-                                    "value": "low-bandwidth-devices",
-                                    "text": "low-bandwidth-devices"
-                                }, {
-                                    "value": "mp4-only",
-                                    "text": "mp4-only"
-                                }, {
-                                    "value": "screencast",
-                                    "text": "screencast"
-                                }, {
-                                    "value": "single-rendition",
-                                    "text": "single-rendition"
-                                }
-                            ]
-                        }
-                    ]
+                  value: 'Live - Premium HD',
+                  text: 'Live - Premium HD'
+                }, {
+                  value: 'Live - Standard',
+                  text: 'Live - Standard'
+                }, {
+                  value: 'audio-only',
+                  text: 'audio-only'
+                }, {
+                  value: 'balanced-high-definition',
+                  text: 'balanced-high-definition'
+                }, {
+                  value: 'balanced-nextgen-player',
+                  text: 'balanced-nextgen-player'
+                }, {
+                  value: 'balanced-standard-definition',
+                  text: 'balanced-standard-definition'
+                }, {
+                  value: 'high-bandwidth-devices',
+                  text: 'high-bandwidth-devices'
+                }, {
+                  value: 'low-bandwidth-devices',
+                  text: 'low-bandwidth-devices'
+                }, {
+                  value: 'mp4-only',
+                  text: 'mp4-only'
+                }, {
+                  value: 'screencast',
+                  text: 'screencast'
+                }, {
+                  value: 'single-rendition',
+                  text: 'single-rendition'
                 }
-            ]
-        }, {
-            xtype: 'hidden',
-            id: 'video',
-            name: 'video',
-            value: '',
-            width: "100%"
-        }, {
-            xtype: 'hidden',
-            id: 'command',
-            name: 'command',
-            value: 'create_video',
-            width: "100%"
-        }]
-    });
+              ]
+            }
+          ]
+        }
+      ]
+    }, {
+      xtype: 'hidden',
+      id: 'video',
+      name: 'video',
+      value: '',
+      width: '100%'
+    }, {
+      xtype: 'hidden',
+      id: 'command',
+      name: 'command',
+      value: 'create_video',
+      width: '100%'
+    }]
+  });
 
-    var w = new CQ.Ext.Window({
-        title: 'Compose message',
-        collapsible: true,
-        maximizable: true,
-        width: 750,
-        height: 500,
-        minWidth: 300,
-        minHeight: 200,
-        bodyStyle: 'padding:5px;',
-        buttonAlign: 'center',
-        items: form,
-        buttons: [{
-            text: 'Send',
-            handler: function (btn, evt) {
-                var formobj = form.getForm();
-                if (formobj.isValid()) {
-                    var formel = document.getElementById(formobj.getEl().id);
-                    buildJSONRequest(formel);
-                    //Ext.getCmp('form').getForm().submit();
-                    formobj.submit({
-                        success: function (form, action) {
-                            console.log(action);
-                            w.destroy();
-                        },
-                        failure: function (form, action) {
-                            CQ.Ext.Msg.alert('Submission Failed', action.result && action.result.msg != "" ? action.result.msg : 'ERROR: Please try again.');
-                        }
-                    });
-                    loadStart();
-                    Load(getAllVideosURL());
-                    //w.destroy();
-                }
-                else alert('Invalid form');
+  var w = new CQ.Ext.Window({
+    title: 'Compose message',
+    collapsible: true,
+    maximizable: true,
+    width: 750,
+    height: 500,
+    minWidth: 300,
+    minHeight: 200,
+    bodyStyle: 'padding:5px;',
+    buttonAlign: 'center',
+    items: form,
+    buttons: [{
+      text: 'Send',
+      handler: function (btn, evt) {
+        var formobj = form.getForm();
+        if (formobj.isValid()) {
+          var formel = document.getElementById(formobj.getEl().id);
+          buildJSONRequest(formel);
+          //Ext.getCmp('form').getForm().submit();
+          formobj.submit({
+            success: function (form, action) {
+              console.log(action);
+              w.destroy();
+            },
+            failure: function (form, action) {
+              CQ.Ext.Msg.alert('Submission Failed', action.result && action.result.msg != ''
+                  ? action.result.msg
+                  : 'ERROR: Please try again.');
             }
-        }, {
-            text: 'Cancel',
-            handler: function (btn, evt) {
-                w.destroy()
-            }
-        }]
-    });
-    w.setPosition(10, 10);
-    w.show();
+          });
+          loadStart();
+          Load(getAllVideosURL());
+          //w.destroy();
+        }
+        else {
+          alert('Invalid form');
+        }
+      }
+    }, {
+      text: 'Cancel',
+      handler: function (btn, evt) {
+        w.destroy()
+      }
+    }]
+  });
+  w.setPosition(10, 10);
+  w.show();
 
 }

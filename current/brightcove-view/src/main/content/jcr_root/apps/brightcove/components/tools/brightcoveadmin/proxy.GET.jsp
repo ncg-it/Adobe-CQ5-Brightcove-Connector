@@ -104,7 +104,7 @@
  ***************************************************************************/
     String bar = null;
     boolean useGet = false;
-    String[] ids = null;
+
     try {
 
         String command = slingRequest.getRequestParameter("command").getString();
@@ -114,7 +114,7 @@
             switch (write_methods.indexOf(command)) {
                 case 1:
                     useGet = false;
-                    ids = slingRequest.getRequestParameter("ids").getString().split(",");
+                    String[] ids = slingRequest.getRequestParameter("ids").getString().split(",");
                     logger.info("Deleting videos");
                     Boolean cascade = true; // Deletes even if it is in use by playlists/players
                     Boolean deleteShares = true; // Deletes if shared to child accounts
@@ -187,8 +187,11 @@
         out.write("{\"error\": \"Proxy Error, please check your tomcat logs.\", \"result\":null, \"id\": null}");
     }
 
+    pageContext.setAttribute("useGet", useGet);
+    pageContext.setAttribute("bar", bar);
+
 %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<c:if test="<%=useGet%>">
-    <c:import url="<%=bar%>"/>
+<c:if test="${useGet}">
+    <c:import url="${bar}" />
 </c:if>
