@@ -106,8 +106,12 @@ if (customBC == undefined) {
         innerhtml += '<param name="isUI" value="true" />';
         innerhtml += '<param name="dynamicStreaming" value="true" />';
         innerhtml += '<param name="@videoPlayer" value="' + videoPlayer + '" />';
-        if (window.location.protocol == 'https:') innerhtml += '<param name="secureConnections" value="true" /> ';
-        innerhtml += '<param name="templateLoadHandler" value="onPlayerLoaded" />';
+		if ( window.location.protocol == 'https:') 
+        {
+            innerhtml += '<param name="secureConnections" value="true" /> ';
+            innerhtml += '<param name="secureHTMLConnections" value="true" />';
+        }
+		innerhtml += '<param name="templateLoadHandler" value="onPlayerLoaded" />';
         innerhtml += '<param name="templateReadyHandler" value="onPlayerReady" />';
         innerhtml += '<param name="templateErrorHandler" value="onPlayerError" />';
         innerhtml += '<param name="includeAPI" value="true" /> ';
@@ -147,8 +151,12 @@ if (customBC == undefined) {
         innerhtml += '<param name="isUI" value="true" />';
         innerhtml += '<param name="dynamicStreaming" value="true" />';
         innerhtml += '<param name="@playlistTabs" value="' + videoPlayer + '" />';
-        if (window.location.protocol == 'https:') innerhtml += '<param name="secureConnections" value="true" /> ';
-        innerhtml += '<param name="templateLoadHandler" value="onPlayerLoaded" />';
+		if ( window.location.protocol == 'https:') 
+        {
+            innerhtml += '<param name="secureConnections" value="true" /> ';
+            innerhtml += '<param name="secureHTMLConnections" value="true" />';
+        }
+		innerhtml += '<param name="templateLoadHandler" value="onPlayerLoaded" />';
         innerhtml += '<param name="templateReadyHandler" value="onPlayerReady" />';
         innerhtml += '<param name="templateErrorHandler" value="onPlayerError" />';
         innerhtml += '<param name="includeAPI" value="true" /> ';
