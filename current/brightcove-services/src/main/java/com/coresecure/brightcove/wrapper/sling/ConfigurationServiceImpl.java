@@ -52,7 +52,8 @@ import java.util.*;
         @Property(name = "defPlaylistPlayerKey", label = "Default Playlist Player Key", description = "Default Playlist Player Key", value = ""),
         @Property(name = "previewPlayerLoc", label = "Preview Video Player", description = "Preview Player Path (Videos)", value = "http://link.brightcove.com/services/player/bcpid1154829530001"),
         @Property(name = "previewPlayerListLoc", label = "Preview Playlist Player", description = "Preview Player Path (Playlists)", value = "http://link.brightcove.com/services/player/bcpid1154829529001"),
-        @Property(name = "allowed_groups", label = "Allowed Groups", description = "Groups that are allowed to see this account data", value = {"administrators", ""})
+        @Property(name = "allowed_groups", label = "Allowed Groups", description = "Groups that are allowed to see this account data", value = {"administrators", ""}),
+        @Property(name = "proxy", label = "Proxy server", description = "Proxy server in the form proxy.foo.com:3128", value = {""})
 })
 
 
@@ -141,6 +142,11 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
     public List<String> getAllowedGroupsList() {
         return Arrays.asList(getAllowedGroups());
+    }
+
+
+    public String getProxy() {
+        return (String) getProperties().get("proxy");
     }
 
     private String[] cleanStringArray(String[] input) {

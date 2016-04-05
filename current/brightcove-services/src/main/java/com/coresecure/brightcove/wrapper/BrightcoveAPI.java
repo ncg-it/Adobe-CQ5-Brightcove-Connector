@@ -22,6 +22,10 @@ public class BrightcoveAPI {
         platform = new Platform();
         ConfigurationGrabber cg = ServiceUtil.getConfigurationGrabber();
         ConfigurationService brcService = cg.getConfigurationService(key);
+
+        if (brcService.getProxy()!=null && brcService.getProxy().length()>0) {
+            platform.setProxy(brcService.getProxy());
+        }
         account = new Account(platform, brcService.getClientID(), brcService.getClientSecret(), brcService.getAccountID());
         cms = new Cms(account);
     }

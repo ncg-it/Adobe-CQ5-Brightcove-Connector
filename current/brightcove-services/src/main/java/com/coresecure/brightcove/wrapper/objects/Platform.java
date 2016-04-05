@@ -1,7 +1,8 @@
 package com.coresecure.brightcove.wrapper.objects;
 
 import com.coresecure.brightcove.wrapper.utils.HttpServices;
-
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.util.Map;
 
 public class Platform {
@@ -13,10 +14,12 @@ public class Platform {
     private static String PLAYERS_API_Url;
     private static String API_Url;
     private static String DI_API_Url;
+    private static Proxy PROXY = Proxy.NO_PROXY;
 
     public Platform() {
 
     }
+
 
     public Platform(String aOAUTH_Url, String aAPI_Url, String aDI_API_Url, String aPLAYERS_API_Url) {
         OAUTH_Url = aOAUTH_Url;
@@ -84,5 +87,19 @@ public class Platform {
         String response = HttpServices.excuteDelete(URL, headers);
         System.out.println(response);
         return response;
+    }
+
+
+    public void setProxy(String proxy) {
+      Proxy newProxy = Proxy.NO_PROXY;
+
+      if(proxy!=null) {
+        String[] parts = proxy.split(":");
+        if (parts.length==2) {
+          PROXY = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(parts[0], Integer.parseInt(parts[1])));
+        }
+      }
+
+      HttpServices.setProxy(PROXY);
     }
 }
