@@ -398,7 +398,7 @@ CQ.Ext.brightcove.economics = new CQ.Ext.data.JsonStore({
 
 function extMetaEdit() {
     var v = oCurrentVideoList[$("tr.select").attr("id")],
-        modDate = new Date().setTime(v.lastModifiedDate),
+        modDate = new Date(parseInt(v.lastModifiedDate)),
         tags = ((v.tags != null) ? v.tags : new Array()),
         sec = String((Math.floor(v.length * .001)) % 60); //The number of seconds not part of a whole minute
 
@@ -649,7 +649,7 @@ function doPreview(id) {
     document.getElementById("playerTitle").innerHTML = "<center>" + document.getElementById("divMeta.name").innerHTML + "</center>";
     var preview = document.createElement('iframe');
     //if ($("a#allVideos").parent("li").attr("class").indexOf("active") != -1){
-    preview.setAttribute("src", brc_admin.previewPlayerLoc + "?bctid=" + id);
+    preview.setAttribute("src", brc_admin.previewPlayerLoc + "?videoId=" + id);
     preview.setAttribute("width", 480);
     preview.setAttribute("height", 270);
     /*} else {
