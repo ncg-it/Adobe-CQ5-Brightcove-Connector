@@ -41,6 +41,7 @@
     <!-- ====================================================================== -->
 
     <build>
+        <sourceDirectory>src/main/content/jcr_root</sourceDirectory>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
