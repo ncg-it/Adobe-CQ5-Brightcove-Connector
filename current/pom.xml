@@ -10,7 +10,7 @@
 
     <groupId>com.coresecure.brightcove.cq5</groupId>
     <artifactId>parent</artifactId>
-    <version>4.1.0-SNAPSHOT</version>
+    <version>4.1.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>${project.groupId} - ${project.artifactId}</name>
@@ -27,7 +27,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <!-- 
+        <!--
             the following CQ connection properties are the default out-of-the-box CQ settings and are used by all modules in this project.
             you should override them in your local settings.xml file if your CQ environment is different.
         -->
@@ -291,7 +291,7 @@
             <build>
                 <pluginManagement>
                     <plugins>
-                        <!-- 
+                        <!--
                             this plugin holds configuration information for Maven plugins that the Eclipse m2e plugin does not know how to handle.
                             it does not affect the actual Maven build process.
                             you should activate the "eclipse" profile for this project and its sub-modules if you are working in Eclipse as it will remove
