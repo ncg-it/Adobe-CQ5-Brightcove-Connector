@@ -262,7 +262,7 @@ function showPlaylist() {
     $(":button[name=delFromPlstButton]").show();
 
     //For each retrieved video, add a row to the table
-    modDate = new Date();
+    var modDate = new Date();
     $.each(oCurrentVideoList, function (i, n) {
         modDate.setTime(n.lastModifiedDate);
         $("#tbData").append(
@@ -319,7 +319,7 @@ function showMetaData(idx) {
 
     //v.length is the running time of the video in ms
     var sec = String((Math.floor(v.length * .001)) % 60); //The number of seconds not part of a whole minute
-    sec.length < 2 ? sec = sec + "0" : sec;  //Make sure  the one's place 0 is included. 
+    sec.length < 2 ? sec = sec + "0" : sec;  //Make sure  the one's place 0 is included.
     document.getElementById('divMeta.length').innerHTML = Math.floor(v.length / 60000) + ":" + sec;
 
     document.getElementById('divMeta.id').innerHTML = v.id;
@@ -397,12 +397,12 @@ CQ.Ext.brightcove.economics = new CQ.Ext.data.JsonStore({
 });
 
 function extMetaEdit() {
+
     var v = oCurrentVideoList[$("tr.select").attr("id")],
-        modDate = new Date(parseInt(v.lastModifiedDate)),
+        modDate = new Date(parseInt(v.lastModifiedDate, 10)),
         tags = ((v.tags != null) ? v.tags : new Array()),
         sec = String((Math.floor(v.length * .001)) % 60); //The number of seconds not part of a whole minute
-
-    sec.length < 2 ? sec = sec + "0" : sec;  //Make sure  the one's place 0 is included. 
+    sec.length < 2 ? sec = sec + "0" : sec;  //Make sure  the one's place 0 is included.
 
 
     var combo = new CQ.Ext.form.ComboBox({
@@ -571,7 +571,7 @@ function metaEdit() {
 
     //v.length is the running time of the video in ms
     var sec = String((Math.floor(v.length * .001)) % 60); //The number of seconds not part of a whole minute
-    sec.length < 2 ? sec = sec + "0" : sec;  //Make sure  the one's place 0 is included. 
+    sec.length < 2 ? sec = sec + "0" : sec;  //Make sure  the one's place 0 is included.
 
     document.getElementById('meta.preview').value = document.getElementById('divMeta.previewDiv').value;
     document.getElementById('meta.length').innerHTML = Math.floor(v.length / 60000) + ":" + sec;
@@ -638,7 +638,7 @@ function createPlaylistBox() {
     openBox("createPlaylistDiv");
 }
 
-/*show a preview of the selected video 
+/*show a preview of the selected video
  * this works by embedding an iframe into an existing hidden div.
  * the iframe opens the brightcove player and passes the requested videoId.
  *In console 1, click players, get publishing code.  Copy the Player URL
@@ -646,27 +646,29 @@ function createPlaylistBox() {
  * In the publishing module click get code and select Player URL.
  */
 function doPreview(id) {
-    document.getElementById("playerTitle").innerHTML = "<center>" + document.getElementById("divMeta.name").innerHTML + "</center>";
+    document.getElementById('playerTitle').innerHTML = '<center>' + document.getElementById('divMeta.name').innerHTML + '</center>';
     var preview = document.createElement('iframe');
     //if ($("a#allVideos").parent("li").attr("class").indexOf("active") != -1){
-    preview.setAttribute("src", brc_admin.previewPlayerLoc + "?videoId=" + id);
-    preview.setAttribute("width", 480);
-    preview.setAttribute("height", 270);
+
+    // including both query parameters for backwards compatibility.
+    preview.setAttribute('src', brc_admin.previewPlayerLoc + '?bctid=' + id + '&videoId=' + id);
+    preview.setAttribute('width', 480);
+    preview.setAttribute('height', 270);
     /*} else {
      preview.setAttribute("src", previewPlayerListLoc+"?bctid="+id);
      preview.setAttribute("width", 960);
      preview.setAttribute("height", 445);
      }*/
-    preview.setAttribute("frameborder", 0);
-    preview.setAttribute("scrolling", "no");
-    preview.setAttribute("id", "previewPlayer");
-    document.getElementById("playerDiv").appendChild(preview);
+    preview.setAttribute('frameborder', 0);
+    preview.setAttribute('scrolling', 'no');
+    preview.setAttribute('id', 'previewPlayer');
+    document.getElementById('playerDiv').appendChild(preview);
 
     //This div has a close button, more content can be added  here below the player.  to add content above the player add it to the
     //playerDiv in default.html
-    $("#playerDiv").append('<div id="previewClose" style="background-color:#fff;color:#5F9CE3;cursor:pointer; text-transform:uppercase; font-weight:bold;"\
+    $('#playerDiv').append('<div id="previewClose" style="background-color:#fff;color:#5F9CE3;cursor:pointer; text-transform:uppercase; font-weight:bold;"\
     onclick="stopPreview()"><br/><center>Close Preview</center></div>');
-    openBox("playerDiv");
+    openBox('playerDiv');
 
 }
 
