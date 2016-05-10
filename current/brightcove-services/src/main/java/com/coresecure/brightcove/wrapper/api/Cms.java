@@ -26,6 +26,7 @@ public class Cms {
     private final static String DEFAULT_ENCODING = "UTF-8";
 
     public Cms(Account aAccount) {
+        LOGGER.debug("Cms Init aAccount " + aAccount.getAccount_ID());
         account = aAccount;
     }
 
@@ -113,6 +114,7 @@ public class Cms {
             String targetURL = "/accounts/" + account.getAccount_ID() + "/videos/" + ID;
             try {
                 String response = account.platform.getAPI(targetURL, urlParameters, headers);
+                LOGGER.debug("getVideo response "+ response);
                 if (response != null && !response.isEmpty()) json = JsonReader.readJsonFromString(response);
             } catch (IOException e) {
                 LOGGER.error("IOException", e);
@@ -226,6 +228,8 @@ public class Cms {
             String targetURL = "/accounts/" + account.getAccount_ID() + "/videos/" + ID + "/images";
             try {
                 String response = account.platform.getAPI(targetURL, "", headers);
+                LOGGER.debug("getVideoImages response "+ response);
+
                 if (response != null && !response.isEmpty()) json = JsonReader.readJsonFromString(response);
             } catch (IOException e) {
                 LOGGER.error("IOException", e);
@@ -241,8 +245,11 @@ public class Cms {
 
     public JSONArray getVideos(String q, int limit, int offset, String sort) {
         JSONArray json = new JSONArray();
+        LOGGER.debug("account: " + account.getAccount_ID());
         account.login();
         Token authToken = account.getToken();
+        LOGGER.debug("authToken: " + authToken.getToken());
+
         if (authToken != null) {
             Map<String, String> headers = new HashMap<String, String>();
             headers.put("Authorization", authToken.getTokenType() + " " + authToken.getToken());
@@ -291,7 +298,7 @@ public class Cms {
                 }
             }
         } catch (JSONException je) {
-
+            LOGGER.error("JSONException", je);
         }
         return videos;
     }
