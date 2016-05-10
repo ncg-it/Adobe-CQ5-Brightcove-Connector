@@ -58,4 +58,6 @@ public interface ConfigurationService {
     List<String> getAllowedGroupsList();
 
     String[] getAllowedGroups();
+
+    String getProxy();
 }

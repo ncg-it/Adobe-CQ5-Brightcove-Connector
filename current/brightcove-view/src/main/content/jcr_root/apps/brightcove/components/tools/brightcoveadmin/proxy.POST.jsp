@@ -54,6 +54,10 @@
     ConfigurationService cs = cg.getConfigurationService(selectedAccount);
     com.coresecure.brightcove.wrapper.BrightcoveAPI brAPI = new com.coresecure.brightcove.wrapper.BrightcoveAPI(cs.getClientID(), cs.getClientSecret(), selectedAccount);
 
+    if (cs.getProxy()!=null && cs.getProxy().length()>0) {
+      brAPI.setProxy(cs.getProxy());
+    }
+
     String ReadToken = cs.getReadToken();
     String WriteToken = cs.getWriteToken();
     response.reset();
@@ -71,6 +75,11 @@
     response.setContentType("text/html");
     WriteApi wapi = new WriteApi(logger);
     ReadApi rapi = new ReadApi(logger);
+    if (cs.getProxy()!=null && cs.getProxy().length()>0) {
+      wapi.setProxy(cs.getProxy());
+      rapi.setProxy(cs.getProxy());
+    }
+
     boolean success = false;
     JSONObject root = new JSONObject();
     String msg = "";
