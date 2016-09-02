@@ -36,6 +36,7 @@ var BCLplayer,
     BCLexperienceModule,
     BCLvideoPlayer,
     BCLcurrentVideo;
+    var api;
 
 //listener for player error
 function onPlayerError(event) {
@@ -46,16 +47,25 @@ function onPlayerError(event) {
 function onPlayerLoaded(id) {
     // newLog();
 //  log("EVENT: onPlayerLoaded");
-    BCLplayer = brightcove.getExperience(id);
-    if (typeof BCLplayer != 'undefined') BCLexperienceModule = BCLplayer.getModule(APIModules.EXPERIENCE);
+    try {
+        experienceID = id;
+
+        BCLplayer = brightcove.getExperience(id);
+        if(BCLplayer)
+        {
+            api = "FLASH-ONLY";
+        } else {
+            BCLplayer = brightcove.api.getExperience(id);
+            api = "SMART";
+        }
+        if (typeof BCLplayer!='undefined') {
+            BCLexperienceModule = BCLplayer.getModule(APIModules.EXPERIENCE);
+        }
+    } catch(e) {
+    }
+    //BCLexperienceModule = BCLplayer.getModule(APIModules.EXPERIENCE);
 }
-
-//listener for when player is ready
-function onPlayerReady(event) {
-    // log("EVENT: onPlayerReady");
-
-    // get a reference to the video player module
-    BCLvideoPlayer = BCLplayer.getModule(APIModules.VIDEO_PLAYER);
+function playVideoID(videoID){
     // add a listener for media change events
     BCLvideoPlayer.addEventListener(BCMediaEvent.BEGIN, onMediaBegin);
     BCLvideoPlayer.addEventListener(BCMediaEvent.COMPLETE, onMediaBegin);
@@ -63,6 +73,29 @@ function onPlayerReady(event) {
     BCLvideoPlayer.addEventListener(BCMediaEvent.ERROR, onMediaBegin);
     BCLvideoPlayer.addEventListener(BCMediaEvent.PLAY, onMediaBegin);
     BCLvideoPlayer.addEventListener(BCMediaEvent.STOP, onMediaBegin);
+}
+//listener for when player is ready
+function onPlayerReady(event) {
+    // log("EVENT: onPlayerReady");
+    if (typeof BCLplayer=='undefined') onPlayerLoaded(myExpId);
+    // get a reference to the video player module
+    BCLvideoPlayer = BCLplayer.getModule(APIModules.VIDEO_PLAYER);
+
+    //fetch the video data and process the cuepoint
+    var videoID;
+    if ("SMART" === api) {
+        BCLvideoPlayer.getCurrentVideo(function (videoDTO) {
+            if (videoDTO) {
+                videoID =videoDTO.id;
+                playVideoID(videoID);
+            }
+        });
+    } else {
+        videoID= BCLvideoPlayer.getCurrentVideo().id;
+        playVideoID(videoID);
+    }
+
+
 }
 //listener for media change events
 function onMediaBegin(event) {
@@ -175,7 +208,7 @@ if (customBC == undefined) {
 
         var apiInclude = customBC.createElement('script');
         apiInclude.type = "text/javascript";
-        apiInclude.src = "https://sadmin.brightcove.com/js/BrightcoveExperiences.js";
+        apiInclude.src = "https://sadmin.brightcove.com/js/BrightcoveExperiences_all.js";
         objID.parentNode.appendChild(apiInclude);
 
         apiInclude = customBC.createElement('script');
