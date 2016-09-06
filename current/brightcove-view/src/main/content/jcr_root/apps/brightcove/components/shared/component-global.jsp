@@ -47,10 +47,9 @@ permission to convey the resulting work.
 
     String account = properties.get("account", "").trim();
     String playerPath = properties.get("playerPath", "").trim();
-    String playerID = properties.get("playerID","").trim();
-    String playerKey = properties.get("playerKey","").trim();;
-
-    String playerDataEmbed = "default";
+    String playerID ="";
+    String playerKey = "";
+    String playerDataEmbed = "";
 
     String containerID = properties.get("containerID", "");
     String containerClass = properties.get("containerClass", "");
@@ -64,6 +63,23 @@ permission to convey the resulting work.
     boolean hasSize = false;
 
     boolean ignoreComponentProperties = false;
+
+
+    //fallback to default
+    if (TextUtil.notEmpty(account)) {
+        ConfigurationGrabber cg = ServiceUtil.getConfigurationGrabber();
+        ConfigurationService cs = cg.getConfigurationService(account);
+        if (cs != null) {
+            playerID = cs.getDefVideoPlayerID();
+            playerDataEmbed = cs.getDefVideoPlayerDataEmbedded();
+            playerKey= cs.getDefVideoPlayerKey();
+        }
+    }
+
+    playerID = properties.get("playerID",playerID).trim();
+    playerKey = properties.get("playerKey",playerKey).trim();;
+    playerDataEmbed = playerDataEmbed.isEmpty() ? "default" : "";
+
 
     // Load Player Configuration
 
@@ -122,16 +138,7 @@ permission to convey the resulting work.
     }
 
 
-    //fallback to default
-    if (TextUtil.notEmpty(account)) {
-        ConfigurationGrabber cg = ServiceUtil.getConfigurationGrabber();
-        ConfigurationService cs = cg.getConfigurationService(account);
-        if (cs != null) {
-            playerID = cs.getDefVideoPlayerID();
-            playerDataEmbed = cs.getDefVideoPlayerDataEmbedded();
-            playerKey= cs.getDefVideoPlayerKey();
-        }
-    }
+
 
 
     // Update Page Context
