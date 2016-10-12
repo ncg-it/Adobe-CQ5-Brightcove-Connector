@@ -30,7 +30,7 @@ public class HttpServices {
             connection = (HttpURLConnection) url.openConnection(PROXY);
             connection.setRequestMethod("DELETE");
             connection.setRequestProperty("Content-Type", "application/json");
-            connection.setRequestProperty("Content-Length", "" + Integer.toString(payload.getBytes().length));
+            connection.setRequestProperty("Content-Length", "" + Integer.toString(payload.getBytes("UTF-8").length));
             connection.setRequestProperty("Content-Language", "en-US");
             for (String key : headers.keySet()) {
                 connection.setRequestProperty(key, headers.get(key));
@@ -47,7 +47,7 @@ public class HttpServices {
 
             //Get Response
             InputStream is = connection.getInputStream();
-            BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+            BufferedReader rd = new BufferedReader(new InputStreamReader(is, "UTF-8"));
             String line;
             StringBuffer response = new StringBuffer();
             while ((line = rd.readLine()) != null) {

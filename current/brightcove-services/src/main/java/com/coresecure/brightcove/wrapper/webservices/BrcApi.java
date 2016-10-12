@@ -83,8 +83,8 @@ public class BrcApi extends SlingAllMethodsServlet {
     public void api(final SlingHttpServletRequest request,
                     final SlingHttpServletResponse response) throws ServletException,
             IOException {
+        response.setContentType("application/json;charset=UTF-8");
         PrintWriter outWriter = response.getWriter();
-        response.setContentType("application/json");
 
         int requestedAPI = 0;
         String requestedAccount = "";
