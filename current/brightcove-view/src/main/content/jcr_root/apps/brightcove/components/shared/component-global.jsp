@@ -78,7 +78,7 @@ permission to convey the resulting work.
 
     playerID = properties.get("playerID",playerID).trim();
     playerKey = properties.get("playerKey",playerKey).trim();;
-    playerDataEmbed = playerDataEmbed.isEmpty() ? "default" : "";
+    playerDataEmbed = playerDataEmbed.isEmpty() ? "default" : playerDataEmbed;
 
 
     // Load Player Configuration
