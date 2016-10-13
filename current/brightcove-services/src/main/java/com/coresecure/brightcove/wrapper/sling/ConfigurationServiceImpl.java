@@ -18,6 +18,14 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+- Additional permission under GNU GPL version 3 section 7
+If you modify this Program, or any covered work, by linking or combining
+it with httpclient 4.1.3, httpcore 4.1.4, httpmine 4.1.3, jsoup 1.7.2,
+squeakysand-commons and squeakysand-osgi (or a modified version of those
+libraries), containing parts covered by the terms of APACHE LICENSE 2.0 
+or MIT License, the licensors of this Program grant you additional 
+permission to convey the resulting work.
  */
 package com.coresecure.brightcove.wrapper.sling;
 
@@ -53,7 +61,8 @@ import java.util.*;
         @Property(name = "defPlaylistPlayerKey", label = "Default Playlist Player Key", description = "Default Playlist Player Key", value = ""),
         @Property(name = "previewPlayerLoc", label = "Preview Video Player", description = "Preview Player Path (Videos)", value = "http://link.brightcove.com/services/player/bcpid1154829530001"),
         @Property(name = "previewPlayerListLoc", label = "Preview Playlist Player", description = "Preview Player Path (Playlists)", value = "http://link.brightcove.com/services/player/bcpid1154829529001"),
-        @Property(name = "allowed_groups", label = "Allowed Groups", description = "Groups that are allowed to see this account data", value = {"administrators", ""})
+        @Property(name = "allowed_groups", label = "Allowed Groups", description = "Groups that are allowed to see this account data", value = {"administrators", ""}),
+        @Property(name = "proxy", label = "Proxy server", description = "Proxy server in the form proxy.foo.com:3128", value = {""})
 })
 
 
@@ -145,6 +154,11 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
     public List<String> getAllowedGroupsList() {
         return Arrays.asList(getAllowedGroups());
+    }
+
+
+    public String getProxy() {
+        return (String) getProperties().get("proxy");
     }
 
     private String[] cleanStringArray(String[] input) {

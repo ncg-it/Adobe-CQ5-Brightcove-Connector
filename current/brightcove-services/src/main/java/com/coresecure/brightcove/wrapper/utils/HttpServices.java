@@ -5,10 +5,21 @@ import java.io.DataOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.Proxy;
 import java.net.URL;
 import java.util.Map;
 
 public class HttpServices {
+    private static Proxy PROXY = Proxy.NO_PROXY;
+
+    public static void setProxy(Proxy proxy) {
+        if (proxy==null) {
+            PROXY = Proxy.NO_PROXY;
+        } else {
+            PROXY = proxy;
+        }
+    }
+
     public static String excuteDelete(String targetURL, Map<String, String> headers) {
         URL url;
         HttpURLConnection connection = null;
@@ -16,10 +27,10 @@ public class HttpServices {
         try {
             //Create connection
             url = new URL(targetURL);
-            connection = (HttpURLConnection) url.openConnection();
+            connection = (HttpURLConnection) url.openConnection(PROXY);
             connection.setRequestMethod("DELETE");
             connection.setRequestProperty("Content-Type", "application/json");
-            connection.setRequestProperty("Content-Length", "" + Integer.toString(payload.getBytes().length));
+            connection.setRequestProperty("Content-Length", "" + Integer.toString(payload.getBytes("UTF-8").length));
             connection.setRequestProperty("Content-Language", "en-US");
             for (String key : headers.keySet()) {
                 connection.setRequestProperty(key, headers.get(key));
@@ -36,7 +47,7 @@ public class HttpServices {
 
             //Get Response
             InputStream is = connection.getInputStream();
-            BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+            BufferedReader rd = new BufferedReader(new InputStreamReader(is, "UTF-8"));
             String line;
             StringBuffer response = new StringBuffer();
             while ((line = rd.readLine()) != null) {
@@ -65,7 +76,7 @@ public class HttpServices {
         try {
             //Create connection
             url = new URL(targetURL);
-            connection = (HttpURLConnection) url.openConnection();
+            connection = (HttpURLConnection) url.openConnection(PROXY);
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             connection.setRequestProperty("Content-Length", "" + Integer.toString(payload.getBytes().length));
@@ -113,7 +124,7 @@ public class HttpServices {
         try {
             //Create connection
             url = new URL(targetURL + "?" + urlParameters);
-            connection = (HttpURLConnection) url.openConnection();
+            connection = (HttpURLConnection) url.openConnection(PROXY);
             connection.setRequestMethod("GET");
             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             connection.setRequestProperty("Content-Length", "" + Integer.toString(urlParameters.getBytes().length));

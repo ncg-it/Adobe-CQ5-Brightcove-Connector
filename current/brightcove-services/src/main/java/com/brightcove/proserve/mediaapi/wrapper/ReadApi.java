@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
+
+import org.apache.http.conn.params.ConnRoutePNames;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,7 +63,8 @@ public class ReadApi {
     private Integer    readPort;
     private String     readPath;
     private HttpClient httpAgent;
-    
+    private String     proxy;
+
     private Boolean    enableUds;
     
     private static final String  READ_API_DEFAULT_SCHEME = "http";
@@ -145,6 +148,10 @@ public class ReadApi {
         log       = null;
         charSet   = "UTF-8";
         httpAgent = new DefaultHttpClient();
+        if (proxy!=null&&proxy.length()>0) {
+            httpAgent.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
+        }
+
         
         enableUds = false;
         
@@ -1382,5 +1389,13 @@ public class ReadApi {
      */
     public Boolean getEnableUds(){
         return enableUds;
+    }
+
+    public String getProxy() {
+        return proxy;
+    }
+
+    public void setProxy(String proxy) {
+        this.proxy = proxy;
     }
 }

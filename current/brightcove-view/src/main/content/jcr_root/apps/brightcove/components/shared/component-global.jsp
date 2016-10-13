@@ -20,6 +20,14 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+- Additional permission under GNU GPL version 3 section 7
+If you modify this Program, or any covered work, by linking or combining
+it with httpclient 4.1.3, httpcore 4.1.4, httpmine 4.1.3, jsoup 1.7.2,
+squeakysand-commons and squeakysand-osgi (or a modified version of those
+libraries), containing parts covered by the terms of APACHE LICENSE 2.0 
+or MIT License, the licensors of this Program grant you additional 
+permission to convey the resulting work.
+
 --%>
 
 <%@ page import="com.coresecure.brightcove.wrapper.sling.ConfigurationGrabber,
@@ -39,10 +47,9 @@
 
     String account = properties.get("account", "").trim();
     String playerPath = properties.get("playerPath", "").trim();
-    String playerID = properties.get("playerID","").trim();
-    String playerKey = properties.get("playerKey","").trim();;
-
-    String playerDataEmbed = "default";
+    String playerID ="";
+    String playerKey = "";
+    String playerDataEmbed = "";
 
     String containerID = properties.get("containerID", "");
     String containerClass = properties.get("containerClass", "");
@@ -56,6 +63,23 @@
     boolean hasSize = false;
 
     boolean ignoreComponentProperties = false;
+
+
+    //fallback to default
+    if (TextUtil.notEmpty(account)) {
+        ConfigurationGrabber cg = ServiceUtil.getConfigurationGrabber();
+        ConfigurationService cs = cg.getConfigurationService(account);
+        if (cs != null) {
+            playerID = cs.getDefVideoPlayerID();
+            playerDataEmbed = cs.getDefVideoPlayerDataEmbedded();
+            playerKey= cs.getDefVideoPlayerKey();
+        }
+    }
+
+    playerID = properties.get("playerID",playerID).trim();
+    playerKey = properties.get("playerKey",playerKey).trim();;
+    playerDataEmbed = playerDataEmbed.isEmpty() ? "default" : playerDataEmbed;
+
 
     // Load Player Configuration
 
@@ -114,16 +138,7 @@
     }
 
 
-    //fallback to default
-    if (TextUtil.notEmpty(account)) {
-        ConfigurationGrabber cg = ServiceUtil.getConfigurationGrabber();
-        ConfigurationService cs = cg.getConfigurationService(account);
-        if (cs != null) {
-            playerID = cs.getDefVideoPlayerID();
-            playerDataEmbed = cs.getDefVideoPlayerDataEmbedded();
-            playerKey= cs.getDefVideoPlayerKey();
-        }
-    }
+
 
 
     // Update Page Context
