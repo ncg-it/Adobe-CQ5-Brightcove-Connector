@@ -342,8 +342,12 @@ public class WriteApi {
 			
 			// JSONObject videoObj = new JSONObject();
 			paramObj.put("video", video.toJson());
-			
-			paramObj.put("filename",                   file.getName());
+			//Fortify Scan -- WriteApi.java, line 346 (Null Dereference) [Hidden]
+			//Fixed for the below commented line.
+			//paramObj.put("filename",                   file.getName());
+			if(null != file && null != file.getName()){
+				paramObj.put("filename",                   file.getName());
+			}
 			paramObj.put("maxsize",                    maxSize);
 			paramObj.put("file_checksum",              fileChecksum);
 			paramObj.put("create_multiple_renditions", createMultipleRenditions);
@@ -411,8 +415,15 @@ public class WriteApi {
 			
 			paramObj.put("token", writeToken);
 			paramObj.put("image", image.toJson());
-			
-			paramObj.put("filename",                   file.getName());
+
+			//Fortify Scan -- WriteApi.java, line 415 (Null Dereference) [Hidden]
+			//Fixed for the below commented line.
+			//paramObj.put("filename",                   file.getName());
+
+			if(null != file && null != file.getName()){
+				paramObj.put("filename",                   file.getName());
+			}
+
 			paramObj.put("maxsize",                    maxSize);
 			paramObj.put("file_checksum",              fileChecksum);
 			
@@ -930,13 +941,24 @@ class GenerateFileData {
 		MessageDigest complete = MessageDigest.getInstance("MD5");
 		
 		int numRead;
-		do {
-			numRead = fis.read(buffer);
-			if (numRead > 0) {
-				complete.update(buffer, 0, numRead);
+		//Fortify Scan, WriteApi.java, line 928 (Unreleased Resource: Streams) [Hidden].
+		//Added the try catch block here to release the filestream object.
+		try {
+			do {
+
+				numRead = fis.read(buffer);
+
+				if (numRead > 0) {
+					complete.update(buffer, 0, numRead);
+				}
+			} while (numRead != -1);
+		}finally{
+			try {
+				fis.close();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-		} while (numRead != -1);
-		fis.close();
+		}
 		return complete.digest();
 	}
 	

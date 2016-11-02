@@ -1,6 +1,7 @@
 package com.coresecure.brightcove.wrapper.enums;
 
 import java.util.EnumSet;
+import java.util.Locale;
 
 public enum GeoFilterCodeEnum {
 	// A
@@ -294,10 +295,11 @@ public enum GeoFilterCodeEnum {
 		if(name == null){
 			return null;
 		}
-		
-		String upperName = name.toUpperCase();
+		//Fortify Scan- GeoFilterCodeEnum.java, line 300 (Portability Flaw: Locale Dependent Comparison) [Hidden]
+		//Passed the Locale param inside toUpperCase Method
+		String upperName = name.toUpperCase(Locale.ENGLISH);
 		for(GeoFilterCodeEnum code : EnumSet.allOf(GeoFilterCodeEnum.class)){
-			if(code.name.toUpperCase().equals(upperName)){
+			if(code.name.toUpperCase(Locale.ENGLISH).equals(upperName)){
 				return code;
 			}
 		}
@@ -308,10 +310,11 @@ public enum GeoFilterCodeEnum {
 		if(code == null){
 			return null;
 		}
-		
-		String upperCode = code.toUpperCase();
+		//Fortify Scan- GeoFilterCodeEnum.java, line 314 (Portability Flaw: Locale Dependent Comparison) [Hidden]
+		//Passed the Locale param inside toUpperCase Method
+		String upperCode = code.toUpperCase(Locale.ENGLISH);
 		for(GeoFilterCodeEnum lookup : EnumSet.allOf(GeoFilterCodeEnum.class)){
-			if(lookup.code.toUpperCase().equals(upperCode)){
+			if(lookup.code.toUpperCase(Locale.ENGLISH).equals(upperCode)){
 				return lookup;
 			}
 		}

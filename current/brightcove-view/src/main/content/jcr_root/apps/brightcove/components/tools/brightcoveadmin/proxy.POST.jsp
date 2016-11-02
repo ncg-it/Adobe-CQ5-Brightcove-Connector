@@ -169,11 +169,17 @@ permission to convey the resulting work.
                         tempFile = new File(tempDir, videoFilename);
                         FileOutputStream outStream = new FileOutputStream(tempFile);
                         byte[] buf = new byte[1024];
-                        for (int byLen = 0; (byLen = fileStream.read(buf, 0, 1024)) > 0; ) {
-                            outStream.write(buf, 0, byLen);
-                            //if(tempFile.length()/1000 > 2){}//maximum file size is 2gigs
+                        //Fortify Fix
+                        try{
+                            outStream = new FileOutputStream(tempFile);
+                            for (int byLen = 0; (byLen = fileStream.read(buf, 0, 1024)) > 0; ) {
+                                outStream.write(buf, 0, byLen);
+                                //if(tempFile.length()/1000 > 2){}//maximum file size is 2gigs
+                            }
+                        }finally{
+                            if(outStream!=null)
+                                outStream.close();
                         }
-                        outStream.close();
                         // Required fields
                         video.setName(request.getParameter("name"));
                         video.setShortDescription(request.getParameter("shortDescription"));
@@ -315,13 +321,18 @@ permission to convey the resulting work.
                     thumbnailFilename = RandomID + "_" + thumbnailFile.getFileName().replaceAll("[^a-zA-Z0-9\\._]+", "_");
                     fileImageStream = thumbnailFile.getInputStream();
                     tempImageFile = new File(tempDir, thumbnailFilename);
-                    outImageStream = new FileOutputStream(tempImageFile);
-                    imagebuf = new byte[1024];
-                    for (int byLen = 0; (byLen = fileImageStream.read(imagebuf, 0, 1024)) > 0; ) {
-                        outImageStream.write(imagebuf, 0, byLen);
-                        //if(tempFile.length()/1000 > 2){}//maximum file size is 2gigs
+                    try{
+                        outImageStream = new FileOutputStream(tempImageFile);
+                        imagebuf = new byte[1024];
+                        for (int byLen = 0; (byLen = fileImageStream.read(imagebuf, 0, 1024)) > 0; ) {
+                            outImageStream.write(imagebuf, 0, byLen);
+                            //if(tempFile.length()/1000 > 2){}//maximum file size is 2gigs
+                        }
+                    }finally{
+                        //Fortify Fix
+                        if(null != outImageStream)
+                            outImageStream.close();
                     }
-                    outImageStream.close();
                     // Required fields
                     // Image meta data
                     Image thumbnail = new Image();
@@ -359,13 +370,18 @@ permission to convey the resulting work.
                     thumbnailFilename = RandomID + "_" + thumbnailFile.getFileName().replaceAll("[^a-zA-Z0-9\\._]+", "_");
                     fileImageStream = thumbnailFile.getInputStream();
                     tempImageFile = new File(tempDir, thumbnailFilename);
-                    outImageStream = new FileOutputStream(tempImageFile);
-                    imagebuf = new byte[1024];
-                    for (int byLen = 0; (byLen = fileImageStream.read(imagebuf, 0, 1024)) > 0; ) {
-                        outImageStream.write(imagebuf, 0, byLen);
-                        //if(tempFile.length()/1000 > 2){}//maximum file size is 2gigs
+                    try{
+                        outImageStream = new FileOutputStream(tempImageFile);
+                        imagebuf = new byte[1024];
+                        for (int byLen = 0; (byLen = fileImageStream.read(imagebuf, 0, 1024)) > 0; ) {
+                            outImageStream.write(imagebuf, 0, byLen);
+                            //if(tempFile.length()/1000 > 2){}//maximum file size is 2gigs
+                        }
+                    }finally{
+                        //Fortify Fix
+                        if(null != outImageStream)
+                            outImageStream.close();
                     }
-                    outImageStream.close();
                     // Required fields
                     // Image meta data
                     Image videoStill = new Image();
