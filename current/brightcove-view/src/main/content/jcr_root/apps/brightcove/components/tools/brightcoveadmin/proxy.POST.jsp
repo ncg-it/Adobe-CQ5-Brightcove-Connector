@@ -65,6 +65,7 @@ permission to convey the resulting work.
     if (cs.getProxy()!=null && cs.getProxy().length()>0) {
       brAPI.setProxy(cs.getProxy());
     }
+    File tempDir = new File (cs.getTempPath());
 
     String ReadToken = cs.getReadToken();
     String WriteToken = cs.getWriteToken();
@@ -163,9 +164,9 @@ permission to convey the resulting work.
                         InputStream fileStream;
                         Video video = new Video();
                         RequestParameter videoFile = slingRequest.getRequestParameter("filePath");
-                        String videoFilename = "/tmp/" + RandomID + "_" + videoFile.getFileName();
+                        String videoFilename = RandomID + "_" + videoFile.getFileName();
                         fileStream = videoFile.getInputStream();
-                        tempFile = new File(videoFilename);
+                        tempFile = new File(tempDir, videoFilename);
                         FileOutputStream outStream = new FileOutputStream(tempFile);
                         byte[] buf = new byte[1024];
                         for (int byLen = 0; (byLen = fileStream.read(buf, 0, 1024)) > 0; ) {
@@ -312,9 +313,9 @@ permission to convey the resulting work.
                 case 6:
                     VideoId = Long.valueOf(request.getParameter("videoidthumb"));
                     thumbnailFile = slingRequest.getRequestParameter("filePath");
-                    thumbnailFilename = "/tmp/" + RandomID + "_" + thumbnailFile.getFileName();
+                    thumbnailFilename = RandomID + "_" + thumbnailFile.getFileName();
                     fileImageStream = thumbnailFile.getInputStream();
-                    tempImageFile = new File(thumbnailFilename);
+                    tempImageFile = new File(tempDir, thumbnailFilename);
                     outImageStream = new FileOutputStream(tempImageFile);
                     imagebuf = new byte[1024];
                     for (int byLen = 0; (byLen = fileImageStream.read(imagebuf, 0, 1024)) > 0; ) {
@@ -356,9 +357,9 @@ permission to convey the resulting work.
                 case 7:
                     VideoId = Long.valueOf(request.getParameter("videoidthumb"));
                     thumbnailFile = slingRequest.getRequestParameter("filePath");
-                    thumbnailFilename = "/tmp/" + RandomID + "_" + thumbnailFile.getFileName();
+                    thumbnailFilename = RandomID + "_" + thumbnailFile.getFileName();
                     fileImageStream = thumbnailFile.getInputStream();
-                    tempImageFile = new File(thumbnailFilename);
+                    tempImageFile = new File(tempDir, thumbnailFilename);
                     outImageStream = new FileOutputStream(tempImageFile);
                     imagebuf = new byte[1024];
                     for (int byLen = 0; (byLen = fileImageStream.read(imagebuf, 0, 1024)) > 0; ) {

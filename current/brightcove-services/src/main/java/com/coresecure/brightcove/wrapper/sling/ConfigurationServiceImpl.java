@@ -34,7 +34,7 @@ import org.apache.felix.scr.annotations.Properties;
 import org.osgi.service.component.ComponentContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import java.nio.file.*;
 import java.util.*;
 
 @Component(immediate = true,
@@ -62,7 +62,8 @@ import java.util.*;
         @Property(name = "previewPlayerLoc", label = "Preview Video Player", description = "Preview Player Path (Videos)", value = "http://link.brightcove.com/services/player/bcpid1154829530001"),
         @Property(name = "previewPlayerListLoc", label = "Preview Playlist Player", description = "Preview Player Path (Playlists)", value = "http://link.brightcove.com/services/player/bcpid1154829529001"),
         @Property(name = "allowed_groups", label = "Allowed Groups", description = "Groups that are allowed to see this account data", value = {"administrators", ""}),
-        @Property(name = "proxy", label = "Proxy server", description = "Proxy server in the form proxy.foo.com:3128", value = {""})
+        @Property(name = "proxy", label = "Proxy server", description = "Proxy server in the form proxy.foo.com:3128", value = {""}),
+        @Property(name = "tempFolder", label = "Video Upload Temp Folder", description = "Temp Folder for video upload", value = "")
 })
 
 
@@ -172,5 +173,19 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         }
         result = list.toArray(new String[list.size()]);
         return result;
+    }
+
+    public String getTempPath(){
+        String tempPath = (String) getProperties().get("tempFolder");
+        if (tempPath.isEmpty() || !isValidPath(tempPath)) {
+            tempPath = System.getProperty("java.io.tmpdir");
+            loggerVar.warn("Video Upload Temp Folder is invalid; Using system default:"+tempPath);
+        }
+        return tempPath;
+    }
+
+    private boolean isValidPath(String filePathString){
+        Path path = Paths.get(filePathString);
+        return Files.exists(path);
     }
 }

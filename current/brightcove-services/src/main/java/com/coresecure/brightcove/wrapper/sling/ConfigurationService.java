@@ -68,4 +68,6 @@ public interface ConfigurationService {
     String[] getAllowedGroups();
 
     String getProxy();
+
+    String getTempPath();
 }
