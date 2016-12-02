@@ -84,7 +84,7 @@ permission to convey the resulting work.
         CQ.wcm.ContentFinderTab.getResultsBoxConfig({
             "itemsDDGroups": ["brightcove_playlist"],
             "itemsDDNewParagraph": {
-                "path": "brightcove/components/content/brightcoveplaylist",
+                "path": "brightcove/components/content/brightcoveplayer-playlist",
                 "propertyName": "./videoPlayerPL"
             },
             "noRefreshButton": true,
