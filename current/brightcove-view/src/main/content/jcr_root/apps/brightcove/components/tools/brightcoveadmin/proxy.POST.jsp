@@ -203,7 +203,7 @@ permission to convey the resulting work.
                         try {
                             // Write the video
                             logger.info("Writing video to Media API");
-                            Long newVideoId = wapi.CreateVideo(apiToken, video, videoFilename, TranscodeEncodeToEnum.FLV, createMultipleRenditions, preserveSourceRendition, h264NoProcessing);
+                            Long newVideoId = wapi.CreateVideo(apiToken, video, tempFile.getAbsolutePath(), TranscodeEncodeToEnum.FLV, createMultipleRenditions, preserveSourceRendition, h264NoProcessing);
                             logger.info("New video id: '" + newVideoId + "'.");
                             tempFile.delete();
                             success = true;
@@ -212,7 +212,6 @@ permission to convey the resulting work.
 
                         } catch (Exception e) {
                             logger.error("Exception caught: '" + e + "'.");
-
                         }
                     }
                     break;
@@ -341,7 +340,7 @@ permission to convey the resulting work.
                         // Write the image
                         Boolean resizeImage = false;
 
-                        Image thumbReturn = wapi.AddImage(apiWriteToken, thumbnail, thumbnailFilename, VideoId, null, resizeImage);
+                        Image thumbReturn = wapi.AddImage(apiWriteToken, thumbnail, tempImageFile.getAbsolutePath(), VideoId, null, resizeImage);
                         logger.info("Thumbnail image: " + thumbReturn + ".");
                         //Image stillReturn = wapi.AddImage(apiWriteToken, videoStill, thumbnailFilename, VideoId, null, resizeImage);
                         //logger.info("Video still image: " + stillReturn + ".");
@@ -381,7 +380,7 @@ permission to convey the resulting work.
                         // Write the image
                         Boolean resizeImage = false;
 
-                        Image stillReturn = wapi.AddImage(apiWriteToken, videoStill, thumbnailFilename, VideoId, null, resizeImage);
+                        Image stillReturn = wapi.AddImage(apiWriteToken, videoStill, tempImageFile.getAbsolutePath(), VideoId, null, resizeImage);
                         logger.info("Video still image: " + stillReturn + ".");
 
                         tempImageFile.delete();
