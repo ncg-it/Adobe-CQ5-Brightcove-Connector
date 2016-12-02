@@ -164,7 +164,7 @@ permission to convey the resulting work.
                         InputStream fileStream;
                         Video video = new Video();
                         RequestParameter videoFile = slingRequest.getRequestParameter("filePath");
-                        String videoFilename = RandomID + "_" + videoFile.getFileName();
+                        String videoFilename = RandomID + "_" + videoFile.getFileName().replaceAll("[^a-zA-Z0-9\\._]+", "_");
                         fileStream = videoFile.getInputStream();
                         tempFile = new File(tempDir, videoFilename);
                         FileOutputStream outStream = new FileOutputStream(tempFile);
@@ -313,7 +313,7 @@ permission to convey the resulting work.
                 case 6:
                     VideoId = Long.valueOf(request.getParameter("videoidthumb"));
                     thumbnailFile = slingRequest.getRequestParameter("filePath");
-                    thumbnailFilename = RandomID + "_" + thumbnailFile.getFileName();
+                    thumbnailFilename = RandomID + "_" + thumbnailFile.getFileName().replaceAll("[^a-zA-Z0-9\\._]+", "_");
                     fileImageStream = thumbnailFile.getInputStream();
                     tempImageFile = new File(tempDir, thumbnailFilename);
                     outImageStream = new FileOutputStream(tempImageFile);
@@ -357,7 +357,7 @@ permission to convey the resulting work.
                 case 7:
                     VideoId = Long.valueOf(request.getParameter("videoidthumb"));
                     thumbnailFile = slingRequest.getRequestParameter("filePath");
-                    thumbnailFilename = RandomID + "_" + thumbnailFile.getFileName();
+                    thumbnailFilename = RandomID + "_" + thumbnailFile.getFileName().replaceAll("[^a-zA-Z0-9\\._]+", "_");
                     fileImageStream = thumbnailFile.getInputStream();
                     tempImageFile = new File(tempDir, thumbnailFilename);
                     outImageStream = new FileOutputStream(tempImageFile);
