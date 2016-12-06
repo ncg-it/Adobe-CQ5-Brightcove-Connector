@@ -85,7 +85,7 @@ permission to convey the resulting work.
             "id":"cfTab-Brightcove-resultBox",
             "itemsDDGroups": ["brightcove_video"],
             "itemsDDNewParagraph": {
-                "path": "brightcove/components/content/brightcovevideo",
+                "path": "brightcove/components/content/brightcoveplayer",
                 "propertyName": "./videoPlayer"
             },
             "noRefreshButton": true,

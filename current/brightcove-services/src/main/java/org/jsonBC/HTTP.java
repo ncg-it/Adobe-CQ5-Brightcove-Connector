@@ -25,6 +25,7 @@ SOFTWARE.
 */
 
 import java.util.Iterator;
+import java.util.Locale;
 
 /**
  * Convert an HTTP header to a JSONObject and back.
@@ -75,7 +76,9 @@ public class HTTP {
         String         t;
 
         t = x.nextToken();
-        if (t.toUpperCase().startsWith("HTTP")) {
+        //Fortify Scan- HTTP.java, line 78 (Portability Flaw: Locale Dependent Comparison) [Hidden]
+        //Passed the Locale param inside toUpperCase Method
+        if (t.toUpperCase(Locale.ENGLISH).startsWith("HTTP")) {
 
 // Response
 

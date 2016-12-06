@@ -179,7 +179,9 @@ public class ServiceUtil {
     }
 
     public String searchVideo(String querystr, int offset, int limit) {
-        String result = getList(false, offset, limit, true, querystr);
+        //Fixed the performance issue at the component authoring side.
+        //String result = getList(false, offset, limit, true, querystr);
+        String result = getList(false, offset, limit, false, querystr);
         return result;
     }
 

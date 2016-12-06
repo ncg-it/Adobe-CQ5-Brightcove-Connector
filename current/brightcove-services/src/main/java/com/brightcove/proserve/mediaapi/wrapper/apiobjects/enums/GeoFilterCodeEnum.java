@@ -1,11 +1,12 @@
 package com.brightcove.proserve.mediaapi.wrapper.apiobjects.enums;
 
 import java.util.EnumSet;
+import java.util.Locale;
 
 public enum GeoFilterCodeEnum {
 	// ISO 3166-1-alpha-2 code elements
 	// http://www.iso.org/iso/english_country_names_and_code_elements
-	
+
 	// A
 	AF("AFGHANISTAN", "af"),
 	AX("ÅLAND ISLANDS", "ax"),
@@ -277,24 +278,26 @@ public enum GeoFilterCodeEnum {
 	YE("YEMEN", "ye"),
 	// Z
 	ZM("ZAMBIA", "zm"),
-	ZW("ZIMBABWE", "zw");	
-	
+	ZW("ZIMBABWE", "zw");
+
 	private final String name;
 	private final String code;
 	GeoFilterCodeEnum(String name, String code){
 		this.name = name;
 		this.code = code;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
 	public String getCode() {
 		return code;
 	}
-	
+
 	public static GeoFilterCodeEnum lookupByName(String name){
-		String upperName = name.toUpperCase();
+		//Fortify Scan- GeoFilterCodeEnum.java, line 300 (Portability Flaw: Locale Dependent Comparison) [Hidden]
+		//Passed the Locale param inside toUpperCase Method
+		String upperName = name.toUpperCase(Locale.ENGLISH);
 		EnumSet<GeoFilterCodeEnum> allEnums = EnumSet.allOf(GeoFilterCodeEnum.class);
 		for(GeoFilterCodeEnum code : allEnums){
 			if(code.name.equals(upperName)){

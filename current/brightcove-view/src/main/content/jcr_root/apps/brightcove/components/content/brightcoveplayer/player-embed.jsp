@@ -62,22 +62,13 @@ Brightcove Reference:
 
 --%>
 
-<div id="container-${brc_componentID}" class="brightcove-container">
-
-    <video
-            id="video-${brc_componentID}"
-            data-account="${brc_account}"
-            data-player="${brc_playerID}"
-            data-embed="${brc_playerDataEmbed}"
-            data-video-id="${brc_videoID}"
-            <c:if test="${brc_hasSize}">
-                width="${brc_width}px"
-                height="${brc_height}px"
-            </c:if>
-            class="video-js"
-            controls>
-    </video>
-
-    <script src="//players.brightcove.net/${brc_account}/${brc_playerID}_${brc_playerDataEmbed}/index.min.js"></script>
-
+<div id="container-${brc_componentID}" class="brightcove-container" data-playerid="${brc_componentID}" data-account="${brc_account}"
+     data-player="${brc_playerID}"
+     data-embed="${brc_playerDataEmbed}"
+     data-video-id="${brc_videoID}"
+        <c:if test="${brc_hasSize}">
+            data-width="${brc_width}px"
+            data-height="${brc_height}px"
+        </c:if>>
 </div>
+<cq:includeClientLib js="brc.html5-player"/>

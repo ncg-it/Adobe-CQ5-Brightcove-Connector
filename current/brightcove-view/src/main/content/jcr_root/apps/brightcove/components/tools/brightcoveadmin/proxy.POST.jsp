@@ -65,6 +65,7 @@ permission to convey the resulting work.
     if (cs.getProxy()!=null && cs.getProxy().length()>0) {
       brAPI.setProxy(cs.getProxy());
     }
+    File tempDir = new File (cs.getTempPath());
 
     String ReadToken = cs.getReadToken();
     String WriteToken = cs.getWriteToken();
@@ -163,16 +164,22 @@ permission to convey the resulting work.
                         InputStream fileStream;
                         Video video = new Video();
                         RequestParameter videoFile = slingRequest.getRequestParameter("filePath");
-                        String videoFilename = "/tmp/" + RandomID + "_" + videoFile.getFileName();
+                        String videoFilename = RandomID + "_" + videoFile.getFileName().replaceAll("[^a-zA-Z0-9\\._]+", "_");
                         fileStream = videoFile.getInputStream();
-                        tempFile = new File(videoFilename);
+                        tempFile = new File(tempDir, videoFilename);
                         FileOutputStream outStream = new FileOutputStream(tempFile);
                         byte[] buf = new byte[1024];
-                        for (int byLen = 0; (byLen = fileStream.read(buf, 0, 1024)) > 0; ) {
-                            outStream.write(buf, 0, byLen);
-                            //if(tempFile.length()/1000 > 2){}//maximum file size is 2gigs
+                        //Fortify Fix
+                        try{
+                            outStream = new FileOutputStream(tempFile);
+                            for (int byLen = 0; (byLen = fileStream.read(buf, 0, 1024)) > 0; ) {
+                                outStream.write(buf, 0, byLen);
+                                //if(tempFile.length()/1000 > 2){}//maximum file size is 2gigs
+                            }
+                        }finally{
+                            if(outStream!=null)
+                                outStream.close();
                         }
-                        outStream.close();
                         // Required fields
                         video.setName(request.getParameter("name"));
                         video.setShortDescription(request.getParameter("shortDescription"));
@@ -202,7 +209,7 @@ permission to convey the resulting work.
                         try {
                             // Write the video
                             logger.info("Writing video to Media API");
-                            Long newVideoId = wapi.CreateVideo(apiToken, video, videoFilename, TranscodeEncodeToEnum.FLV, createMultipleRenditions, preserveSourceRendition, h264NoProcessing);
+                            Long newVideoId = wapi.CreateVideo(apiToken, video, tempFile.getAbsolutePath(), TranscodeEncodeToEnum.FLV, createMultipleRenditions, preserveSourceRendition, h264NoProcessing);
                             logger.info("New video id: '" + newVideoId + "'.");
                             tempFile.delete();
                             success = true;
@@ -211,7 +218,6 @@ permission to convey the resulting work.
 
                         } catch (Exception e) {
                             logger.error("Exception caught: '" + e + "'.");
-
                         }
                     }
                     break;
@@ -312,16 +318,21 @@ permission to convey the resulting work.
                 case 6:
                     VideoId = Long.valueOf(request.getParameter("videoidthumb"));
                     thumbnailFile = slingRequest.getRequestParameter("filePath");
-                    thumbnailFilename = "/tmp/" + RandomID + "_" + thumbnailFile.getFileName();
+                    thumbnailFilename = RandomID + "_" + thumbnailFile.getFileName().replaceAll("[^a-zA-Z0-9\\._]+", "_");
                     fileImageStream = thumbnailFile.getInputStream();
-                    tempImageFile = new File(thumbnailFilename);
-                    outImageStream = new FileOutputStream(tempImageFile);
-                    imagebuf = new byte[1024];
-                    for (int byLen = 0; (byLen = fileImageStream.read(imagebuf, 0, 1024)) > 0; ) {
-                        outImageStream.write(imagebuf, 0, byLen);
-                        //if(tempFile.length()/1000 > 2){}//maximum file size is 2gigs
+                    tempImageFile = new File(tempDir, thumbnailFilename);
+                    try{
+                        outImageStream = new FileOutputStream(tempImageFile);
+                        imagebuf = new byte[1024];
+                        for (int byLen = 0; (byLen = fileImageStream.read(imagebuf, 0, 1024)) > 0; ) {
+                            outImageStream.write(imagebuf, 0, byLen);
+                            //if(tempFile.length()/1000 > 2){}//maximum file size is 2gigs
+                        }
+                    }finally{
+                        //Fortify Fix
+                        if(null != outImageStream)
+                            outImageStream.close();
                     }
-                    outImageStream.close();
                     // Required fields
                     // Image meta data
                     Image thumbnail = new Image();
@@ -340,7 +351,7 @@ permission to convey the resulting work.
                         // Write the image
                         Boolean resizeImage = false;
 
-                        Image thumbReturn = wapi.AddImage(apiWriteToken, thumbnail, thumbnailFilename, VideoId, null, resizeImage);
+                        Image thumbReturn = wapi.AddImage(apiWriteToken, thumbnail, tempImageFile.getAbsolutePath(), VideoId, null, resizeImage);
                         logger.info("Thumbnail image: " + thumbReturn + ".");
                         //Image stillReturn = wapi.AddImage(apiWriteToken, videoStill, thumbnailFilename, VideoId, null, resizeImage);
                         //logger.info("Video still image: " + stillReturn + ".");
@@ -356,16 +367,21 @@ permission to convey the resulting work.
                 case 7:
                     VideoId = Long.valueOf(request.getParameter("videoidthumb"));
                     thumbnailFile = slingRequest.getRequestParameter("filePath");
-                    thumbnailFilename = "/tmp/" + RandomID + "_" + thumbnailFile.getFileName();
+                    thumbnailFilename = RandomID + "_" + thumbnailFile.getFileName().replaceAll("[^a-zA-Z0-9\\._]+", "_");
                     fileImageStream = thumbnailFile.getInputStream();
-                    tempImageFile = new File(thumbnailFilename);
-                    outImageStream = new FileOutputStream(tempImageFile);
-                    imagebuf = new byte[1024];
-                    for (int byLen = 0; (byLen = fileImageStream.read(imagebuf, 0, 1024)) > 0; ) {
-                        outImageStream.write(imagebuf, 0, byLen);
-                        //if(tempFile.length()/1000 > 2){}//maximum file size is 2gigs
+                    tempImageFile = new File(tempDir, thumbnailFilename);
+                    try{
+                        outImageStream = new FileOutputStream(tempImageFile);
+                        imagebuf = new byte[1024];
+                        for (int byLen = 0; (byLen = fileImageStream.read(imagebuf, 0, 1024)) > 0; ) {
+                            outImageStream.write(imagebuf, 0, byLen);
+                            //if(tempFile.length()/1000 > 2){}//maximum file size is 2gigs
+                        }
+                    }finally{
+                        //Fortify Fix
+                        if(null != outImageStream)
+                            outImageStream.close();
                     }
-                    outImageStream.close();
                     // Required fields
                     // Image meta data
                     Image videoStill = new Image();
@@ -380,7 +396,7 @@ permission to convey the resulting work.
                         // Write the image
                         Boolean resizeImage = false;
 
-                        Image stillReturn = wapi.AddImage(apiWriteToken, videoStill, thumbnailFilename, VideoId, null, resizeImage);
+                        Image stillReturn = wapi.AddImage(apiWriteToken, videoStill, tempImageFile.getAbsolutePath(), VideoId, null, resizeImage);
                         logger.info("Video still image: " + stillReturn + ".");
 
                         tempImageFile.delete();
