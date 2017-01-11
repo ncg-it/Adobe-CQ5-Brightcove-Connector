@@ -1,19 +1,32 @@
 package com.brightcove.proserve.mediaapi.wrapper.osgi;
 
+import org.osgi.framework.BundleActivator;
+import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.squeakysand.osgi.framework.BasicBundleActivator;
+public class Activator implements BundleActivator {
 
-/**
- * Bundle activator for com.coresecure.brightcove.cq5 - brightcove-services.
- */
-public class Activator extends BasicBundleActivator {
+    /**
+     * default logger
+     */
+    private static final Logger log = LoggerFactory.getLogger(Activator.class);
 
-    private static final Logger LOG = LoggerFactory.getLogger(Activator.class);
+    /*
+     * (non-Javadoc)
+     * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
+     */
+    public void start(BundleContext context) throws Exception {
+        log.info(context.getBundle().getSymbolicName() + " started");
+        // TODO add initialization code
+    }
 
-    public Activator() {
-		super(LOG);
-	}
-
+    /*
+     * (non-Javadoc)
+     * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
+     */
+    public void stop(BundleContext context) throws Exception {
+        log.info(context.getBundle().getSymbolicName() + " stopped");
+        // TODO add cleanup code
+    }
 }
