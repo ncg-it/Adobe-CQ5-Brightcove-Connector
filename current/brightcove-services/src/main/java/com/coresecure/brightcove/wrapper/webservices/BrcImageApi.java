@@ -49,7 +49,7 @@ import java.net.URL;
 
 @Service
 @Component
-@Property(name = "sling.servlet.paths", value = {"/bin/brightcove/image","/bin/services/brightcove/image"})
+@Property(name = "sling.servlet.paths", value = {"/bin/brightcove/image","/bin/services/brightcove/image","/bin/services/brightcove/cache/image"})
 public class BrcImageApi extends SlingAllMethodsServlet {
 
     @Override

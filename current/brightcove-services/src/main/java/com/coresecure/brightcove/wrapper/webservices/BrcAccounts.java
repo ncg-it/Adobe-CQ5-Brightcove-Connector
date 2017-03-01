@@ -63,7 +63,7 @@ import java.util.List;
 @Component
 @Properties(value = {
         @Property(name = "sling.servlet.extensions", value = {"json"}),
-        @Property(name = "sling.servlet.paths", value = "/bin/brightcove/accounts")
+        @Property(name = "sling.servlet.paths", value = {"/bin/brightcove/accounts"})
 })
 public class BrcAccounts extends SlingAllMethodsServlet {
 
