@@ -26,6 +26,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.coresecure.brightcove.wrapper.sling.CertificateListService;
 
@@ -34,6 +36,7 @@ public class HttpServices {
     private static final String CERTIFICATE_TYPE = "X.509";
     private static final String CA = "ca";
     private static final String TLS = "TLS";
+    private static final Logger LOGGER = LoggerFactory.getLogger(HttpServices.class);
 
     public static void setProxy(Proxy proxy) {
         if (proxy == null) {
@@ -159,7 +162,7 @@ public class HttpServices {
             StringBuffer response = new StringBuffer();
             while ((line = rd.readLine()) != null) {
                 response.append(line);
-                response.append('\r');
+                response.append("\r\n");
             }
             // Fortify Fix for below two lines.
             // rd.close();
@@ -205,6 +208,7 @@ public class HttpServices {
         try {
             // Create connection
             url = new URL(targetURL + "?" + urlParameters);
+            LOGGER.trace("url: "+targetURL + "?" + urlParameters);
 
             connection = getSSLConnection(url, targetURL);
 
@@ -216,6 +220,7 @@ public class HttpServices {
             connection.setRequestProperty("Content-Language", "en-US");
             for (String key : headers.keySet()) {
                 connection.setRequestProperty(key, headers.get(key));
+                LOGGER.trace("-H \""+key+": "+headers.get(key)+"\"");
             }
             connection.setUseCaches(false);
             connection.setDoInput(true);
@@ -228,8 +233,10 @@ public class HttpServices {
             StringBuffer response = new StringBuffer();
             while ((line = rd.readLine()) != null) {
                 response.append(line);
-                response.append('\r');
+                response.append("\r\n");
             }
+            LOGGER.trace("response committed!");
+
             // Fortify Fix for below two lines.
             // rd.close();
             // return response.toString();
@@ -237,6 +244,7 @@ public class HttpServices {
 
         } catch (Exception e) {
             e.printStackTrace();
+            LOGGER.error("error! ",e);
 
         } finally {
 
@@ -250,6 +258,8 @@ public class HttpServices {
                     rd.close();
                 } catch (IOException e) {
                     e.printStackTrace();
+                    LOGGER.trace("error 2!");
+
                 }
             }
         }
