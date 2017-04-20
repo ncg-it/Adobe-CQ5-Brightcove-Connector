@@ -58,57 +58,59 @@ function createPlayers() {
         var dataHeight= selected_element.getAttribute("data-height");
         var s = document.createElement('script');
         s.src = "//players.brightcove.net/" + dataAccount + "/" + dataPlayer + "_"+dataEmbed+"/index.min.js";
+        s.onload = (function(playerID,dataVideoId,dataAccount,dataPlayer,dataEmbed,dataWidth,dataHeight,selected_element) {
+            return function() {
+                playerHTML = '<video id=\"' + playerID + '\" data-video-id=\"' + dataVideoId + '\"  data-account=\"' + dataAccount + '\" data-player=\"' + dataPlayer + '\" data-embed=\"' + dataEmbed + '\" class=\"video-js\" controls data-width=\"' + dataWidth + '\" data-height=\"' + dataHeight + '\"></video>';
+                selected_element.innerHTML = playerHTML;
+                bc(document.getElementById(playerID));
+                videojs(playerID).ready(function () {
+                    myPlayer = this;
+                    if (typeof myPlayer !== "undefined") {
+                        myPlayer.on("firstplay", function () {
+                            var videoName = myPlayer.mediainfo.name;
+                            var videoID = myPlayer.mediainfo.id;
+                            var videoDuration = myPlayer.mediainfo.duration;
+                            ga("send", "video", "firstplay", videoName + " - " + videoID + " - " + videoDuration);
+                        });
+                        myPlayer.on("play", function () {
+                            var videoName = myPlayer.mediainfo.name;
+                            var videoID = myPlayer.mediainfo.id;
+                            ga("send", "video", "play", videoName + " - " + videoID, myPlayer.currentTime());
+                        });
+                        myPlayer.on("ended", function () {
+                            var videoName = myPlayer.mediainfo.name;
+                            var videoID = myPlayer.mediainfo.id;
+                            ga("send", "video", "ended", videoName + " - " + videoID, myPlayer.currentTime());
+                        });
+                        myPlayer.on("fullscreenchange", function () {
+                            var videoName = myPlayer.mediainfo.name;
+                            var videoID = myPlayer.mediainfo.id;
+                            ga("send", "video", "fullscreenchange", videoName + " - " + videoID, myPlayer.currentTime() + (myPlayer.isFullscreen() ? " Fullscreen" : ""));
+                        });
+                        myPlayer.on("pause", function () {
+                            var videoName = myPlayer.mediainfo.name;
+                            var videoID = myPlayer.mediainfo.id;
+                            ga("send", "video", "pause", videoName + " - " + videoID, myPlayer.currentTime());
+                        });
+                        myPlayer.on("resize", function () {
+                            var videoName = myPlayer.mediainfo.name;
+                            var videoID = myPlayer.mediainfo.id;
+                            ga("send", "video", "resize", videoName + " - " + videoID, myPlayer.currentTime());
+                        });
+                        myPlayer.on("seeked", function () {
+                            var videoName = myPlayer.mediainfo.name;
+                            var videoID = myPlayer.mediainfo.id;
+                            ga("send", "video", "seeked", videoName + " - " + videoID, myPlayer.currentTime());
+                        });
+                        myPlayer.on("volumechange", function () {
+                            var videoName = myPlayer.mediainfo.name;
+                            var videoID = myPlayer.mediainfo.id;
+                            ga("send", "video", "volumechange", videoName + " - " + videoID, (myPlayer.volume() * 100) + "%" + (myPlayer.muted() ? " Muted" : ""));
+                        });
+                    }
+                });
+            };
+        }(playerID,dataVideoId,dataAccount,dataPlayer,dataEmbed,dataWidth,dataHeight,selected_element));
         document.body.appendChild(s);
-        s.onload = function() {
-            playerHTML = '<video id=\"' + playerID + '\" data-video-id=\"' + dataVideoId + '\"  data-account=\"' + dataAccount + '\" data-player=\"' + dataPlayer + '\" data-embed=\"' + dataEmbed + '\" class=\"video-js\" controls data-width=\"' + dataWidth + '\" data-height=\"' + dataHeight + '\"></video>';
-            selected_element.innerHTML = playerHTML;
-            bc(document.getElementById(playerID));
-            videojs(playerID).ready(function () {
-                myPlayer = this;
-                if (typeof myPlayer !== "undefined") {
-                    myPlayer.on("firstplay", function () {
-                        var videoName = myPlayer.mediainfo.name;
-                        var videoID = myPlayer.mediainfo.id;
-                        var videoDuration = myPlayer.mediainfo.duration;
-                        ga("send", "video", "firstplay", videoName + " - " + videoID + " - " + videoDuration);
-                    });
-                    myPlayer.on("play", function () {
-                        var videoName = myPlayer.mediainfo.name;
-                        var videoID = myPlayer.mediainfo.id;
-                        ga("send", "video", "play", videoName + " - " + videoID, myPlayer.currentTime());
-                    });
-                    myPlayer.on("ended", function () {
-                        var videoName = myPlayer.mediainfo.name;
-                        var videoID = myPlayer.mediainfo.id;
-                        ga("send", "video", "ended", videoName + " - " + videoID, myPlayer.currentTime());
-                    });
-                    myPlayer.on("fullscreenchange", function () {
-                        var videoName = myPlayer.mediainfo.name;
-                        var videoID = myPlayer.mediainfo.id;
-                        ga("send", "video", "fullscreenchange", videoName + " - " + videoID, myPlayer.currentTime() + (myPlayer.isFullscreen() ? " Fullscreen" : ""));
-                    });
-                    myPlayer.on("pause", function () {
-                        var videoName = myPlayer.mediainfo.name;
-                        var videoID = myPlayer.mediainfo.id;
-                        ga("send", "video", "pause", videoName + " - " + videoID, myPlayer.currentTime());
-                    });
-                    myPlayer.on("resize", function () {
-                        var videoName = myPlayer.mediainfo.name;
-                        var videoID = myPlayer.mediainfo.id;
-                        ga("send", "video", "resize", videoName + " - " + videoID, myPlayer.currentTime());
-                    });
-                    myPlayer.on("seeked", function () {
-                        var videoName = myPlayer.mediainfo.name;
-                        var videoID = myPlayer.mediainfo.id;
-                        ga("send", "video", "seeked", videoName + " - " + videoID, myPlayer.currentTime());
-                    });
-                    myPlayer.on("volumechange", function () {
-                        var videoName = myPlayer.mediainfo.name;
-                        var videoID = myPlayer.mediainfo.id;
-                        ga("send", "video", "volumechange", videoName + " - " + videoID, (myPlayer.volume() * 100) + "%" + (myPlayer.muted() ? " Muted" : ""));
-                    });
-                }
-            });
-        }
     }
 }
