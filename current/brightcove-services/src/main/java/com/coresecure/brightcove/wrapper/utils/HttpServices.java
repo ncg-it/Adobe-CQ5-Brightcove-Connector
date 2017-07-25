@@ -7,12 +7,18 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
+import java.net.HttpURLConnection;
+import java.net.ProtocolException;
 import java.net.Proxy;
 import java.net.URL;
+import java.security.AccessController;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
@@ -195,6 +201,162 @@ public class HttpServices {
         }
         return exPostResponse;
     }
+    
+	 /**
+     * Workaround for a bug in {@code HttpURLConnection.setRequestMethod(String)}
+     * The implementation of Sun/Oracle is throwing a {@code ProtocolException}
+     * when the method is other than the HTTP/1.1 default methods. So to use {@code PATCH}
+     * and others, we must apply this workaround.
+     *
+     * See issue http://java.net/jira/browse/JERSEY-639
+     */
+    private static void setRequestMethodViaJreBugWorkaround(final HttpURLConnection httpURLConnection, final String method) {
+        try {
+            httpURLConnection.setRequestMethod(method); // Check whether we are running on a buggy JRE
+        } catch (final ProtocolException pe) {
+            try {
+                final Class<?> httpURLConnectionClass = httpURLConnection.getClass();
+				AccessController
+						.doPrivileged(new PrivilegedExceptionAction<Object>() {
+							public Object run() throws NoSuchFieldException,
+									IllegalAccessException {
+								try {
+									httpURLConnection.setRequestMethod(method);
+									// Check whether we are running on a buggy
+									// JRE
+								} catch (final ProtocolException pe) {
+									Class<?> connectionClass = httpURLConnection
+											.getClass();
+									Field delegateField;
+									try {
+										delegateField = connectionClass
+												.getDeclaredField("delegate");
+										delegateField.setAccessible(true);
+										HttpURLConnection delegateConnection = (HttpURLConnection) delegateField
+												.get(httpURLConnection);
+										setRequestMethodViaJreBugWorkaround(
+												delegateConnection, method);
+									} catch (NoSuchFieldException e) {
+										// Ignore for now, keep going
+									} catch (IllegalArgumentException e) {
+										throw new RuntimeException(e);
+									} catch (IllegalAccessException e) {
+										throw new RuntimeException(e);
+									}
+									try {
+										Field methodField;
+										while (connectionClass != null) {
+											try {
+												methodField = connectionClass
+														.getDeclaredField("method");
+											} catch (NoSuchFieldException e) {
+												connectionClass = connectionClass
+														.getSuperclass();
+												continue;
+											}
+											methodField.setAccessible(true);
+											methodField.set(httpURLConnection,
+													method);
+											break;
+										}
+									} catch (final Exception e) {
+										throw new RuntimeException(e);
+									}
+								}
+								return null;
+							}
+						});
+            } catch (final PrivilegedActionException e) {
+                final Throwable cause = e.getCause();
+                if (cause instanceof RuntimeException) {
+                    throw (RuntimeException) cause;
+                } else {
+                    throw new RuntimeException(cause);
+                }
+            }
+        }
+    }
+
+	/**
+	 * Method using the HTTP Patch method as required by the CMS API for update_video operation. 
+	 * Parameter payload needs to be UTF-8 encoded.
+	 * @param targetURL
+	 * @param payload (UTF-8 encoded String)
+	 * @param headers
+	 * @return 
+	 */
+	public static String executePatch(String targetURL, String payload, Map<String, String> headers) {
+		URL url;
+		HttpsURLConnection connection = null;
+		String exPatchResponse = null;
+		BufferedReader rd = null;
+		DataOutputStream wr = null;
+		try {
+
+			// Create connection
+			url = new URL(targetURL);
+			connection = getSSLConnection(url, targetURL);
+
+			connection = (HttpsURLConnection) url.openConnection(PROXY);
+			connection.setRequestProperty("Content-Type", "application/json");
+			connection.setRequestProperty("Content-Length", "" + Integer.toString(payload.getBytes("UTF-8").length));
+			for (String key : headers.keySet()) {
+				connection.setRequestProperty(key, headers.get(key));
+			}
+			connection.setUseCaches(false);
+			connection.setDoInput(true);
+			connection.setDoOutput(true);
+			setRequestMethodViaJreBugWorkaround(connection, "PATCH");
+			// Send request
+			wr = new DataOutputStream(connection.getOutputStream());
+			wr.writeBytes(payload);
+			// Fortify Fix for below commented two lines.
+			// wr.flush();
+			// wr.close();
+
+			// Get Response
+			InputStream is = connection.getInputStream();
+			rd = new BufferedReader(new InputStreamReader(is));
+			String line;
+			StringBuffer response = new StringBuffer();
+			while ((line = rd.readLine()) != null) {
+				response.append(line);
+				response.append('\r');
+			}
+			// Fortify Fix for below two lines.
+			// rd.close();
+			// return response.toString();
+			exPatchResponse = response.toString();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		} finally {
+
+			if (connection != null) {
+				connection.disconnect();
+			}
+			// Fixed the Fortify Scan -- HttpServices.java, line 99 (Unreleased
+			// Resource: Streams) [Hidden]
+			if (null != rd) {
+				try {
+					rd.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if (null != wr) {
+				try {
+					wr.flush();
+					wr.close();
+				} catch (IOException e) {
+
+					e.printStackTrace();
+				}
+			}
+		}
+		return exPatchResponse;
+	} 
 
     public static String excuteGet(String targetURL, String urlParameters,
                                    Map<String, String> headers) {

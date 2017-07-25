@@ -149,6 +149,28 @@ public class Cms {
         }
         return json;
     }
+    
+    public JSONObject updateVideo(Video aVideo, String videoId) {
+        JSONObject json = new JSONObject();
+        account.login();
+        Token authToken = account.getToken();
+        if (authToken != null) {
+            Map<String, String> headers = new HashMap<String, String>();
+            headers.put("Authorization", authToken.getTokenType() + " " + authToken.getToken());
+            String targetURL = "/accounts/" + account.getAccount_ID() + "/videos/" + videoId;
+            try {
+                String response = account.platform.patchAPI(targetURL, aVideo.toJSON().toString(1), headers);
+                if (response != null && !response.isEmpty()) json = JsonReader.readJsonFromString(response);
+            } catch (IOException e) {
+                LOGGER.error("IOException", e);
+                e.printStackTrace();
+            } catch (JSONException e) {
+                LOGGER.error("JSONException", e);
+                e.printStackTrace();
+            }
+        }
+        return json;
+    }
 
     public JSONObject createIngest(Video aVideo, Ingest aIngest) {
         JSONObject json = new JSONObject();

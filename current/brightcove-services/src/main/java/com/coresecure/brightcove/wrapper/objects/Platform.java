@@ -6,9 +6,9 @@ import java.net.Proxy;
 import java.util.Map;
 
 public class Platform {
-    private final static String DEFAULT_OAUTH_URL = "https://oauth.brightcove.com/v3";
+    private final static String DEFAULT_OAUTH_URL = "https://oauth.brightcove.com/v4";
     private final static String DEFAULT_PLAYERS_API_URL = "https://players.api.brightcove.com/v1";
-    private final static String DEFAULT_API_URL = "https://cms.api.brightcove.com/v1beta1";
+    private final static String DEFAULT_API_URL = "https://cms.api.brightcove.com/v1";
     private final static String DEFAULT_DI_API_URL = "https://ingest.api.brightcove.com/v1";
     private static String OAUTH_Url;
     private static String PLAYERS_API_Url;
@@ -71,6 +71,13 @@ public class Platform {
     public String postAPI(String targetURL, String payload, Map<String, String> headers) {
         String URL = getAPI_Url() + targetURL;
         String response = HttpServices.excutePost(URL, payload, headers);
+        System.out.println(response);
+        return response;
+    }
+    
+    public String patchAPI(String targetURL, String payload, Map<String, String> headers) {
+        String URL = getAPI_Url() + targetURL;
+        String response = HttpServices.executePatch(URL, payload, headers);
         System.out.println(response);
         return response;
     }

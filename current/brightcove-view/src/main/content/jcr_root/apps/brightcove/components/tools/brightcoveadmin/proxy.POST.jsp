@@ -222,65 +222,54 @@ permission to convey the resulting work.
                     }
                     break;
                 case 1:
-                    Video video = new Video();
-                    EnumSet<VideoFieldEnum> videoFields = VideoFieldEnum.CreateEmptyEnumSet();
-                    videoFields.add(VideoFieldEnum.ID);
-                    videoFields.add(VideoFieldEnum.NAME);
-                    videoFields.add(VideoFieldEnum.SHORTDESCRIPTION);
-                    videoFields.add(VideoFieldEnum.LINKTEXT);
-                    videoFields.add(VideoFieldEnum.LINKURL);
-                    videoFields.add(VideoFieldEnum.ECONOMICS);
-                    videoFields.add(VideoFieldEnum.REFERENCEID);
-                    videoFields.add(VideoFieldEnum.TAGS);
+                	 String videoId = request.getParameter("meta.id");
+                	 String name = new String(request.getParameter("meta.name").getBytes("UTF-8"), "iso-8859-1");
+                	 String shortDescription = new String(request.getParameter("meta.shortDescription").getBytes("UTF-8"), "iso-8859-1").replaceAll("\n", "");
+                	 String referenceId = request.getParameter("meta.referenceId");
+                	 List<String> tagsToAdd = new ArrayList<String>();
 
-                    Set<String> customFields = CollectionUtils.CreateEmptyStringSet();
-                    Long videoId = Long.parseLong(slingRequest.getRequestParameter("meta.id").getString());
+                     if (request.getParameter("meta.existingTags") != null && !request.getParameter("meta.existingTags").trim().isEmpty()) {
+                         tagsToAdd.addAll(Arrays.asList(request.getParameter("meta.existingTags").split(",")));
+                     }
+                     
+                     if (request.getParameter("meta.tags") != null) {
 
-                    video = rapi.FindVideoById(apiReadToken, videoId, videoFields, customFields);
-                    // Required fields
-                    String name = new String(request.getParameter("meta.name").getBytes("iso-8859-1"), "UTF-8");
-                    video.setName(name);
-                    String shortDescription = new String(request.getParameter("meta.shortDescription").getBytes("iso-8859-1"), "UTF-8");
-                    shortDescription = shortDescription.replaceAll("\n", "");
-                    video.setShortDescription(shortDescription);
-                    logger.info("description: " + shortDescription);
-                    // Optional fields
-                    video.setLinkText(request.getParameter("meta.linkText"));
-                    video.setLinkUrl(request.getParameter("meta.linkURL"));
-                    video.setEconomics(EconomicsEnum.valueOf(request.getParameter("meta.economics")));
-                    video.setReferenceId(request.getParameter("meta.referenceId"));
+                         List<String> tags = Arrays.asList(request.getParameterValues("meta.tags"));
+                         for (String tag : tags) {
+                             if (tag.startsWith("+")) {
+                                 tagsToAdd.add(tag.substring(1));
+                             } else if (tag.startsWith("-")) {
+                                 tagsToAdd.remove(tag.substring(1));
+
+                             }
+                         }
 
 
-                    List<String> tagsToAdd = new ArrayList<String>();
+                     }
+                     com.coresecure.brightcove.wrapper.objects.RelatedLink link = new com.coresecure.brightcove.wrapper.objects.RelatedLink(request.getParameter("meta.linkText"), request.getParameter("meta.linkURL"));
+                     
+                     com.coresecure.brightcove.wrapper.objects.Video video = new com.coresecure.brightcove.wrapper.objects.Video(
+                             name,
+                             referenceId,
+                             shortDescription,
+                             "",
+                             "",
+                             tagsToAdd,
+                             null,
+                             null,
+                             false,
+                             link
+                     );
 
-                    if (request.getParameter("meta.existingTags") != null && !request.getParameter("meta.existingTags").trim().isEmpty()) {
-                        tagsToAdd.addAll(Arrays.asList(request.getParameter("meta.existingTags").split(",")));
-                    }
-
-
-                    if (request.getParameter("meta.tags") != null) {
-
-                        List<String> tags = Arrays.asList(request.getParameterValues("meta.tags"));
-                        for (String tag : tags) {
-                            if (tag.startsWith("+")) {
-                                tagsToAdd.add(tag.substring(1));
-                            } else if (tag.startsWith("-")) {
-                                tagsToAdd.remove(tag.substring(1));
-
-                            }
-                        }
-
-
-                    }
-                    video.setTags(tagsToAdd);
+                    //Set<String> customFields = CollectionUtils.CreateEmptyStringSet();
 
                     try {
                         // Write the video
-                        logger.info("Updating video to Media API " + shortDescription);
-                        Video responseUpdate = wapi.UpdateVideo(apiToken, video);
-                        logger.info("Updated video: '" + responseUpdate.getId() + "'.");
+                        logger.info("Updating video to CMS API " + shortDescription);
+                        com.coresecure.brightcove.wrapper.objects.Video responseUpdate = new com.coresecure.brightcove.wrapper.objects.Video(brAPI.cms.updateVideo(video, videoId));
+                        logger.info("Updated video: '" + responseUpdate.id + "'.");
                         success = true;
-                        root.put("videoid", responseUpdate.getId());
+                        root.put("videoid", responseUpdate.id);
 
                     } catch (Exception e) {
                         logger.error("Exception caught: '" + e + "'.");

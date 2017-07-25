@@ -13,7 +13,7 @@ import java.util.*;
 @Properties({
 		@Property(name = "certificate_paths", label = "Certificate Path Mappings", description = "Certificate path mapping for different urls, should be like url:::certificate path", value = {
 				"https://players.api.brightcove.com/v1:::D:/cert/players_api.cer",
-				"https://cms.api.brightcove.com/v1beta1:::D:/cert/cms_api.cer",
+				"https://cms.api.brightcove.com/v1:::D:/cert/cms_api.cer",
 				"https://ingest.api.brightcove.com/v1:::D:/cert/ingest_api.cer",
 				"https://oauth.brightcove.com/v3/access_token:::D:/cert/oath_brightcove.cer" }),
 		@Property(name = "enable-trusted-certificate", label = "Enable Trusted Certificate", description = "To Enable Enable Trusted Certificate, Value should be YES else NO", value = { "YES" }) })

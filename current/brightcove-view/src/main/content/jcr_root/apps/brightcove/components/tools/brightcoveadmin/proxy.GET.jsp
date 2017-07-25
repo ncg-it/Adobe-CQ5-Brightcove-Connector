@@ -30,7 +30,7 @@ permission to convey the resulting work.
 
 --%>
 <%@page trimDirectiveWhitespaces="true"
-        import="com.brightcove.proserve.mediaapi.wrapper.WriteApi,
+        import="com.coresecure.brightcove.wrapper.BrightcoveAPI,
                 com.coresecure.brightcove.wrapper.sling.ConfigurationGrabber,
                 com.coresecure.brightcove.wrapper.sling.ConfigurationService,
                 com.coresecure.brightcove.wrapper.sling.ServiceUtil,
@@ -40,6 +40,7 @@ permission to convey the resulting work.
                 org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity,
                 org.apache.commons.httpclient.methods.multipart.Part,
                 org.apache.commons.httpclient.methods.multipart.StringPart,
+                org.apache.sling.commons.json.JSONObject,
                 org.slf4j.Logger,
                 org.slf4j.LoggerFactory,
                 java.util.Arrays,
@@ -118,7 +119,7 @@ permission to convey the resulting work.
         String command = slingRequest.getRequestParameter("command").getString();
         logger.info("Command: '" + command + "' ");
         if (write_methods.contains(command) && request.getMethod().equals("GET")) {
-            WriteApi wapi = new WriteApi(logger);
+            BrightcoveAPI brAPI = new BrightcoveAPI(cs.getClientID(), cs.getClientSecret(), selectedAccount);
             switch (write_methods.indexOf(command)) {
                 case 1:
                     useGet = false;
@@ -127,8 +128,7 @@ permission to convey the resulting work.
                     Boolean cascade = true; // Deletes even if it is in use by playlists/players
                     Boolean deleteShares = true; // Deletes if shared to child accounts
                     for (String idStr : ids) {
-                        Long id = Long.parseLong(idStr);
-                        String deleteResponse = wapi.DeleteVideo(apiWriteToken, id, null, cascade, deleteShares).toString();
+                        JSONObject deleteResponse = brAPI.cms.deleteVideo(idStr);
                         logger.info(idStr + " Response from server for delete (no message is perfectly OK): '" + deleteResponse + "'.");
 
                     }
