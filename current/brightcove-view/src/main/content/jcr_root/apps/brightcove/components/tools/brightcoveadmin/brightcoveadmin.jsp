@@ -344,7 +344,7 @@ permission to convey the resulting work.
 
         <!--Upload Image-->
         <div id="uploadImageDiv" style="display:none" class="overlay tbInput">
-            <form id="uploadImageForm" method="POST" enctype="multipart/form-data" target="postFrame">
+            <form id="uploadImageForm" method="post" enctype="multipart/form-data" target="postFrame">
                 <br/>
                 <center><span class="title">Upload A New Image:</span>
                     <br/>
@@ -392,7 +392,7 @@ permission to convey the resulting work.
 
         <!--Upload Video Image-->
         <div id="uploadVideoImageDiv" style="display:none" class="overlay tbInput">
-            <form id="uploadVideoImageForm" method="POST" enctype="multipart/form-data" target="postFrame">
+            <form id="uploadVideoImageForm" method="post" enctype="multipart/form-data" target="postFrame">
                 <br/>
                 <center><span class="title">Upload A New Image:</span>
                     <br/>
@@ -439,7 +439,7 @@ permission to convey the resulting work.
         </div>
         <!--Create Playlist -->
         <div id="createPlaylistDiv" style="display:none" class="overlay tbInput">
-            <form id="createPlaylistForm" method="POST" enctype="multipart/form-data" target="postFrame">
+            <form id="createPlaylistForm" method="post" enctype="multipart/form-data" target="postFrame">
                 <br/>
                 <center><span class="title">Create Playlist:</span>
                     <br/>
@@ -537,7 +537,7 @@ permission to convey the resulting work.
                 <br/>
                 <br/>
 
-                <form id="modPlstForm" method="POST" enctype="multipart/form-data" target="postFrame">
+                <form id="modPlstForm" method="post" enctype="multipart/form-data" target="postFrame">
                     <button onClick="modPlstSubmit()">Yes</button>
                     <button type="button" class="btn" onClick="closeBox('modPlstPop')">No</button>
 
@@ -558,7 +558,7 @@ permission to convey the resulting work.
         <!--Share Video -->
         <!--this functionality has been disabled (commented out), and has not been fully maintained -->
         <div id="shareVideoDiv" style="display:none" class="overlay tbInput">
-            <form id="shareVideoForm" method="POST" enctype="multipart/form-data" target="postFrame">
+            <form id="shareVideoForm" method="post" enctype="multipart/form-data" target="postFrame">
                 <br/>
                 <center><span class="title">Share Video</span>
                     <br/>
