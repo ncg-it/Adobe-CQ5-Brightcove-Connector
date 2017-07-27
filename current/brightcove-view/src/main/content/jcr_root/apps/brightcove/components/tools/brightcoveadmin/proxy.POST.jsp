@@ -40,6 +40,7 @@ permission to convey the resulting work.
                 com.coresecure.brightcove.wrapper.sling.ConfigurationGrabber,
                 com.coresecure.brightcove.wrapper.sling.ConfigurationService,
                 com.coresecure.brightcove.wrapper.sling.ServiceUtil,
+                org.apache.commons.codec.binary.StringUtils,
                 org.apache.sling.api.request.RequestParameter,
                 org.apache.sling.commons.json.JSONObject,
                 org.slf4j.Logger,
@@ -223,9 +224,10 @@ permission to convey the resulting work.
                     break;
                 case 1:
                 	 String videoId = request.getParameter("meta.id");
-                	 String name = new String(request.getParameter("meta.name").getBytes("UTF-8"), "iso-8859-1");
-                	 String shortDescription = new String(request.getParameter("meta.shortDescription").getBytes("UTF-8"), "iso-8859-1").replaceAll("\n", "");
+                	 String name = new String(request.getParameter("meta.name").getBytes("UTF-8"));
+                	 String shortDescription = new String(request.getParameter("meta.shortDescription").getBytes("UTF-8")).replaceAll("\n", "");
                 	 String referenceId = request.getParameter("meta.referenceId");
+                	 //String nameutils = StringUtils..newStringIso8859_1(StringUtils.getBytesUtf8(request.getParameter("meta.name")));
                 	 List<String> tagsToAdd = new ArrayList<String>();
 
                      if (request.getParameter("meta.existingTags") != null && !request.getParameter("meta.existingTags").trim().isEmpty()) {

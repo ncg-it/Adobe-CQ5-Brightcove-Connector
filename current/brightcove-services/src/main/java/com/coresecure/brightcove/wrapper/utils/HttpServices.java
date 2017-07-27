@@ -299,7 +299,7 @@ public class HttpServices {
 
 			connection = (HttpsURLConnection) url.openConnection(PROXY);
 			connection.setRequestProperty("Content-Type", "application/json");
-			connection.setRequestProperty("Content-Length", "" + Integer.toString(payload.getBytes("UTF-8").length));
+			connection.setRequestProperty("Content-Length", "" + Integer.toString(payload.getBytes().length));
 			for (String key : headers.keySet()) {
 				connection.setRequestProperty(key, headers.get(key));
 			}
@@ -309,7 +309,7 @@ public class HttpServices {
 			setRequestMethodViaJreBugWorkaround(connection, "PATCH");
 			// Send request
 			wr = new DataOutputStream(connection.getOutputStream());
-			wr.writeBytes(payload);
+			wr.write(payload.getBytes());
 			// Fortify Fix for below commented two lines.
 			// wr.flush();
 			// wr.close();
