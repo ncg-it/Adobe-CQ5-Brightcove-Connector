@@ -364,6 +364,7 @@ public class HttpServices {
         HttpsURLConnection connection = null;
         BufferedReader rd = null;
         String exGetResponse = null;
+        String utf8GetResponse = null;
         try {
             // Create connection
             url = new URL(targetURL + "?" + urlParameters);
@@ -396,6 +397,7 @@ public class HttpServices {
             // rd.close();
             // return response.toString();
             exGetResponse = response.toString();
+            utf8GetResponse = new String(exGetResponse.getBytes(), "UTF-8");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -415,7 +417,7 @@ public class HttpServices {
                 }
             }
         }
-        return exGetResponse;
+        return utf8GetResponse;
     }
 
     /**
