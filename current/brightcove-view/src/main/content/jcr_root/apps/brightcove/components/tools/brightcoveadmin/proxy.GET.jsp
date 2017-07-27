@@ -198,5 +198,5 @@ permission to convey the resulting work.
 %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:if test="<%=useGet%>">
-    <c:import url="<%=bar%>"/>
+    <c:import url="<%=bar%>" charEncoding="ISO-8859-1" />
 </c:if>
